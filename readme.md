@@ -149,12 +149,12 @@ A normal link without page refresh:
 <a href="/">Hello</a>
 
 // Open in same page with refresh
-<a href="https://example.com/">Hello</Link> // http(s): links open with refresh
-<a href="/" target="_self">Hello</Link>  // self to open with refresh
+<a href="https://example.com/">Hello</a> // http(s): links open with refresh
+<a href="/" target="_self">Hello</a>  // self to open with refresh
 
 // Open in new page
-<a href="/myfile.pdf" target="_blank">Hello</Link>  // Traditional target blank
-<a href="https://example.com/" target="_blank">Hello</Link>
+<a href="/myfile.pdf" target="_blank">Hello</a>  // Traditional target blank
+<a href="https://example.com/" target="_blank">Hello</a>
 ```
 
 The same in React Router are like this, note the inconsistencies of some times using `<Link>` and some times using `<a>`
