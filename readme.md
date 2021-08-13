@@ -65,15 +65,15 @@ export default function Login() {
 These are the structures of each:
 
 - `url`: an object with the properties, it's similar to the native URL:
+  - `url.href`: a string with the full URL
   - `url.path`: a string with the current pathname
   - `url.query`: an object with the keys and values. Example: `{ q: 'hello' }`, `{ q: 'hello', s: 'world' }`.
   - `url.hash`: the hashtag, without the "#"
-  - `url.href`: a string with the full URL
-  - `url.host`: the domain with the optional port. Examples: 'example.com', 'picnicss.com', 'localhost:3000'
-  - `url.domain`: just the current domain
-  - `url.origin`: the "baseURL", which is the scheme, domain and port
-  - `url.port`: the current port where the website is opened
-  - `url.protocol`: the protocol of the url, including the ':'. Examples: `https:`, `http:`
+- `setUrl()`: a setter in the React Hooks style
+  - `setUrl("/newpath?search=hello")`: a shortcut with the string
+  - `setUrl({ path: '/newpath' })`: set the path (and delete anything else)
+  - `setUrl({ path: '/newpath', query: { hello: 'world' } })`: update the path and query
+  - `setUrl(prev => ...)`: use the previous url (object)
 
 The resulting `url` is an object containing each of the parts of the URL:
 
