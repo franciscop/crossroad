@@ -29,7 +29,7 @@ const Router = ({ children }) => {
       const el = e.target.closest("a");
       if (el && el.href) {
         e.preventDefault();
-        setUrl(parse(el.href));
+        setBrowserUrl(el.href);
       }
     };
     document.addEventListener("click", handleClick);
