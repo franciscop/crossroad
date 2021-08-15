@@ -8,14 +8,9 @@ class Catcher extends React.Component {
     super(props);
     this.state = { error: false };
   }
-
+  // Update state so the next render will show the fallback UI.
   static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
     return { error };
-  }
-  componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
-    // logErrorToMyService(error, errorInfo);
   }
   render() {
     if (this.state.error) {
@@ -26,6 +21,7 @@ class Catcher extends React.Component {
   }
 }
 
+// TODO: make it work with the history
 const Mock = ({ path, children }) => {
   const href = "https://example.com" + path;
   const oldLocation = { value: window.location };

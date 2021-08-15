@@ -27,10 +27,17 @@ const Router = ({ children }) => {
     };
     const handleClick = e => {
       const el = e.target.closest("a");
-      if (el && el.href) {
-        e.preventDefault();
-        setBrowserUrl(el.href);
-      }
+      if (!el) return;
+      if (!el.href) return;
+      // Absolute paths should be ignored
+      if (/^https?:\/\//.test(el.href)) return;
+
+      // Open it either on a new or same tab, but always with a hard refresh
+      if (el.getAttribute("target") !== null) return;
+
+      // Handle it with Crossroad
+      e.preventDefault();
+      setBrowserUrl(el.href);
     };
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
@@ -46,7 +53,6 @@ const Route = ({ path, exact = true, component: Comp }) => {
   const [url, setUrl] = useUrl();
   const params = {};
   const matches = samePath(path, url.path, exact, params);
-  Comp.displayName = "Comp";
   if (matches) return <Comp {...params} />;
   return null;
 };
