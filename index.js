@@ -25,6 +25,16 @@ const Router = ({ children }) => {
     window.onpopstate = e => {
       setUrl(parse(window.location.href));
     };
+    const handleClick = e => {
+      const el = e.target.closest("a");
+      console.log(el);
+      if (el) {
+        e.preventDefault();
+        setUrl(parse(el.href));
+      }
+    };
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
   }, []);
   return (
     <RouterContext.Provider value={[url, setBrowserUrl]}>
