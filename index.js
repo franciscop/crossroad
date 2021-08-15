@@ -40,10 +40,8 @@ const Switch = ({ children }) => {
   const [path] = usePath();
   if (!children) return null;
   if (!Array.isArray(children)) children = [children];
-  const badChild = [...children].find(
-    child => !(child?.type?.name === "Route")
-  );
-  if (badChild) {
+  const bad = [...children].find(child => !(child?.type?.name === "Route"));
+  if (bad) {
     throw new Error(
       `<Switch> only accepts <Route> or <Redirect> as children, received:\n${JSON.stringify(
         badChild
