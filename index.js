@@ -36,6 +36,8 @@ const Route = ({ path, exact = true, component: Comp }) => {
   return null;
 };
 
+Route.displayName = "Route";
+
 const getCircularReplacer = () => {
   const seen = new WeakSet();
   return (key, value) => {
