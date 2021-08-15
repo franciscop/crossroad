@@ -44,7 +44,7 @@ const Switch = ({ children }) => {
   if (bad) {
     throw new Error(
       `<Switch> only accepts <Route> or <Redirect> as children, received:\n${JSON.stringify(
-        badChild
+        bad
       )}`
     );
   }

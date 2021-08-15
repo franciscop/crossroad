@@ -136,7 +136,7 @@ describe("<Switch>", () => {
     );
     console.error = error;
 
-    expect($home.text()).toBe(
+    expect($home.text()).toContain(
       "<Switch> only accepts <Route> or <Redirect> as children"
     );
   });
@@ -159,7 +159,7 @@ describe("<Switch>", () => {
     );
     console.error = error;
 
-    expect($home.text()).toBe(
+    expect($home.text()).toContain(
       "<Switch> only accepts <Route> or <Redirect> as children"
     );
   });
