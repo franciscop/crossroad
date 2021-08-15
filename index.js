@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import samePath from "./src/samePath.js";
 import { parse, stringify } from "./src/format.js";
 
@@ -21,6 +21,11 @@ const Router = ({ children }) => {
     history.pushState({}, null, href);
     setUrl(url);
   };
+  useEffect(() => {
+    window.onpopstate = e => {
+      setUrl(parse(window.location.href));
+    };
+  }, []);
   return (
     <RouterContext.Provider value={[url, setBrowserUrl]}>
       {children}
