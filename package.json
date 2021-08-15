@@ -1,6 +1,6 @@
 {
   "name": "crossroad",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A small router library for React focusing on the Developer Experience",
   "homepage": "https://crossroad.page/",
   "repository": "https://github.com/franciscop/crossroad.git",
