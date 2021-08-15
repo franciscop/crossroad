@@ -33,39 +33,17 @@ const Route = ({ path, exact = true, component: Comp }) => {
   const params = {};
   const matches = samePath(path, url.path, exact, params);
   Comp.displayName = "Comp";
-  Comp.isComp = true;
   if (matches) return <Comp {...params} />;
   return null;
-};
-
-Route.displayName = "Route";
-Route.isRoute = true;
-
-const getCircularReplacer = () => {
-  const seen = new WeakSet();
-  return (key, value) => {
-    if (typeof value === "object" && value !== null) {
-      if (seen.has(value)) {
-        return;
-      }
-      seen.add(value);
-    }
-    return value;
-  };
 };
 
 const Switch = ({ children }) => {
   const [path] = usePath();
   if (!children) return null;
   if (!Array.isArray(children)) children = [children];
-  const bad = [...children].find(child => !(child?.type?.name === "Route"));
+  const bad = [...children].find(({ props }) => !props.path && !props.to);
   if (bad) {
-    throw new Error(
-      `<Switch> only accepts <Route> or <Redirect> as children, received:\n${JSON.stringify(
-        bad,
-        getCircularReplacer()
-      )}`
-    );
+    throw new Error(`<Switch> only accepts <Route> or <Redirect> as children`);
   }
   return children.find(({ props }) => samePath(props.path, path, props.exact));
 };
