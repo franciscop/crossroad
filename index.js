@@ -27,7 +27,6 @@ const Router = ({ children }) => {
     };
     const handleClick = e => {
       const el = e.target.closest("a");
-      console.log(el);
       if (el && el.href) {
         e.preventDefault();
         setUrl(parse(el.href));
