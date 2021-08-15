@@ -41,7 +41,11 @@ const Switch = ({ children }) => {
   if (!children) return null;
   if (!Array.isArray(children)) children = [children];
   if ([...children].some(child => !(child?.type?.name === "Route"))) {
-    throw new Error("<Switch> only accepts <Route> or <Redirect> as children");
+    throw new Error(
+      `<Switch> only accepts <Route> or <Redirect> as children, received ${JSON.stringify(
+        child
+      )}`
+    );
   }
   return children.find(({ props }) => samePath(props.path, path, props.exact));
 };
