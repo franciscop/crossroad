@@ -32,11 +32,14 @@ const Route = ({ path, exact = true, component: Comp }) => {
   const [url, setUrl] = useUrl();
   const params = {};
   const matches = samePath(path, url.path, exact, params);
+  Comp.displayName = "Comp";
+  Comp.isComp = true;
   if (matches) return <Comp {...params} />;
   return null;
 };
 
 Route.displayName = "Route";
+Route.isRoute = true;
 
 const getCircularReplacer = () => {
   const seen = new WeakSet();
