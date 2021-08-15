@@ -40,7 +40,7 @@ const Switch = ({ children }) => {
   const [path] = usePath();
   if (!children) return null;
   if (!Array.isArray(children)) children = [children];
-  const badChild = [...children].some(
+  const badChild = [...children].find(
     child => !(child?.type?.name === "Route")
   );
   if (badChild) {
