@@ -36,6 +36,19 @@ const Route = ({ path, exact = true, component: Comp }) => {
   return null;
 };
 
+const getCircularReplacer = () => {
+  const seen = new WeakSet();
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
 const Switch = ({ children }) => {
   const [path] = usePath();
   if (!children) return null;
@@ -44,7 +57,8 @@ const Switch = ({ children }) => {
   if (bad) {
     throw new Error(
       `<Switch> only accepts <Route> or <Redirect> as children, received:\n${JSON.stringify(
-        bad
+        bad,
+        getCircularReplacer()
       )}`
     );
   }
