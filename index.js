@@ -28,16 +28,18 @@ const Router = ({ children }) => {
     const handleClick = e => {
       const el = e.target.closest("a");
       if (!el) return;
-      if (!el.href) return;
+
+      const href = el.getAttribute("href");
+      if (!href) return;
       // Absolute paths should be ignored
-      if (/^https?:\/\//.test(el.href)) return;
+      if (/^https?:\/\//.test(href)) return;
 
       // Open it either on a new or same tab, but always with a hard refresh
       if (el.getAttribute("target") !== null) return;
 
       // Handle it with Crossroad
       e.preventDefault();
-      setBrowserUrl(el.href);
+      setBrowserUrl(href);
     };
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
