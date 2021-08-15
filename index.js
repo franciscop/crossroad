@@ -17,6 +17,8 @@ const Router = ({ children }) => {
     if (typeof url === "string") {
       url = parse(url);
     }
+    const href = stringify(url);
+    history.pushState({}, null, href);
     setUrl(url);
   };
   return (

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import Router, { Route, Switch } from "crossroad";
+import Router, { Route, Switch, useUrl } from "./index.js";
 import $ from "react-test";
+import "babel-polyfill";
 
 class Catcher extends React.Component {
   constructor(props) {
@@ -41,6 +42,14 @@ const Mock = ({ path, children }) => {
 };
 
 const Home = () => <div>Home</div>;
+const HomeButton = () => {
+  const [url, setUrl] = useUrl();
+  return (
+    <div>
+      Home <button onClick={e => setUrl("/user")}>Click</button>
+    </div>
+  );
+};
 const User = ({ id }) => <div>User{id ? " " + id : null}</div>;
 const Other = () => <div>Other</div>;
 
@@ -153,5 +162,23 @@ describe("<Switch>", () => {
     expect($home.text()).toBe(
       "<Switch> only accepts <Route> or <Redirect> as children"
     );
+  });
+});
+
+describe("setUrl()", () => {
+  it("can modify the URL", async () => {
+    const $home = $(
+      <Mock path="/">
+        <Router>
+          <Switch>
+            <Route path="/user" component={User} />
+            <Route path="/" component={HomeButton} />
+          </Switch>
+        </Router>
+      </Mock>
+    );
+    expect($home.text()).toBe("Home Click");
+    await $home.find("button").click();
+    expect($home.text()).toBe("User");
   });
 });

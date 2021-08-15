@@ -11,6 +11,7 @@
   "author": "Francisco Presencia <public@francisco.io> (https://francisco.io/)",
   "license": "MIT",
   "scripts": {
+    "build": "webpack -c",
     "size": "echo $(gzip -c index.min.js | wc -c) bytes",
     "start": "jest --watch",
     "test": "jest --coverage"
