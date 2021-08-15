@@ -1,4 +1,5 @@
 export default function samePath(ref, path, exact, params = {}) {
+  if (!path || !ref) return false;
   if (path.endsWith("/")) path = path.slice(0, -1);
   if (ref.endsWith("/")) ref = ref.slice(0, -1);
 

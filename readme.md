@@ -35,19 +35,20 @@ export default () => (
 <Redirect />
 
 // Hooks
-const [path, setPath] = usePath(null);
-const [query, setQuery] = useQuery(null);
-const [hash, setHash] = useHash(null);
+const [url, setUrl] = useUrl(); // The main one you normally need
+// url.path, url.query, url.hash
+
+const [query, setQuery] = useQuery();
+const [path, setPath] = usePath();
+const [hash, setHash] = useHash();
 const [params, setParams] = useParams("/users/:id");
-const [url, setUrl] = useUrl(); // Combination of all of the above
-// url.path, url.pathname, url.query, url.hash
 ```
 
 > NOTE: we don't have useHistory() nor useLocation(), utilize useUrl() instead
 
 ### useUrl()
 
-Read and set the full URL.
+Read and set the full URL (path+query+hash).
 
 ```js
 export default function Login() {
@@ -82,7 +83,7 @@ The resulting `url` is an object containing each of the parts of the URL:
 const [url, setUrl] = useUrl();
 console.log(url.path); // /whatever
 console.log(url.query); // { filter: hello }
-console.log(url.hash); // #world
+console.log(url.hash); // world
 ```
 
 You can also set it fully or partially:
@@ -116,7 +117,7 @@ const Login = () => {
 };
 ```
 
-> Note: this _only_ modifies the path(name), so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
+> Note: this _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
 
 ## React Router Differences
 

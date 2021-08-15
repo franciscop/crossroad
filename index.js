@@ -1,43 +1,40 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 import samePath from "./src/samePath.js";
+import { parse, stringify } from "./src/format.js";
 
-export const RouterContext = createContext({});
+const RouterContext = createContext([]);
 
-const parseUrl = url => {
-  const MyUrl = new URL(url);
-  MyUrl.path = MyUrl.pathname;
-  return MyUrl;
-};
-
-export const useUrl = () => {
-  const { url } = useContext(RouterContext);
-  return [url, () => {}];
-};
+const useUrl = () => useContext(RouterContext);
 
 const usePath = () => {
   const [url, setUrl] = useUrl();
   return [url.path, path => setUrl({ ...url, path })];
 };
 
-export default function Router({ children }) {
-  const url = parseUrl(window.location.href);
-  const history = {};
+const Router = ({ children }) => {
+  const [url, setUrl] = useState(parse(window.location.href));
+  const setBrowserUrl = url => {
+    if (typeof url === "string") {
+      url = parse(url);
+    }
+    setUrl(url);
+  };
   return (
-    <RouterContext.Provider value={{ url, history }}>
+    <RouterContext.Provider value={[url, setBrowserUrl]}>
       {children}
     </RouterContext.Provider>
   );
-}
+};
 
-export const Route = ({ path, exact = true, component: Comp }) => {
+const Route = ({ path, exact = true, component: Comp }) => {
   const [url, setUrl] = useUrl();
   const params = {};
-  const matches = samePath(path, url.pathname, exact, params);
+  const matches = samePath(path, url.path, exact, params);
   if (matches) return <Comp {...params} />;
   return null;
 };
 
-export const Switch = ({ children }) => {
+const Switch = ({ children }) => {
   const [path] = usePath();
   if (!children) return null;
   if (!Array.isArray(children)) children = [children];
@@ -46,3 +43,6 @@ export const Switch = ({ children }) => {
   }
   return children.find(({ props }) => samePath(props.path, path, props.exact));
 };
+
+export default Router;
+export { Route, Switch, useUrl, usePath, RouterContext };
