@@ -1,31 +1,32 @@
 # Crossroad [![npm install crossroad](https://img.shields.io/badge/npm%20install-crossroad-blue.svg "install badge")](https://www.npmjs.com/package/crossroad) [![test badge](https://github.com/franciscop/crossroad/workflows/tests/badge.svg "test badge")](https://github.com/franciscop/crossroad/blob/master/.github/workflows/tests.yml) [![gzip size](https://img.badgesize.io/franciscop/crossroad/master/index.min.js.svg?compression=gzip "gzip badge")](https://github.com/franciscop/crossroad/blob/master/index.min.js)
 
-A minimal routing library for React. It has mostly the same API as React Router, with three major differences ([and some smaller ones](#react-router-differences)):
+A routing library for React with a familiar interface. It has [some differences](#react-router-differences) with React Router so you write cleaner code:
 
-- The links are just `<a>` instead of custom components. Add a `target="_blank"` to open them in a new page, or `target="_self"` to do a full refresh in the current page.
-- There are more useful hooks like `useUrl`, `useQuery`, `useHash`, etc.
+- The links are plain `<a>` instead of custom components. [Read more about links](#a).
+- There are useful hooks like `useUrl`, `useQuery`, `useHash`, etc.
+- The `<Route>` is `exact` and can match query parameters straight away.
 - It's [just 3kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb with React Router(+Dom).
 
-If you already know React Router, the high-level routing system is similar:
-
 ```js
-import React from "react";
+// App.js
 import Router, { Switch, Route, Redirect } from "crossroad";
 
-export default () => (
-  <Router>
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/signup" component={Signup} />
-      <Route path="/users/:id" component={Profile} />
-      <Redirect to="/" />
-    </Switch>
-  </Router>
-);
+export default function App() {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/users/:id" component={Profile} />
+        <Redirect to="/" />
+      </Switch>
+    </Router>
+  );
+}
 ```
 
-> NOTE: within Crossroad's documentation and for lack of a better name, whenever we say "URL" or similar we refer to only the path + search query + hash, not the full proper URL.
+> NOTE: within Crossroad's and for lack of a better name, whenever we say "URL" or similar we refer to only the path + search query + hash.
 
 ## Getting Started
 
@@ -91,6 +92,7 @@ See the working example [in this CodeSandbox](https://codesandbox.io/s/sleepy-ch
 <Switch>{...}</Switch>
 <Route />
 <Redirect />
+<a>
 
 // Hooks
 const [url, setUrl] = useUrl(); // The main one you normally need
@@ -203,6 +205,18 @@ The path can also include a wildcard `*`, in which case it will perform a partia
 > NOTE: in Crossroad the paths are exact by default, and with the wildcard you can make them partial matches. So the wildcard is the opposite of adding `exact` to React Router.
 
 > TODO: match query parameters as well, like `/user?filter=new`. How would this work with the strict/wildcard system though? (possibly additively, since the order doesn't matter there)
+
+### `<a>`
+
+Links with Crossroad are just traditional plain `<a>`. You write the URL and a relative path, and Crossroad handles all the history, routing, etc:
+
+```js
+export default function Message() => (
+  Hello! <a href="/">go home</a> or to <a href="/latest">latests</a> for more info.
+);
+```
+
+Add a `target="_blank"` to open them in a new page, or `target="_self"` to do a full refresh in the current page.
 
 ### `useUrl()`
 
