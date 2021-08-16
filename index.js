@@ -1,15 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+
 import samePath from "./src/samePath.js";
+import RouterContext from "./src/Context.js";
 import { parse, stringify } from "./src/format.js";
-
-const RouterContext = createContext([]);
-
-const useUrl = () => useContext(RouterContext);
-
-const usePath = () => {
-  const [url, setUrl] = useUrl();
-  return [url.path, path => setUrl({ ...url, path })];
-};
+import { useUrl, usePath, useQuery } from "./src/hooks.js";
 
 const Router = ({ children }) => {
   const [url, setUrl] = useState(parse(window.location.href));
@@ -51,12 +45,22 @@ const Router = ({ children }) => {
   );
 };
 
-const Route = ({ path, exact = true, component: Comp }) => {
+const Route = ({ path = "*", exact = true, component, render, children }) => {
   const [url, setUrl] = useUrl();
   const params = {};
   const matches = samePath(path, url.path, exact, params);
-  if (matches) return <Comp {...params} />;
-  return null;
+  if (!matches) return null;
+
+  if (component) {
+    const Comp = component;
+    return <Comp {...params} />;
+  } else if (render) {
+    return render(params);
+  } else if (children) {
+    return children;
+  } else {
+    throw new Error("Route needs the prop `component`, `render` or `children`");
+  }
 };
 
 const Switch = ({ children }) => {

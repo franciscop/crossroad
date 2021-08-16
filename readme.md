@@ -2,11 +2,11 @@
 
 A minimal routing library for React. It has mostly the same API as React Router, with three major differences ([and some smaller ones](#react-router-differences)):
 
-- [TBD] It's just 3kb (min+gzip) instead of the 17kb with React Router(+Dom).
-- The links are just `<a>` instead of custom links. Add a `target="_blank"` to open them in a new page, or `target="_self"` to do a full refresh in the current page.
-- There are many more useful hooks like `useQuery`, `useHash`, etc.
+- The links are just `<a>` instead of custom components. Add a `target="_blank"` to open them in a new page, or `target="_self"` to do a full refresh in the current page.
+- There are more useful hooks like `useUrl`, `useQuery`, `useHash`, etc.
+- It's [just 3kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb with React Router(+Dom).
 
-If you already know React Router, that's basically all you should know to be productive right now:
+If you already know React Router, the high-level routing system is similar:
 
 ```js
 import React from "react";
@@ -24,6 +24,8 @@ export default () => (
   </Router>
 );
 ```
+
+> NOTE: within Crossroad's documentation and for lack of a better name, whenever we say "URL" or similar we refer to only the path + search query + hash, not the full proper URL.
 
 ## API
 
@@ -44,11 +46,111 @@ const [hash, setHash] = useHash();
 const [params, setParams] = useParams("/users/:id");
 ```
 
-> NOTE: we don't have useHistory() nor useLocation(), utilize useUrl() instead
+### <Router />
+
+The top-level component that has to wrap everything else. Internally it's used to handle clicks, history, etc. It's also the default export of the library:
+
+```js
+// App.js
+import Router from "crossroad";
+
+export default function App() {
+  return <Router>... Your normal App code ...</Router>;
+}
+```
+
+You would normally setup this Router straight on your App, along things like [Statux](https://statux.dev/)'s or [Redux](https://redux.js.org/)'s Store, error handling, translations, etc.
+
+### <Switch />
+
+A component that will only render the first of its children that matches the current URL. This is very useful to handle 404s, multiple routes matching, etc. For example, if you have a username system like `"/:username"` but want to have a help page, you can make it work easily with the switch:
+
+```js
+// In https://example.com/help, it'll render the Help component only
+<Switch>
+  <Route path="/help" component={Help} />
+  <Route path="/:username" component={User} />
+</Switch>
+```
+
+It is also very useful for 404s:
+
+```js
+<Switch>
+  <Route path="/path1" component={Comp1} />
+  <Route path="/path2" component={Comp2} />
+  <Route component={NotFound} />
+</Switch>
+```
+
+The `<Switch>` component only accepts `<Route>` or `<Redirect>` as its children.
+
+### <Route />
+
+This component defines a conditional path that, when strictly matched, renders the given component. Its props are:
+
+- `path`: the path to match to the current browser's URL. It can have parameters `/:id` and a wildcard at the end `*` to make it a partial route.
+- `component`: the component that will be rendered if the browser's URL matches the `path` parameter.
+- `render`: a function that will be called with the params if the browser's URL matches the `path` parameter.
+- `children`: the children to render if the browser's URL matches the `path` parameter.
+
+So for example if the `path` prop is `"/user"` and you visit the page `"/user"`, then the component is rendered; it is ignored otherwise:
+
+```js
+// In https://example.com/
+<Route path="/" component={Home} /> // Rendered
+<Route path="/*" component={Any} />  // Rendered
+<Route path="/user" component={User} />  // Not rendered
+<Route path="/:page" component={Page} />  // Not rendered
+
+// In https://example.com/user/
+<Route path="/" component={Home} /> // Not Rendered
+<Route path="/*" component={Any} />  // Rendered
+<Route path="/user" component={User} />  // Rendered
+<Route path="/:page" component={Page} />  // Rendered
+```
+
+When matching a path with a parameter (a part of the url that starts with `:`) it will be passed as a prop straight to the children:
+
+```js
+// In https://example.com/user/abc
+const User = ({ id }) => <div>Hello {id}</div>;
+const UserList = () => <div>List here</div>;
+
+<Route path="/user/:id" component={User} />;
+// <div>Hello abc</div>
+
+<Route path="/user/:id" render={({ id }) => <User id={id} />} />;
+// <div>Hello abc</div>
+
+// Avoid when you need the params, since they cannot be passed
+<Route path="/user/">
+  <UserList />
+</Route>;
+// <div>List here</div>
+```
+
+> NOTE: the parameter is passed straight to the component instead of wrapped like in React Router.
+
+The path can also include a wildcard `*`, in which case it will perform a partial match of everything before itself. It can only be at the end of the path:
+
+```js
+// In https://example.com/user/abc
+
+// All of these match the current route
+<Route path="/*" component={User} />
+<Route path="/user/*" component={User} />
+<Route path="/user/abc/*" component={User} />
+<Route path="/user/:id/*" component={User} />
+```
+
+> NOTE: in Crossroad the paths are exact by default, and with the wildcard you can make them partial matches. So the wildcard is the opposite of adding `exact` to React Router.
+
+> TODO: math query parameters as well, like `/user?filter=new`. How would this work with the strict/wildcard system though? (possibly additively, since the order doesn't matter there)
 
 ### useUrl()
 
-Read and set the full URL (path+query+hash).
+Read and set the full URL:
 
 ```js
 export default function Login() {
@@ -66,20 +168,20 @@ export default function Login() {
 These are the structures of each:
 
 - `url`: an object with the properties, it's similar to the native URL:
-  - `url.href`: a string with the full URL
+  - `url.href`: a string with the full URL (path + query + hash)
   - `url.path`: a string with the current pathname
   - `url.query`: an object with the keys and values. Example: `{ q: 'hello' }`, `{ q: 'hello', s: 'world' }`.
   - `url.hash`: the hashtag, without the "#"
 - `setUrl()`: a setter in the React Hooks style
   - `setUrl("/newpath?search=hello")`: a shortcut with the string
-  - `setUrl({ path: '/newpath' })`: set the path (and delete anything else)
-  - `setUrl({ path: '/newpath', query: { hello: 'world' } })`: update the path and query
+  - `setUrl({ path: '/newpath' })`: set the path (and delete anything else if any)
+  - `setUrl({ path: '/newpath', query: { hello: 'world' } })`: update the path and query (and delete the hash if any)
   - `setUrl(prev => ...)`: use the previous url (object)
 
 The resulting `url` is an object containing each of the parts of the URL:
 
 ```js
-// /whatever?filter=hello#world
+// In /whatever?filter=hello#world
 const [url, setUrl] = useUrl();
 console.log(url.path); // /whatever
 console.log(url.query); // { filter: hello }
@@ -102,7 +204,7 @@ setUrl({ ...url, query: { ...url.query, safe: 0 } }); // Modify only one query p
 
 ### usePath()
 
-Read and set the path(name) part of the URL:
+Read and set only the path(name) part of the URL:
 
 ```js
 const Login = () => {
@@ -118,6 +220,49 @@ const Login = () => {
 ```
 
 > Note: this _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
+
+### useQuery()
+
+Read and set only the search query parameters from the URL:
+
+```js
+// In /users?q=name&filter=new
+const [query, setQuery] = useQuery();
+// { q: 'name', filter: 'new' }
+
+setQuery({ ...query, q: "myname" });
+// Goto /users?q=myname
+```
+
+When you update it, it will clean any parameter not passed, so make sure to pass the old ones if you want to keep them or a new object if you want to scrub them:
+
+```js
+// In /users?q=name&filter=new
+const [query, setQuery] = useQuery();
+
+setQuery({ q: "myname" }); // Goto /users?q=myname  (removes the filter)
+setQuery({ ...query, q: "myname" }); // Goto /users?q=myname&filter=new
+setQuery(prev => ({ ...prev, q: "myname" })); // Goto /users?q=myname&filter=new
+```
+
+`setQuery` only modifies the query string part of the URL, keeping the `path` and `hash` the same as they were previously.
+
+> TODO: right now they always create a new entry in the history. Consider allowing for `replace` instead of `push` with `setQuery(..., { mode: 'replace' })`
+
+> TODO: maybe accept a specific parameter like `const [q, setQ] = useQuery('q')` to edit only a specific part.
+
+### useHash()
+
+Read and set only the hash part of the URL:
+
+```js
+// In /login#welcome
+const [hash, setHash] = useHash();
+// welcome
+
+setHash("bye");
+// Goto /login#bye
+```
 
 ## React Router Differences
 
