@@ -46,7 +46,7 @@ const [hash, setHash] = useHash();
 const [params, setParams] = useParams("/users/:id");
 ```
 
-### <Router />
+### `<Router />`
 
 The top-level component that has to wrap everything else. Internally it's used to handle clicks, history, etc. It's also the default export of the library:
 
@@ -61,7 +61,7 @@ export default function App() {
 
 You would normally setup this Router straight on your App, along things like [Statux](https://statux.dev/)'s or [Redux](https://redux.js.org/)'s Store, error handling, translations, etc.
 
-### <Switch />
+### `<Switch />`
 
 A component that will only render the first of its children that matches the current URL. This is very useful to handle 404s, multiple routes matching, etc. For example, if you have a username system like `"/:username"` but want to have a help page, you can make it work easily with the switch:
 
@@ -85,7 +85,7 @@ It is also very useful for 404s:
 
 The `<Switch>` component only accepts `<Route>` or `<Redirect>` as its children.
 
-### <Route />
+### `<Route />`
 
 This component defines a conditional path that, when strictly matched, renders the given component. Its props are:
 
@@ -148,7 +148,7 @@ The path can also include a wildcard `*`, in which case it will perform a partia
 
 > TODO: math query parameters as well, like `/user?filter=new`. How would this work with the strict/wildcard system though? (possibly additively, since the order doesn't matter there)
 
-### useUrl()
+### `useUrl()`
 
 Read and set the full URL:
 
@@ -202,7 +202,7 @@ setUrl({ ...url, query: { ...url.query, safe: 0 } }); // Modify only one query p
 
 `useUrl()` is powerful enough for all of your needs, but you might still be interested in other hooks to simplify situations where you do e.g. heavy query manipulation with `useQuery`.
 
-### usePath()
+### `usePath()`
 
 Read and set only the path(name) part of the URL:
 
@@ -221,7 +221,7 @@ const Login = () => {
 
 > Note: this _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
 
-### useQuery()
+### `useQuery()`
 
 Read and set only the search query parameters from the URL:
 
@@ -251,7 +251,7 @@ setQuery(prev => ({ ...prev, q: "myname" })); // Goto /users?q=myname&filter=new
 
 > TODO: maybe accept a specific parameter like `const [q, setQ] = useQuery('q')` to edit only a specific part.
 
-### useHash()
+### `useHash()`
 
 Read and set only the hash part of the URL:
 
