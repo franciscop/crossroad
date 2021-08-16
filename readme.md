@@ -27,6 +27,62 @@ export default () => (
 
 > NOTE: within Crossroad's documentation and for lack of a better name, whenever we say "URL" or similar we refer to only the path + search query + hash, not the full proper URL.
 
+## Getting Started
+
+First create a React project (`npx create-react-app demo`) and install Crossroad:
+
+```js
+npm i crossroad
+```
+
+Then import it on your App.js and define some routes:
+
+```js
+import Router, { Switch, Route } from "crossroad";
+
+const Home = () => <div>Home Page</div>;
+const Login = () => <div>Login Page</div>;
+
+export default function App() {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        ...
+      </Switch>
+    </Router>
+  );
+}
+```
+
+Now you can start your project and test it by visiting `http://localhost:3000/` and `http://localhost:3000/login`:
+
+```bash
+npm start
+```
+
+For completeness, let's add also some links:
+
+```js
+const Home = () => (
+  <div>
+    <h1>Home</h1>
+    <a href="/login">Login</a>
+  </div>
+);
+
+const Login = () => (
+  <div>
+    <a href="/">← back home</a>
+    <h1>Login</h1>
+    ...
+  </div>
+);
+```
+
+See the working example [in this CodeSandbox](https://codesandbox.io/s/sleepy-chaplygin-3u290?file=/src/App.js).
+
 ## API
 
 ```js
@@ -146,7 +202,7 @@ The path can also include a wildcard `*`, in which case it will perform a partia
 
 > NOTE: in Crossroad the paths are exact by default, and with the wildcard you can make them partial matches. So the wildcard is the opposite of adding `exact` to React Router.
 
-> TODO: math query parameters as well, like `/user?filter=new`. How would this work with the strict/wildcard system though? (possibly additively, since the order doesn't matter there)
+> TODO: match query parameters as well, like `/user?filter=new`. How would this work with the strict/wildcard system though? (possibly additively, since the order doesn't matter there)
 
 ### `useUrl()`
 

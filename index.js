@@ -48,7 +48,7 @@ const Router = ({ children }) => {
 const Route = ({ path = "*", exact = true, component, render, children }) => {
   const [url, setUrl] = useUrl();
   const params = {};
-  const matches = samePath(path, url.path, exact, params);
+  const matches = samePath(path, url, exact, params);
   if (!matches) return null;
 
   if (component) {
@@ -64,14 +64,14 @@ const Route = ({ path = "*", exact = true, component, render, children }) => {
 };
 
 const Switch = ({ children }) => {
-  const [path] = usePath();
+  const [url] = useUrl();
   if (!children) return null;
   if (!Array.isArray(children)) children = [children];
   const bad = [...children].find(({ props }) => !props.path && !props.to);
   if (bad) {
     throw new Error(`<Switch> only accepts <Route> or <Redirect> as children`);
   }
-  return children.find(({ props }) => samePath(props.path, path, props.exact));
+  return children.find(({ props }) => samePath(props.path, url, props.exact));
 };
 
 export default Router;
