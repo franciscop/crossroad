@@ -1,4 +1,4 @@
-# Crossroad
+# 🛣 Crossroad
 
 A minimal routing library for React. It has mostly the same API as React Router, with three major differences ([and some smaller ones](#react-router-differences)):
 
