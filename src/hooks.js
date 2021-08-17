@@ -12,9 +12,14 @@ const usePath = () => {
   return [url.path, path => setUrl({ ...url, path })];
 };
 
-const useQuery = () => {
+const useQuery = key => {
   const [url, setUrl] = useUrl();
-  return [url.query, query => setUrl({ ...url, query })];
+  const query = url.query;
+  const setQuery = query => setUrl({ ...url, query });
+  if (key) {
+    return [query[key], value => setQuery({ ...query, [key]: value })];
+  }
+  return [query, setQuery];
 };
 
 const useHash = () => {

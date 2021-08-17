@@ -103,6 +103,18 @@ describe("useQuery", () => {
     expect($user.json("query")).toEqual({ hello: "world", welcome: "there" });
   });
 
+  it("can modify a single parameter", async () => {
+    const $user = withPath("/user?hello=world#there", () => {
+      const [query, setQuery] = useQuery("hello");
+      const onClick = e => setQuery("xxx");
+      return <RenderUrl onClick={onClick} />;
+    });
+
+    expect($user.json("query")).toEqual({ hello: "world" });
+    await $user.find("button").click();
+    expect($user.json("query")).toEqual({ hello: "xxx" });
+  });
+
   it("doesn't change anything else", async () => {
     const $user = withPath("/user?hello=world#there", () => {
       const [query, setQuery] = useQuery();
@@ -141,6 +153,18 @@ describe("useQuery", () => {
       query: { hello: "world", welcome: "there" },
       hash: "there"
     });
+  });
+
+  it("doesn't modify other parameters", async () => {
+    const $user = withPath("/user?hello=world&a=b#there", () => {
+      const [query, setQuery] = useQuery("hello");
+      const onClick = e => setQuery("xxx");
+      return <RenderUrl onClick={onClick} />;
+    });
+
+    expect($user.json("query")).toEqual({ hello: "world", a: "b" });
+    await $user.find("button").click();
+    expect($user.json("query")).toEqual({ hello: "xxx", a: "b" });
   });
 });
 

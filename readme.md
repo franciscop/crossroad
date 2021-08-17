@@ -296,30 +296,42 @@ const Login = () => {
 Read and set only the search query parameters from the URL:
 
 ```js
-// In /users?q=name&filter=new
+// In /users?search=name&filter=new
 const [query, setQuery] = useQuery();
-// { q: 'name', filter: 'new' }
+// { search: 'name', filter: 'new' }
 
-setQuery({ ...query, q: "myname" });
-// Goto /users?q=myname
+setQuery({ search: "myname" }); // Remove the other query params
+// Goto /users?search=myname
+
+setQuery({ ...query, search: "myname" }); // Keep the other query params
+// Goto /users?search=myname&filter=new
+```
+
+If you pass a parameter, it can read and modify that parameter while keeping the others the same. This is specially useful in e.g. a search form:
+
+```js
+// In /users?search=name&filter=new
+const [search, setSearch] = useQuery("search");
+// 'name'
+
+setQuery("myname");
+// Goto /users?search=myname&filter=new
 ```
 
 When you update it, it will clean any parameter not passed, so make sure to pass the old ones if you want to keep them or a new object if you want to scrub them:
 
 ```js
-// In /users?q=name&filter=new
+// In /users?search=name&filter=new
 const [query, setQuery] = useQuery();
 
-setQuery({ q: "myname" }); // Goto /users?q=myname  (removes the filter)
-setQuery({ ...query, q: "myname" }); // Goto /users?q=myname&filter=new
-setQuery(prev => ({ ...prev, q: "myname" })); // Goto /users?q=myname&filter=new
+setQuery({ search: "myname" }); // Goto /users?q=myname  (removes the filter)
+setQuery({ ...query, search: "myname" }); // Goto /users?q=myname&filter=new
+setQuery(prev => ({ ...prev, search: "myname" })); // Goto /users?q=myname&filter=new
 ```
 
 `setQuery` only modifies the query string part of the URL, keeping the `path` and `hash` the same as they were previously.
 
 > TODO: right now they always create a new entry in the history. Consider allowing for `replace` instead of `push` with `setQuery(..., { mode: 'replace' })`
-
-> TODO: maybe accept a specific parameter like `const [q, setQ] = useQuery('q')` to edit only a specific part.
 
 ### `useHash()`
 
@@ -333,6 +345,22 @@ const [hash, setHash] = useHash();
 setHash("bye");
 // Goto /login#bye
 ```
+
+## Examples
+
+### Static routes
+
+### Vanity URLs
+
+### Search page
+
+### Query routing
+
+### Not found
+
+### Github hosting
+
+> NOTE: this is a bad idea for SEO, but if that doesn't matter much for you...
 
 ## React Router Differences
 
@@ -393,13 +421,3 @@ The same in React Router are like this, note the inconsistencies of some times u
 ### Improved Hooks
 
 I've seen in multiple codebases people end up creating a `useQuery()` hook wrapping `useLocation` and `useHistory` to work with query parameters. Fear no more, this and some other useful hooks are there already on Crossroad.
-
-#### useQuery();
-
-#### useHash();
-
-#### useParams("/users/:id");
-
-#### useUrl(); // Combination of all of the above
-
-// url.path, url.pathname, url.query, url.hash
