@@ -66,7 +66,7 @@ describe("crossroad", () => {
     const $home = $(
       <Mock path="/hello">
         <Router>
-          <Route exact={false} path="/" component={Home} />
+          <Route path="/*" component={Home} />
           <Route path="/user" component={User} />
         </Router>
       </Mock>
@@ -74,11 +74,11 @@ describe("crossroad", () => {
     expect($home.text()).toBe("Home");
   });
 
-  it("can deal with partial matches", () => {
+  it("can deal with multiple partial matches", () => {
     const $home = $(
       <Mock path="/user/abc">
         <Router>
-          <Route path="/" exact={false} component={Home} />
+          <Route path="/*" component={Home} />
           <Route path="/user/:id" component={User} />
         </Router>
       </Mock>
@@ -93,7 +93,7 @@ describe("<Switch>", () => {
       <Mock path="/user/abc">
         <Router>
           <Switch>
-            <Route path="/" exact={false} component={Home} />
+            <Route path="/*" component={Home} />
             <Route path="/user/:id" component={User} />
             <Route path="/hello" component={Other} />
           </Switch>

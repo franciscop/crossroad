@@ -1,4 +1,5 @@
 const parse = base => {
+  if (typeof base !== "string") return base;
   const url = {};
   const MyUrl = new URL(base, "https://example.com/");
   url.path = MyUrl.pathname.replace(/\/$/, "") || "/"; // It shouldn't end with /

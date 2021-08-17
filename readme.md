@@ -204,7 +204,24 @@ The path can also include a wildcard `*`, in which case it will perform a partia
 
 > NOTE: in Crossroad the paths are exact by default, and with the wildcard you can make them partial matches. So the wildcard is the opposite of adding `exact` to React Router.
 
-> TODO: match query parameters as well, like `/user?filter=new`. How would this work with the strict/wildcard system though? (possibly additively, since the order doesn't matter there)
+It can also match query parameters:
+
+```js
+// In /profile?page=settings&filter=abc
+
+// All of these match the current route
+<Route path="/profile" component={User} />
+<Route path="/profile?page" component={User} />
+<Route path="/profile?page=settings" component={User} />
+<Route path="/profile/*?page=settings" component={User} />
+<Route path="/:id?page=settings" component={User} />
+<Route path="/:id/*?page=settings" component={User} />
+
+// These shall not match:
+<Route path="/?page" component={User} />  // Wrong path
+<Route path="/profile?page2" component={User} />  // Wrong key
+<Route path="/profile?page=options" component={User} />  // Wrong value
+```
 
 ### `<a>`
 
