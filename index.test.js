@@ -1,51 +1,10 @@
 import React, { useEffect } from "react";
-import Router, { Route, Switch, useUrl } from "./index.js";
 import $ from "react-test";
-import "babel-polyfill";
 
-class Catcher extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { error: false };
-  }
-  // Update state so the next render will show the fallback UI.
-  static getDerivedStateFromError(error) {
-    return { error };
-  }
-  render() {
-    if (this.state.error) {
-      // You can render any custom fallback UI
-      return <div>{this.state.error.message}</div>;
-    }
-    return this.props.children;
-  }
-}
-
-// TODO: make it work with the history
-const Mock = ({ path, children }) => {
-  const href = "https://example.com" + path;
-  const oldLocation = { value: window.location };
-  delete global.window.location;
-  Object.defineProperty(global.window, "location", {
-    value: new URL(href),
-    configurable: true
-  });
-
-  useEffect(() => {
-    return () => Object.defineProperty(window, "location", oldLocation);
-  });
-  return <div>{children}</div>;
-};
+import { Catcher, Mock } from "./test/index.js";
+import Router, { Route, Switch, useUrl } from "./index.js";
 
 const Home = () => <div>Home</div>;
-const HomeButton = () => {
-  const [url, setUrl] = useUrl();
-  return (
-    <div>
-      Home <button onClick={e => setUrl("/user")}>Click</button>
-    </div>
-  );
-};
 const User = ({ id }) => <div>User{id ? " " + id : null}</div>;
 const Other = () => <div>Other</div>;
 
@@ -60,6 +19,35 @@ describe("crossroad", () => {
       </Mock>
     );
     expect($home.text()).toBe("Home");
+  });
+
+  it("can render with render, component or children", () => {
+    expect(
+      <Mock path="/">
+        <Router>
+          <Route path="/" component={Home} />
+          <Route path="/user" component={User} />
+        </Router>
+      </Mock>
+    ).toHaveText("Home");
+    expect(
+      <Mock path="/">
+        <Router>
+          <Route path="/" render={() => <Home />} />
+          <Route path="/user" component={User} />
+        </Router>
+      </Mock>
+    ).toHaveText("Home");
+    expect(
+      <Mock path="/">
+        <Router>
+          <Route path="/">
+            <Home />
+          </Route>
+          <Route path="/user" component={User} />
+        </Router>
+      </Mock>
+    ).toHaveText("Home");
   });
 
   it("can render a different path", () => {
@@ -137,7 +125,7 @@ describe("<Switch>", () => {
     );
   });
 
-  it("only accepts routes", () => {
+  it("only accepts routes, even when mixed", () => {
     const error = console.error;
     console.error = () => {};
 
@@ -159,22 +147,46 @@ describe("<Switch>", () => {
       "<Switch> only accepts <Route> or <Redirect> as children"
     );
   });
-});
 
-describe("setUrl()", () => {
-  it("can modify the URL", async () => {
+  it("needs one of the three props", () => {
+    const error = console.error;
+    console.error = () => {};
+
     const $home = $(
-      <Mock path="/">
-        <Router>
-          <Switch>
-            <Route path="/user" component={User} />
-            <Route path="/" component={HomeButton} />
-          </Switch>
-        </Router>
-      </Mock>
+      <Catcher>
+        <Mock path="/">
+          <Router>
+            <Switch>
+              <Route path="/" />
+            </Switch>
+          </Router>
+        </Mock>
+      </Catcher>
     );
-    expect($home.text()).toBe("Home Click");
-    await $home.find("button").click();
-    expect($home.text()).toBe("User");
+    console.error = error;
+
+    expect($home.text()).toContain(
+      "Route needs the prop `component`, `render` or `children`"
+    );
+  });
+
+  it("needs to be wrapped in <Router />", () => {
+    const error = console.error;
+    console.error = () => {};
+
+    const $home = $(
+      <Catcher>
+        <Mock path="/">
+          <Switch>
+            <Route path="/" component={Home} />
+          </Switch>
+        </Mock>
+      </Catcher>
+    );
+    console.error = error;
+
+    expect($home.text()).toContain(
+      "Hooks should be used as children of <Router>"
+    );
   });
 });
