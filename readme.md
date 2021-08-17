@@ -2,10 +2,10 @@
 
 A routing library for React with a familiar interface. It has [some differences](#react-router-differences) with React Router so you write cleaner code:
 
-- The links are plain `<a>` instead of custom components. [Read more about links](#a).
-- There are useful hooks like `useUrl`, `useQuery`, `useHash`, etc.
-- The `<Route>` is `exact` and can match query parameters straight away.
-- It's [just 3kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb with React Router(+Dom).
+- The links are plain `<a>` instead of custom components. [Read more](#a).
+- There are useful hooks like [`useUrl`](#useurl), [`useQuery`](#usequery), etc.
+- The `<Route>` path is `exact` by default and can match query parameters.
+- It's [just 3kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
 
 ```js
 // App.js
@@ -26,11 +26,11 @@ export default function App() {
 }
 ```
 
-> NOTE: within Crossroad's and for lack of a better name, whenever we say "URL" or similar we refer to only the path + search query + hash.
+> NOTE: within Crossroad's and for lack of a better name, "URL" refers to the combination of path + search query + hash.
 
 ## Getting Started
 
-First create a React project (`npx create-react-app demo`) and install Crossroad:
+Create a React project (e.g. `npx create-react-app demo`) and install Crossroad:
 
 ```js
 npm i crossroad
