@@ -272,6 +272,12 @@ setUrl({ ...url, query: { ...url.query, safe: 0 } }); // Modify only one query p
 
 `useUrl()` is powerful enough for all of your needs, but you might still be interested in other hooks to simplify situations where you do e.g. heavy query manipulation with `useQuery`.
 
+By default `setUrl()` will create a new entry in the browser history. If you want to instead replace the current entry you can pass a second parameter with `{ mode: 'replace' }`:
+
+```js
+setUrl("/newurl", { mode: "replace" });
+```
+
 ### `usePath()`
 
 Read and set only the path(name) part of the URL:
@@ -290,6 +296,12 @@ const Login = () => {
 ```
 
 > Note: this _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
+
+By default `setPath()` will create a new entry in the browser history. If you want to instead replace the current entry you can pass a second parameter with `{ mode: 'replace' }`:
+
+```js
+setPath("/newurl", { mode: "replace" });
+```
 
 ### `useQuery()`
 
@@ -331,7 +343,11 @@ setQuery(prev => ({ ...prev, search: "myname" })); // Goto /users?q=myname&filte
 
 `setQuery` only modifies the query string part of the URL, keeping the `path` and `hash` the same as they were previously.
 
-> TODO: right now they always create a new entry in the history. Consider allowing for `replace` instead of `push` with `setQuery(..., { mode: 'replace' })`
+By default `setQuery()` will create a new entry in the browser history. If you want to instead replace the current entry, so that the "Back" button goes to the previous page, you can pass a second parameter with `{ mode: 'replace' }`:
+
+```js
+setQuery({ search: "abc" }, { mode: "replace" });
+```
 
 ### `useHash()`
 
@@ -344,6 +360,12 @@ const [hash, setHash] = useHash();
 
 setHash("bye");
 // Goto /login#bye
+```
+
+By default `setHash()` will create a new entry in the browser history. If you want to instead replace the current entry you can pass a second parameter with `{ mode: 'replace' }`:
+
+```js
+setHash("newhash", { mode: "replace" });
 ```
 
 ## Examples

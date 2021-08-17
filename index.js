@@ -7,12 +7,18 @@ import { useUrl, usePath, useQuery, useHash } from "./src/hooks.js";
 
 const Router = ({ children }) => {
   const [url, setUrl] = useState(parse(window.location.href));
-  const setBrowserUrl = url => {
+  const setBrowserUrl = (url, opts = { mode: "push" }) => {
     if (typeof url === "string") {
       url = parse(url);
     }
     const href = stringify(url);
-    history.pushState({}, null, href);
+    if (opts.mode === "push") {
+      history.pushState({}, null, href);
+    } else if (opts.mode === "replace") {
+      history.replaceState({}, null, href);
+    } else {
+      throw new Error(`Unrecognized mode ${opts.mode}`);
+    }
     setUrl(url);
   };
   useEffect(() => {
