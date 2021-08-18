@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import Context from "./Context.js";
+import samePath from "./samePath";
 
 const useUrl = () => {
   const ctx = useContext(Context);
@@ -30,4 +31,11 @@ const useHash = () => {
   return [url.hash, (hash, opts) => setUrl({ ...url, hash }, opts)];
 };
 
-export { useUrl, usePath, useQuery, useHash };
+const useParams = ref => {
+  const [path] = usePath();
+  const params = {};
+  samePath(ref, path, params);
+  return params;
+};
+
+export { useUrl, usePath, useQuery, useHash, useParams };

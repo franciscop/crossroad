@@ -7,23 +7,27 @@ A routing library for React with a familiar interface. It has [some differences]
 - The `<Route>` path is `exact` by default and can match query parameters.
 - It's [just 3kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
 
+[**demo on CodeSandbox**](https://codesandbox.io/s/recursing-wozniak-uftyo?file=/src/App.js)
+
 ```js
 // App.js
 import Router, { Switch, Route, Redirect } from "crossroad";
 
-export default function App() {
-  return (
-    <Router>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/users/:id" component={Profile} />
-        <Redirect to="/" />
-      </Switch>
-    </Router>
-  );
-}
+export default () => (
+  <Router>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/users">Users</a>
+      ...
+    </nav>
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/users" component={Users} />
+      <Route path="/users/:id" component={Profile} />
+      <Redirect to="/" />
+    </Switch>
+  </Router>
+);
 ```
 
 > NOTE: within Crossroad's and for lack of a better name, "URL" refers to the combination of path + search query + hash.
@@ -41,16 +45,37 @@ Then import it on your App.js and define some routes:
 ```js
 import Router, { Switch, Route } from "crossroad";
 
-const Home = () => <div>Home Page</div>;
-const Login = () => <div>Login Page</div>;
-
 export default function App() {
   return (
     <Router>
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        ...
+        <Route path="/users/:id" component={Profile} />
+      </Switch>
+    </Router>
+  );
+}
+```
+
+Then let's add some navigation and the actual pages:
+
+```js
+import Router, { Switch, Route } from "crossroad";
+
+const Home = () => <main>Home Page</main>;
+const Profile = ({ id }) => <main>Hello {id.toUpperCase()}</main>;
+
+export default function App() {
+  return (
+    <Router>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/users/a">User A</a>
+        <a href="/users/b">User B</a>
+      </nav>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/users/:id" component={Profile} />
       </Switch>
     </Router>
   );
@@ -63,45 +88,27 @@ Now you can start your project and test it by visiting `http://localhost:3000/` 
 npm start
 ```
 
-For completeness, let's add also some links:
-
-```js
-const Home = () => (
-  <div>
-    <h1>Home</h1>
-    <a href="/login">Login</a>
-  </div>
-);
-
-const Login = () => (
-  <div>
-    <a href="/">← back home</a>
-    <h1>Login</h1>
-    ...
-  </div>
-);
-```
-
-See the working example [in this CodeSandbox](https://codesandbox.io/s/sleepy-chaplygin-3u290?file=/src/App.js).
+See the more complete working example [in this CodeSandbox](https://codesandbox.io/s/recursing-wozniak-uftyo?file=/src/App.js).
 
 ## API
 
+The API is composed of these parts:
+
+- [`<Router />`](#router): the top-level component that should wrap your whole app.
+- [`<Switch />`](#switch): renders only the first child that matches the current url.
+- [`<Route />`](#route): filters whether the given component should be rendered or not for the current URL.
+- [`<Redirect />`](#redirect): takes the user to a different URL if it's rendered.
+- [`<a />`](#a): a plain HTML link, use it to navigate between pages.
+- [`useUrl()`](#useurl): a hook that returns the current URL and a setter to update it.
+- [`usePath()`](#usepath): a hook that returns the current path and a setter to update it.
+- [`useQuery()`](#usequery): a hook that returns the current query and a setter to update it.
+- [`useHash()`](#usehash): a hook that returns the current hash and a setter to update it.
+- [`useParams()`](#useparams): a hook that extracts params form the current path.
+
+`Router` is the default export, `<a>` is not exported since it's just the plain link element, and everything else are named exports:
+
 ```js
-// Components
-<Router>{...}</Router>
-<Switch>{...}</Switch>
-<Route />
-<Redirect />
-<a>
-
-// Hooks
-const [url, setUrl] = useUrl(); // The main one you normally need
-// url.path, url.query, url.hash
-
-const [query, setQuery] = useQuery();
-const [path, setPath] = usePath();
-const [hash, setHash] = useHash();
-const [params, setParams] = useParams("/users/:id");
+import Router, { Switch, Route, Redirect, useUrl, usePath } from "crossroad";
 ```
 
 ### `<Router />`
@@ -398,6 +405,24 @@ By default `setHash()` will create a new entry in the browser history. If you wa
 
 ```js
 setHash("newhash", { mode: "replace" });
+```
+
+### `useParams()`
+
+Parse the current URL against the given reference:
+
+```js
+// In /users/2
+const params = useParams("/users/:id");
+// { id: '2' }
+```
+
+It's not this method responsibility to match the url, just to attempt to parse it, so if there's no good match it'll just return an empty object (use a `<Route />` for path matching):
+
+```js
+// In /pages/settings
+const params = useParams("/users/:id");
+// {}
 ```
 
 ## Examples

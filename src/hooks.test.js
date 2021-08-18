@@ -3,7 +3,13 @@ import $ from "react-test";
 
 import { Mock, RenderUrl } from "../test/index.js";
 
-import Router, { useUrl, usePath, useQuery, useHash } from "./index.js";
+import Router, {
+  useUrl,
+  usePath,
+  useQuery,
+  useHash,
+  useParams
+} from "./index.js";
 
 $.prototype.json = function(key) {
   return JSON.parse(
@@ -104,6 +110,48 @@ describe("usePath", () => {
     expect($user.json("path")).toEqual("/user");
     await $user.find("button").click();
     expect($user.json("path")).toEqual("/user2");
+  });
+});
+
+describe("useParams", () => {
+  it("can parse the path into parameters", () => {
+    const $user = withPath("/user?hello=world#there", () => {
+      const params = useParams("/:id");
+      return <div>{JSON.stringify(params)}</div>;
+    });
+    expect(JSON.parse($user.text())).toEqual({ id: "user" });
+  });
+
+  it("can parse multiple parameters", async () => {
+    const $user = withPath("/user/2", () => {
+      const params = useParams("/:page/:id");
+      return <div>{JSON.stringify(params)}</div>;
+    });
+    expect(JSON.parse($user.text())).toEqual({ page: "user", id: "2" });
+  });
+
+  it("can parse intermediate parameters", async () => {
+    const $user = withPath("/user/2/about", () => {
+      const params = useParams("/:page/:id/about");
+      return <div>{JSON.stringify(params)}</div>;
+    });
+    expect(JSON.parse($user.text())).toEqual({ page: "user", id: "2" });
+  });
+
+  it("is empty when it doesn't match", async () => {
+    const $user = withPath("/user/2", () => {
+      const params = useParams("/xxx/:id/");
+      return <div>{JSON.stringify(params)}</div>;
+    });
+    expect(JSON.parse($user.text())).toEqual({});
+  });
+
+  it("is empty when it doesn't match even in the end", async () => {
+    const $user = withPath("/user/2/about", () => {
+      const params = useParams("/user/:id/xxx");
+      return <div>{JSON.stringify(params)}</div>;
+    });
+    expect(JSON.parse($user.text())).toEqual({});
   });
 });
 

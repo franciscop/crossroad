@@ -46,12 +46,16 @@ export default function samePath(ref, url, params = {}) {
   if (ref.path.split("/").length !== url.path.split("/").length) return false;
 
   // Make a comparison per-parameter; and exctract those parameters
-  return ref.path.split("/").every((ref, i) => {
+  const extra = {};
+  const match = ref.path.split("/").every((ref, i) => {
     const part = url.path.split("/")[i];
     if (ref.startsWith(":")) {
-      params[ref.slice(1)] = part;
+      extra[ref.slice(1)] = part;
       return true; // A parameter is always a match
     }
     return part === ref;
   });
+  // Extend it only if there's a full match
+  if (match) Object.assign(params, extra);
+  return match;
 }

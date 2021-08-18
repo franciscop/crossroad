@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import samePath from "./samePath.js";
 import Context from "./Context.js";
 import { parse, stringify } from "./format.js";
-import { useUrl, usePath, useQuery, useHash } from "./hooks.js";
+import { useUrl, usePath, useQuery, useHash, useParams } from "./hooks.js";
 
 const Router = ({ children }) => {
   const [url, setUrl] = useState(parse(window.location.href));
@@ -87,4 +87,14 @@ const Switch = ({ children }) => {
 };
 
 export default Router;
-export { Route, Switch, Redirect, useUrl, usePath, useQuery, useHash, Context };
+export {
+  Route,
+  Switch,
+  Redirect,
+  useUrl,
+  usePath,
+  useQuery,
+  useHash,
+  useParams,
+  Context
+};
