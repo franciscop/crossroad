@@ -7,7 +7,7 @@ A routing library for React with a familiar interface. It has [some differences]
 - The `<Route>` path is `exact` by default and can match query parameters.
 - It's [just 1.7kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
 
-[**demo on CodeSandbox**](https://codesandbox.io/s/recursing-wozniak-uftyo?file=/src/App.js)
+[**🔗 Demo on CodeSandbox**](https://codesandbox.io/s/recursing-wozniak-uftyo?file=/src/App.js)
 
 ```js
 // App.js
