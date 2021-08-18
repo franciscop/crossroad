@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import $ from "react-test";
 
 import { Catcher, Mock } from "../test/index.js";
-import Router, { Route, Switch, useUrl } from "./index.js";
+import Router, { Route, Switch, Redirect, useUrl } from "./index.js";
 
 const Home = () => <div>Home</div>;
 const User = ({ id }) => <div>User{id ? " " + id : null}</div>;
@@ -84,6 +84,21 @@ describe("crossroad", () => {
       </Mock>
     );
     expect($home.text()).toBe("HomeUser abc");
+  });
+
+  it("can redirect", () => {
+    const $home = $(
+      <Mock path="/user/abc">
+        <Router>
+          <Switch>
+            <Route path="/" component={Home} />
+            <Route path="/user/" component={User} />
+            <Redirect to="/" />
+          </Switch>
+        </Router>
+      </Mock>
+    );
+    expect($home.text()).toBe("Home");
   });
 
   it.skip("needs to be wrapped in <Router />", () => {

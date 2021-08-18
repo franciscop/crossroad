@@ -83,7 +83,7 @@ const Switch = ({ children }) => {
   if (bad) {
     throw new Error(`<Switch> only accepts <Route> or <Redirect> as children`);
   }
-  return children.find(({ props }) => samePath(props.path, url));
+  return children.find(({ props }) => samePath(props.path || "*", url));
 };
 
 export default Router;
