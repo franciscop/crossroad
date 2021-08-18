@@ -5,7 +5,7 @@ A routing library for React with a familiar interface. It has [some differences]
 - The links are plain `<a>` instead of custom components. [Read more](#a).
 - There are useful hooks like [`useUrl`](#useurl), [`useQuery`](#usequery), etc.
 - The `<Route>` path is `exact` by default and can match query parameters.
-- It's [just 3kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
+- It's [just 1.7kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
 
 [**demo on CodeSandbox**](https://codesandbox.io/s/recursing-wozniak-uftyo?file=/src/App.js)
 
@@ -13,24 +13,24 @@ A routing library for React with a familiar interface. It has [some differences]
 // App.js
 import Router, { Switch, Route, Redirect } from "crossroad";
 
-export default () => (
-  <Router>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/users">Users</a>
-      ...
-    </nav>
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/users" component={Users} />
-      <Route path="/users/:id" component={Profile} />
-      <Redirect to="/" />
-    </Switch>
-  </Router>
-);
+export default function App() {
+  return (
+    <Router>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/users">Users</a>
+        ...
+      </nav>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/users" component={Users} />
+        <Route path="/users/:id" component={Profile} />
+        <Redirect to="/" />
+      </Switch>
+    </Router>
+  );
+}
 ```
-
-> NOTE: within Crossroad's and for lack of a better name, "URL" refers to the combination of path + search query + hash.
 
 ## Getting Started
 
@@ -250,14 +250,50 @@ This way, when nothing else is matched in the Switch, then the redirect will be 
 Links with Crossroad are just traditional plain `<a>`. You write the URL and a relative path, and Crossroad handles all the history, routing, etc:
 
 ```js
-export default function Message() => (
-  Hello! <a href="/">go home</a> or to <a href="/latest">latests</a> for more info.
+export default () => (
+  <nav>
+    <a href="/">Home</a>
+    <a href="/users">Users</a>
+    <a href="/settings">Settings</a>
+  </nav>
 );
 ```
 
-Add a `target="_blank"` to open them in a new page, or `target="_self"` to do a full refresh in the current page.
+An important concept to understand is where links open, whether it's a react navigation or a browser page change:
+
+- `/`: plain paths will navigate within React
+- `/?abc=def`: queries, hashtags, etc. will also perform a navigation in React
+- `https://example.com/`: full URLs will trigger a browser page change
+- `target="_self"`: will trigger a browser page change, in the same tab
+- `target="_blank"`: will open a new tab
+
+Some examples:
+
+```js
+// In https://example.com/users/25
+
+// React navigation:
+<a href="/">Home</a>
+
+// React navigation:
+<a href="/users?filter=new">New users</a>
+
+// Page refresh (since it's a full URL)
+<a href="https://google.com/">Google it</a>
+
+// Page refresh (a full URL, even in the same domain)
+<a href="https://example.com/">Home</a>
+
+// Page refresh (it has a target="_self")
+<a href="/update" target="_self">Update</a>
+
+// New tab (it has a target="_blank")
+<a href="/terms-of-service" target="_blank">Read terms of service</a>
+```
 
 ### `useUrl()`
+
+> NOTE: within Crossroad's and for lack of a better name, "URL" refers to the combination of path + search query + hash.
 
 Read and set the full URL:
 
@@ -441,29 +477,58 @@ const params = useParams("/users/:id");
 
 > NOTE: this is a bad idea for SEO, but if that doesn't matter much for you...
 
-## React Router Differences
+## React Router diff
 
 This part of the documentation tries to explain in detail the differences between Crossroad and React Router (Dom). Crossroad goal is to build a modern Router API from scratch, removing the legacy code and using Hooks natively.
 
-For example with React Router your component receives the props `match`, `history`, etc. This is no longer needed in Crossroad, since now these are available with simple hooks so instead we pass any params straight away for convenience:
+### Remove imperative API
+
+With React Router your component receives the props `history`. This is no longer needed with Crossroad; instead of handling the history details, we provide a hook `useUrl()` with the setter `setUrl()` where you can set the new URL straight away:
 
 ```js
-import Router, { Route } from "crossroad";
+import { useUrl } from "crossroad";
 
-const User = ({ id }) => `Hello user ${id}`;
+export default function LoginButton() {
+  const [url, setUrl] = useUrl();
+  const login = async e => {
+    // ...
+    setUrl("/welcome");
+  };
+  return <button onClick={login}>Login</button>;
+}
+```
 
-export default () => (
-  <Router>
-    <Route path="/users/:id" component={User} />
-  </Router>
-);
+The other hooks, like `useQuery()`, behave in a similar way so you don't need to be concerned about the history API.
+
+### Useful Hooks
+
+I've seen in multiple codebases people end up creating a `useQuery()` hook wrapping `useLocation` and `useHistory` to work with query parameters. Fear no more, this and some other useful hooks are there already on Crossroad and you can use them straight away:
+
+```js
+// setUrl() is quite flexible:
+const [url, setUrl] = useUrl();
+setUrl("/#firsttime"); // [Shorthand] Redirect to home with a hashtag
+setUrl({ path: "/", hash: "firsttime" }); // Same as above
+setUrl({ ...url, path: "/" }); // Keep everything the same except the path
+setUrl({ ...url, query: { search: myQuery } }); // Set a full search query
+setUrl({ ...url, query: { ...url.query, safe: 0 } }); // Modify only one query param
+```
+
+```js
+// In /?search=myname&filter=new
+
+// Manipulate the whole query object
+const [query, setQuery] = useQuery();
+setQuery({ ...query, search: "myname2" });
+
+// Manipulate _only_ the query parameter "search"
+const [search, setSearch] = useQuery("search");
+setSearch("myname2");
 ```
 
 ### Plain Links
 
-To add a link in your application, you use the native `<a>` element as expected. Crossroad will intercept the click on <a> elements and open the appropriate page without refresh. Some examples:
-
-A normal link without page refresh:
+To add a link in your application, you use the native `<a>` element instead of having to import a different component. What's more, this makes links a lot more consistent than in React Router. Some examples:
 
 ```js
 // Crossroad
@@ -496,7 +561,3 @@ The same in React Router are like this, note the inconsistencies of some times u
 <a href="https://example.com/" target="_blank">Hello</Link>
 <Link to="https://example.com/">Hello</Link>  // Broken
 ```
-
-### Improved Hooks
-
-I've seen in multiple codebases people end up creating a `useQuery()` hook wrapping `useLocation` and `useHistory` to work with query parameters. Fear no more, this and some other useful hooks are there already on Crossroad.
