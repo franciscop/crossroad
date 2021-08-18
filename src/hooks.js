@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import RouterContext from "./Context.js";
+import Context from "./Context.js";
 
 const useUrl = () => {
-  const ctx = useContext(RouterContext);
+  const ctx = useContext(Context);
   if (!ctx) throw new Error(`Hooks should be used as children of <Router>`);
   return ctx;
 };

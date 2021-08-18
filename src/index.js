@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 import samePath from "./samePath.js";
-import RouterContext from "./Context.js";
+import Context from "./Context.js";
 import { parse, stringify } from "./format.js";
 import { useUrl, usePath, useQuery, useHash } from "./hooks.js";
 
@@ -44,9 +44,7 @@ const Router = ({ children }) => {
     return () => document.removeEventListener("click", handleClick);
   }, []);
   return (
-    <RouterContext.Provider value={[url, setBrowserUrl]}>
-      {children}
-    </RouterContext.Provider>
+    <Context.Provider value={[url, setBrowserUrl]}>{children}</Context.Provider>
   );
 };
 
@@ -68,6 +66,15 @@ const Route = ({ path = "*", exact = true, component, render, children }) => {
   }
 };
 
+const Redirect = ({ path = "*", to }) => {
+  const [url, setUrl] = useUrl();
+  useEffect(() => {
+    const matches = samePath(path, url);
+    if (matches) setUrl(to);
+  }, []);
+  return null;
+};
+
 const Switch = ({ children }) => {
   const [url] = useUrl();
   if (!children) return null;
@@ -80,4 +87,4 @@ const Switch = ({ children }) => {
 };
 
 export default Router;
-export { Route, Switch, useUrl, usePath, useQuery, useHash, RouterContext };
+export { Route, Switch, Redirect, useUrl, usePath, useQuery, useHash, Context };
