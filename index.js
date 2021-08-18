@@ -12,19 +12,18 @@ const Router = ({ children }) => {
       url = parse(url);
     }
     const href = stringify(url);
-    if (opts.mode === "push") {
-      history.pushState({}, null, href);
-    } else if (opts.mode === "replace") {
+    if (!["push", "replace"].includes(opts.mode)) {
+      throw new Error(`Unrecognized mode "${opts.mode}"`);
+    }
+    if (opts.mode === "replace") {
       history.replaceState({}, null, href);
     } else {
-      throw new Error(`Unrecognized mode ${opts.mode}`);
+      history.pushState({}, null, href);
     }
     setUrl(url);
   };
   useEffect(() => {
-    window.onpopstate = e => {
-      setUrl(parse(window.location.href));
-    };
+    window.onpopstate = e => setUrl(parse(window.location.href));
     const handleClick = e => {
       const el = e.target.closest("a");
       if (!el) return;

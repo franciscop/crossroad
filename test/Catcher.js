@@ -3,16 +3,16 @@ import React from "react";
 export default class Catcher extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { error: false };
+    this.state = false;
   }
-  // Update state so the next render will show the fallback UI.
-  static getDerivedStateFromError(error) {
-    return { error };
+
+  componentDidCatch(error, errorInfo) {
+    this.setState(error.message);
   }
+
   render() {
-    if (this.state.error) {
-      // You can render any custom fallback UI
-      return <div>{this.state.error.message}</div>;
+    if (this.state) {
+      return <div>{this.state}</div>;
     }
     return this.props.children;
   }
