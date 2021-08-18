@@ -3,8 +3,7 @@ import $ from "react-test";
 
 import { Mock, RenderUrl } from "../test/index.js";
 
-import Router from "../index.js";
-import { useUrl, usePath, useQuery, useHash } from "../src/hooks.js";
+import Router, { useUrl, usePath, useQuery, useHash } from "./index.js";
 
 $.prototype.json = function(key) {
   return JSON.parse(

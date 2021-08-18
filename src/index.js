@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import samePath from "./src/samePath.js";
-import RouterContext from "./src/Context.js";
-import { parse, stringify } from "./src/format.js";
-import { useUrl, usePath, useQuery, useHash } from "./src/hooks.js";
+import samePath from "./samePath.js";
+import RouterContext from "./Context.js";
+import { parse, stringify } from "./format.js";
+import { useUrl, usePath, useQuery, useHash } from "./hooks.js";
 
 const Router = ({ children }) => {
   const [url, setUrl] = useState(parse(window.location.href));

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import $ from "react-test";
 
 import { Catcher, Mock } from "../test/index.js";
-import Router, { Route, Switch, useUrl } from "../index.js";
+import Router, { Route, Switch, useUrl } from "./index.js";
 
 const Home = () => (
   <div>

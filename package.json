@@ -10,8 +10,9 @@
   },
   "author": "Francisco Presencia <public@francisco.io> (https://francisco.io/)",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "build": "webpack -c",
+    "build": "rollup -c",
     "size": "echo $(gzip -c index.min.js | wc -c) bytes",
     "start": "jest --watch",
     "test": "jest --coverage"
@@ -28,27 +29,39 @@
   "main": "index.min.js",
   "files": [],
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.6",
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-react": "^7.14.5",
+    "babel-loader": "^8.2.2",
     "babel-polyfill": "^6.26.0",
+    "core-js": "^3.16.2",
     "jest": "^25.3.0",
-    "react": "^16.8.0 || 17.0.0",
-    "react-dom": "^16.8.0 || 17.0.0",
+    "react": "^16.8.0 || ^17.0.0",
     "react-test": "^0.9.1",
-    "webpack": "^4.25.0",
-    "webpack-cli": "^3.1.2"
+    "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-jsx": "^1.0.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.2.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || 17.0.0",
-    "react-dom": "^16.8.0 || 17.0.0"
+    "react": "^16.8.0 || ^17.0.0"
   },
   "babel": {
     "presets": [
-      "@babel/preset-env",
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "node": 12
+          },
+          "useBuiltIns": "usage",
+          "corejs": 3
+        }
+      ],
       "@babel/preset-react"
-    ],
-    "plugins": []
+    ]
   }
 }
