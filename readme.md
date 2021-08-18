@@ -30,7 +30,7 @@ export default function App() {
 
 ## Getting Started
 
-Create a React project (e.g. `npx create-react-app demo`) and install Crossroad:
+Create a React project (`npx create-react-app demo`) and install Crossroad:
 
 ```js
 npm i crossroad
@@ -222,6 +222,21 @@ It can also match query parameters:
 <Route path="/profile?page2" component={User} />  // Wrong key
 <Route path="/profile?page=options" component={User} />  // Wrong value
 ```
+
+### `<Redirect />`
+
+Go to the given url when this component is rendered. It should be used with a `Switch`:
+
+```js
+<Switch>
+  <Route ... />
+  <Route ... />
+  ...
+  <Redirect to="/" />
+</Switch>
+```
+
+This way, when nothing else is matched in the Switch, then the redirect will be triggered and go to the homepage (`/`) or any other url we want.
 
 ### `<a>`
 
