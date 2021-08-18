@@ -5,7 +5,7 @@ A routing library for React with a familiar interface. It has [some differences]
 - The links are plain `<a>` instead of custom components. [Read more](#a).
 - There are useful hooks like [`useUrl`](#useurl), [`useQuery`](#usequery), etc.
 - The `<Route>` path is `exact` by default and can match query parameters.
-- It's [just 1.7kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
+- It's [just ~1.5kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
 
 [**🔗 Demo on CodeSandbox**](https://codesandbox.io/s/recursing-wozniak-uftyo?file=/src/App.js)
 
