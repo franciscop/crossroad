@@ -465,7 +465,7 @@ const params = useParams("/users/:id");
 
 ### Static routes
 
-Let's go first with a traditional company website, where you have the homepage, some specific pages for more info and then some PDFs:
+Let's see a traditional company website, where you have a homepage, some specific pages and then some PDFs:
 
 [**Codesandbox example**](https://codesandbox.io/s/loving-joana-jikne)
 
