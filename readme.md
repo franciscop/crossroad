@@ -469,7 +469,7 @@ Let's go first with a traditional company website, where you have the homepage, 
 
 [**Codesandbox example**](https://codesandbox.io/s/loving-joana-jikne)
 
-https://user-images.githubusercontent.com/2801252/131257732-0982015d-06a0-4240-9e8c-22a11d54b0c7.mp4
+https://user-images.githubusercontent.com/2801252/131257834-bfd9b6c6-f22e-46f2-9d06-8c14ac7f2708.mp4
 
 ```js
 // App.js
