@@ -465,6 +465,55 @@ const params = useParams("/users/:id");
 
 ### Static routes
 
+Let's go first with a traditional company website, where you have the homepage, some specific pages for more info and then some PDFs:
+
+[**Codesandbox example**](https://codesandbox.io/s/loving-joana-jikne)
+
+./assets/static-routes.mp4
+
+```js
+// App.js
+import Router, { Switch, Route, Redirect } from "crossroad";
+
+import Nav from "./Nav";
+import Pages from "./Pages";
+
+export default function App() {
+  return (
+    <Router>
+      <Nav />
+      <Switch>
+        <Route path="/" component={Pages.Home} />
+        <Route path="/about" component={Pages.AboutUs} />
+        <Route path="/product1" component={Pages.MainProduct} />
+        <Route path="/product2" component={Pages.AnotherProduct} />
+        <Redirect to="/" />
+      </Switch>
+    </Router>
+  );
+}
+```
+
+Now that we have our routing, and for simplicity sake, let's say all of our navigation links are inside a `<nav>`:
+
+```js
+export default function Nav() {
+  return (
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About Us</a>
+      <a href="/product1">Product 1</a>
+      <a href="/product2">Product 2</a>
+      <a href="/license.pdf" target="_blank">
+        License
+      </a>
+    </nav>
+  );
+}
+```
+
+That's it, in the [Codesandbox](https://codesandbox.io/s/loving-joana-jikne) we added some filler for the pages, but that's the basic structure of how to make it work.
+
 ### Vanity URLs
 
 ### Search page
@@ -476,6 +525,8 @@ const params = useParams("/users/:id");
 ### Github hosting
 
 > NOTE: this is a bad idea for SEO, but if that doesn't matter much for you...
+
+### Testing routes
 
 ## React Router diff
 
