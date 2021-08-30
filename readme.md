@@ -532,6 +532,31 @@ That's it, in the [Codesandbox](https://codesandbox.io/s/loving-joana-jikne) we 
 
 This part of the documentation tries to explain in detail the differences between Crossroad and React Router (Dom). Crossroad goal is to build a modern Router API from scratch, removing the legacy code and using Hooks natively.
 
+### Intuitive API
+
+I've been using React Router for 3-4 years and I _still_ get wrong how to properly import it and have to try 2-3 combinations or reading the docs! I prefer to use intuitive tools that I can learn and get out of the way.
+
+So this is a clear win, with Crossroad you import it like this:
+
+```js
+import Router, { Switch, Route, ... } from 'crossroad';
+```
+
+While with React Router, guess the correct one:
+
+```js
+import { Switch, Route, ... } from 'react-router';
+import Router from 'react-router-dom';
+
+
+import Router, { Switch, Route, ... } from 'react-router-dom';
+
+import { Switch, Route, ... } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
+```
+
+> Tip: none of them are correct!
+
 ### Remove imperative API
 
 With React Router your component receives the props `history`. This is no longer needed with Crossroad; instead of handling the history details, we provide a hook `useUrl()` with the setter `setUrl()` where you can set the new URL straight away:
@@ -549,7 +574,7 @@ export default function LoginButton() {
 }
 ```
 
-The other hooks, like `useQuery()`, behave in a similar way so you don't need to be concerned about the history API.
+The other hooks, like [`useQuery()`](usequery), behave in a similar way so you don't need to be concerned about the history API at all.
 
 ### Useful Hooks
 
@@ -612,3 +637,10 @@ The same in React Router are like this, note the inconsistencies of some times u
 <a href="https://example.com/" target="_blank">Hello</Link>
 <Link to="https://example.com/">Hello</Link>  // Broken
 ```
+
+## TODO
+
+This library is pretty much complete, but as always help with the documentation and test would be greatly appreciated. In particular:
+
+- There are some skipped tests because they are logging to the console and I haven't found a way to avoid that, see `src/index.test.js` and search for "skip".
+- More examples would be amazing.

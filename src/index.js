@@ -75,15 +75,18 @@ const Redirect = ({ path = "*", to }) => {
   return null;
 };
 
+const toArray = children => {
+  if (!children) return [];
+  return Array.isArray(children) ? [...children] : [children];
+};
+
+// Same as with React-Router Switch  (https://github.com/remix-run/react-router/blob/main/packages/react-router/modules/Switch.js#L23-L26),
+// we cannot use React.Children.toArray().find() because with that, a key is
+// added so it remounts every time (even with the same component)
 const Switch = ({ children }) => {
   const [url] = useUrl();
-  if (!children) return null;
-  if (!Array.isArray(children)) children = [children];
-  const bad = [...children].find(({ props }) => !props.path && !props.to);
-  if (bad) {
-    throw new Error(`<Switch> only accepts <Route> or <Redirect> as children`);
-  }
-  return children.find(({ props }) => samePath(props.path || "*", url));
+  const findMatch = child => samePath(child.props.path || "*", url);
+  return toArray(children).find(findMatch) || null;
 };
 
 export default Router;

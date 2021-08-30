@@ -139,51 +139,6 @@ describe("<Switch>", () => {
     expect($home.text()).toBe("Home");
   });
 
-  it.skip("only accepts routes", () => {
-    const error = console.error;
-    console.error = () => {};
-
-    const $home = $(
-      <Catcher>
-        <Mock path="/user/abc">
-          <Router>
-            <Switch>
-              <div>Hello</div>
-            </Switch>
-          </Router>
-        </Mock>
-      </Catcher>
-    );
-    console.error = error;
-
-    expect($home.text()).toContain(
-      "<Switch> only accepts <Route> or <Redirect> as children"
-    );
-  });
-
-  it.skip("only accepts routes, even when mixed", () => {
-    const error = console.error;
-    console.error = () => {};
-
-    const $home = $(
-      <Catcher>
-        <Mock path="/user/abc">
-          <Router>
-            <Switch>
-              <Route path="/" component={Home} />
-              <div>Hello</div>
-            </Switch>
-          </Router>
-        </Mock>
-      </Catcher>
-    );
-    console.error = error;
-
-    expect($home.text()).toContain(
-      "<Switch> only accepts <Route> or <Redirect> as children"
-    );
-  });
-
   it.skip("needs one of the three props", () => {
     const error = console.error;
     console.error = () => {};
@@ -204,5 +159,49 @@ describe("<Switch>", () => {
     expect($home.text()).toContain(
       "Route needs the prop `component`, `render` or `children`"
     );
+  });
+
+  // According to this React Router comment:
+  // https://github.com/remix-run/react-router/blob/main/packages/react-router/modules/Switch.js#L23-L26
+  // The Switch might trigger a remount, which we ofc want to avoid. This test
+  // is to make sure there's never a remount
+  it("does not trigger a remount", async () => {
+    let rendered = 0;
+    let mounted = 0;
+    const Test = () => {
+      const [url] = useUrl();
+      useEffect(() => {
+        mounted++;
+      }, []);
+      rendered++;
+      return "Hello";
+    };
+
+    const App = () => (
+      <Catcher>
+        <Mock path="/">
+          <Router>
+            <nav>
+              <a href="/">Home</a>
+              <a href="/about">About</a>
+            </nav>
+            <Switch>
+              <Route path="/" component={Test} />
+              <Route path="/about" component={Test} />
+            </Switch>
+          </Router>
+        </Mock>
+      </Catcher>
+    );
+
+    const $app = $(<App />);
+    expect(mounted).toBe(1);
+    expect(rendered).toBe(1);
+    await $app.find("a:nth-child(2)").click();
+    expect(mounted).toBe(1);
+    expect(rendered).toBe(2);
+    await $app.find("a:nth-child(1)").click();
+    expect(mounted).toBe(1);
+    expect(rendered).toBe(3);
   });
 });

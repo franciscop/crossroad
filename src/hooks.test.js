@@ -248,6 +248,16 @@ describe("useQuery", () => {
     await $user.find("button").click();
     expect($user.json("query")).toEqual({ hello: "xxx", a: "b" });
   });
+
+  it("decodes the parameters", async () => {
+    const $user = withPath("/?say=a+b%20c%2Bd%26e%2525", () => {
+      const [query, setQuery] = useQuery("hello");
+      const onClick = e => setQuery("xxx");
+      return <RenderUrl onClick={onClick} />;
+    });
+
+    expect($user.json("query")).toEqual({ say: "a b c+d&e%25" });
+  });
 });
 
 describe("useHash", () => {
