@@ -1,8 +1,9 @@
 {
+  "home": "assets/home.html",
   "menu": {
-    "Author": "https://francisco.io/",
+    "Documentation": "/documentation",
     "Donate": "https://www.paypal.me/franciscopresencia/19",
-    "npm": "https://www.npmjs.com/package/crossroad",
+    "Author": "https://francisco.io/",
     "Github": "https://github.com/franciscop/crossroad"
   }
 }

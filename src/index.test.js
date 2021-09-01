@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import $ from "react-test";
 
-import { Catcher, Mock } from "../test/index.js";
-import Router, { Route, Switch, Redirect, useUrl } from "./index.js";
+import { Mock } from "../test/index.js";
+import Router, { Route, Switch, useUrl } from "./index.js";
 
 const Home = () => <div>Home</div>;
 const User = ({ id }) => <div>User{id ? " " + id : null}</div>;
 const Other = () => <div>Other</div>;
+
+const delay = time => new Promise(done => setTimeout(done, time));
 
 describe("crossroad", () => {
   it("can render the home", () => {
@@ -90,10 +92,9 @@ describe("crossroad", () => {
     const $home = $(
       <Mock path="/user/abc">
         <Router>
-          <Switch>
+          <Switch redirect="/">
             <Route path="/" component={Home} />
             <Route path="/user/" component={User} />
-            <Redirect to="/" />
           </Switch>
         </Router>
       </Mock>
@@ -101,25 +102,20 @@ describe("crossroad", () => {
     expect($home.text()).toBe("Home");
   });
 
-  it.skip("needs to be wrapped in <Router />", () => {
-    jest.spyOn(console, "warn").mockImplementation(() => {});
+  it("needs to be wrapped in <Router />", () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
     try {
-      const $home = $(
-        <Mock path="/">
-          <Route path="/" component={Home} />
-        </Mock>
-      );
-      console.log("AAA");
-    } catch (error) {
-      console.log("ERROR:", error);
+      expect(() => {
+        $(
+          <Mock path="/">
+            <Route path="/" component={Home} />
+          </Mock>
+        );
+      }).toThrow();
+    } finally {
+      console.error.mockRestore();
     }
-
-    console.warn.mockRestore();
-    console.error.mockRestore();
-
-    // expect($home.text()).toBe("Hooks should be used as children of <Router>");
   });
 });
 
@@ -139,26 +135,72 @@ describe("<Switch>", () => {
     expect($home.text()).toBe("Home");
   });
 
-  it.skip("needs one of the three props", () => {
-    const error = console.error;
-    console.error = () => {};
-
+  it("matches a route without path", () => {
     const $home = $(
-      <Catcher>
-        <Mock path="/">
-          <Router>
-            <Switch>
-              <Route path="/" />
-            </Switch>
-          </Router>
-        </Mock>
-      </Catcher>
+      <Mock path="/fdsgsrf/dfgas">
+        <Router>
+          <Switch>
+            <Route path="/" component={Home} />
+            <Route path="/user/:id" component={User} />
+            <Route component={Other} />
+          </Switch>
+        </Router>
+      </Mock>
     );
-    console.error = error;
+    expect($home.text()).toBe("Other");
+  });
 
-    expect($home.text()).toContain(
-      "Route needs the prop `component`, `render` or `children`"
+  it("does not blow up empty", () => {
+    const $home = $(
+      <Mock path="/user/abc">
+        <Router>
+          <Switch></Switch>
+        </Router>
+      </Mock>
     );
+    expect($home.text()).toBe("");
+  });
+
+  it("needs one of the three props", () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      expect(() => {
+        $(
+          <Mock path="/">
+            <Router>
+              <Switch>
+                <Route path="/" />
+              </Switch>
+            </Router>
+          </Mock>
+        );
+      }).toThrow();
+    } finally {
+      console.error.mockRestore();
+    }
+  });
+
+  it("unmounts without any issue", async () => {
+    const App = () => {
+      const [show, setShow] = useState(true);
+      if (show) {
+        return (
+          <Router>
+            <button onClick={e => setShow(false)}>Hello</button>
+          </Router>
+        );
+      }
+      return <div>Bye</div>;
+    };
+    const $app = $(
+      <div>
+        <App />
+      </div>
+    );
+    expect($app.text()).toBe("Hello");
+    await $app.find("button").click();
+    expect($app.text()).toBe("Bye");
   });
 
   // According to this React Router comment:
@@ -178,20 +220,18 @@ describe("<Switch>", () => {
     };
 
     const App = () => (
-      <Catcher>
-        <Mock path="/">
-          <Router>
-            <nav>
-              <a href="/">Home</a>
-              <a href="/about">About</a>
-            </nav>
-            <Switch>
-              <Route path="/" component={Test} />
-              <Route path="/about" component={Test} />
-            </Switch>
-          </Router>
-        </Mock>
-      </Catcher>
+      <Mock path="/">
+        <Router>
+          <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+          </nav>
+          <Switch>
+            <Route path="/" component={Test} />
+            <Route path="/about" component={Test} />
+          </Switch>
+        </Router>
+      </Mock>
     );
 
     const $app = $(<App />);

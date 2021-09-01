@@ -5,6 +5,23 @@ import Context from "./Context.js";
 import { parse, stringify } from "./format.js";
 import { useUrl, usePath, useQuery, useHash, useParams } from "./hooks.js";
 
+const getHref = el => {
+  if (!el) return null;
+
+  const href = el.getAttribute("href");
+
+  // Links without href should be ignored
+  if (!href) return null;
+
+  // Absolute paths should be ignored
+  if (/^https?:\/\//.test(href)) return null;
+
+  // Open it either on a new or same tab, but always with a hard refresh
+  if (el.getAttribute("target") !== null) return null;
+
+  return href;
+};
+
 const Router = ({ children }) => {
   const [url, setUrl] = useState(parse(window.location.href));
   const setBrowserUrl = (url, opts = { mode: "push" }) => {
@@ -23,25 +40,23 @@ const Router = ({ children }) => {
     setUrl(url);
   };
   useEffect(() => {
-    window.onpopstate = e => setUrl(parse(window.location.href));
+    const handlePop = e => setUrl(parse(window.location.href));
     const handleClick = e => {
-      const el = e.target.closest("a");
-      if (!el) return;
+      // Attempt to find a valid "href", taking into account the exit conditions
+      const href = getHref(e.target.closest("a"));
 
-      const href = el.getAttribute("href");
-      if (!href) return;
-      // Absolute paths should be ignored
-      if (/^https?:\/\//.test(href)) return;
-
-      // Open it either on a new or same tab, but always with a hard refresh
-      if (el.getAttribute("target") !== null) return;
-
-      // Handle it with Crossroad
-      e.preventDefault();
-      setBrowserUrl(href);
+      // If it was found, handle it with Crossroad
+      if (href) {
+        e.preventDefault();
+        setBrowserUrl(href);
+      }
     };
+    window.addEventListener("popstate", handlePop);
     document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("popstate", handlePop);
+      document.removeEventListener("click", handleClick);
+    };
   }, []);
   return (
     <Context.Provider value={[url, setBrowserUrl]}>{children}</Context.Provider>
@@ -66,15 +81,6 @@ const Route = ({ path = "*", exact = true, component, render, children }) => {
   }
 };
 
-const Redirect = ({ path = "*", to }) => {
-  const [url, setUrl] = useUrl();
-  useEffect(() => {
-    const matches = samePath(path, url);
-    if (matches) setUrl(to);
-  }, []);
-  return null;
-};
-
 const toArray = children => {
   if (!children) return [];
   return Array.isArray(children) ? [...children] : [children];
@@ -83,17 +89,20 @@ const toArray = children => {
 // Same as with React-Router Switch  (https://github.com/remix-run/react-router/blob/main/packages/react-router/modules/Switch.js#L23-L26),
 // we cannot use React.Children.toArray().find() because with that, a key is
 // added so it remounts every time (even with the same component)
-const Switch = ({ children }) => {
-  const [url] = useUrl();
+const Switch = ({ redirect, children }) => {
+  const [url, setUrl] = useUrl();
   const findMatch = child => samePath(child.props.path || "*", url);
-  return toArray(children).find(findMatch) || null;
+  const match = toArray(children).find(findMatch) || null;
+  useEffect(() => {
+    if (redirect && !match) setUrl(redirect);
+  }, [redirect, Boolean(match)]);
+  return match;
 };
 
 export default Router;
 export {
   Route,
   Switch,
-  Redirect,
   useUrl,
   usePath,
   useQuery,
