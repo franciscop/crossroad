@@ -11,7 +11,7 @@ A routing library for React with a familiar interface. It has [some differences]
 
 ```js
 // App.js
-import Router, { Switch, Route, Redirect } from "crossroad";
+import Router, { Switch, Route } from "crossroad";
 
 export default function App() {
   return (
@@ -21,11 +21,10 @@ export default function App() {
         <a href="/users">Users</a>
         ...
       </nav>
-      <Switch>
+      <Switch redirect="/">
         <Route path="/" component={Home} />
         <Route path="/users" component={Users} />
         <Route path="/users/:id" component={Profile} />
-        <Redirect to="/" />
       </Switch>
     </Router>
   );
@@ -97,7 +96,6 @@ The API is composed of these parts:
 - [`<Router />`](#router): the top-level component that should wrap your whole app.
 - [`<Switch />`](#switch): renders only the first child that matches the current url.
 - [`<Route />`](#route): filters whether the given component should be rendered or not for the current URL.
-- [`<Redirect />`](#redirect): takes the user to a different URL if it's rendered.
 - [`<a />`](#a): a plain HTML link, use it to navigate between pages.
 - [`useUrl()`](#useurl): a hook that returns the current URL and a setter to update it.
 - [`usePath()`](#usepath): a hook that returns the current path and a setter to update it.
@@ -108,7 +106,7 @@ The API is composed of these parts:
 `Router` is the default export, `<a>` is not exported since it's just the plain link element, and everything else are named exports:
 
 ```js
-import Router, { Switch, Route, Redirect, useUrl, usePath } from "crossroad";
+import Router, { Switch, Route, useUrl, usePath } from "crossroad";
 ```
 
 ### `<Router />`
@@ -138,7 +136,17 @@ A component that will only render the first of its children that matches the cur
 </Switch>
 ```
 
-It is also very useful for 404s:
+You might want to redirect the user to a specific route (like `/notfound`) when none of the given routes matches the current URL. You can then use the attribute "redirect":
+
+```js
+<Switch redirect="/notfound">
+  <Route path="/path1" component={Comp1} />
+  <Route path="/path2" component={Comp2} />
+  <Route component={NotFound} />
+</Switch>
+```
+
+Or to keep it in the current route, whatever it is, you can render a component with no path (no path === `*`):
 
 ```js
 <Switch>
@@ -148,7 +156,7 @@ It is also very useful for 404s:
 </Switch>
 ```
 
-The `<Switch>` component only accepts `<Route>` or `<Redirect>` as its children.
+The `<Switch>` component only accepts `<Route>` as its children.
 
 ### `<Route />`
 
@@ -203,6 +211,7 @@ The path can also include a wildcard `*`, in which case it will perform a partia
 // In https://example.com/user/abc
 
 // All of these match the current route
+<Route path="*" component={User} />
 <Route path="/*" component={User} />
 <Route path="/user/*" component={User} />
 <Route path="/user/abc/*" component={User} />
@@ -229,21 +238,6 @@ It can also match query parameters:
 <Route path="/profile?page2" component={User} />  // Wrong key
 <Route path="/profile?page=options" component={User} />  // Wrong value
 ```
-
-### `<Redirect />`
-
-Go to the given url when this component is rendered. It should be used with a `Switch`:
-
-```js
-<Switch>
-  <Route ... />
-  <Route ... />
-  ...
-  <Redirect to="/" />
-</Switch>
-```
-
-This way, when nothing else is matched in the Switch, then the redirect will be triggered and go to the homepage (`/`) or any other url we want.
 
 ### `<a>`
 
@@ -473,7 +467,7 @@ https://user-images.githubusercontent.com/2801252/131257834-bfd9b6c6-f22e-46f2-9
 
 ```js
 // App.js
-import Router, { Switch, Route, Redirect } from "crossroad";
+import Router, { Switch, Route } from "crossroad";
 
 import Nav from "./Nav";
 import Pages from "./Pages";
@@ -482,12 +476,11 @@ export default function App() {
   return (
     <Router>
       <Nav />
-      <Switch>
+      <Switch redirect="/">
         <Route path="/" component={Pages.Home} />
         <Route path="/about" component={Pages.AboutUs} />
         <Route path="/product1" component={Pages.MainProduct} />
         <Route path="/product2" component={Pages.AnotherProduct} />
-        <Redirect to="/" />
       </Switch>
     </Router>
   );
@@ -583,6 +576,7 @@ I've seen in multiple codebases people end up creating a `useQuery()` hook wrapp
 ```js
 // setUrl() is quite flexible:
 const [url, setUrl] = useUrl();
+
 setUrl("/#firsttime"); // [Shorthand] Redirect to home with a hashtag
 setUrl({ path: "/", hash: "firsttime" }); // Same as above
 setUrl({ ...url, path: "/" }); // Keep everything the same except the path
