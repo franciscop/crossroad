@@ -16,17 +16,17 @@
     </div>
   </div>
   <div style="width: 630px;max-width:100%">
-    <pre><code class="language-js"><script type="text/plain">import Router, { Switch, Route } from "crossroad";
+    <pre><code class="language-js">import Router, { Switch, Route } from &#x22;crossroad&#x22;;
 
-export default () => (
-  <Router>
-    <Switch redirect="/">
-      <Route path="/" component={Home} />
-      <Route path="/users" component={Users} />
-      <Route path="/users/:id" component={Profile} />
-    </Switch>
-  </Router>
-);</script></code></pre>
+export default () =&#x3E; (
+  &#x3C;Router&#x3E;
+    &#x3C;Switch redirect=&#x22;/&#x22;&#x3E;
+      &#x3C;Route path=&#x22;/&#x22; component={Home} /&#x3E;
+      &#x3C;Route path=&#x22;/users&#x22; component={Users} /&#x3E;
+      &#x3C;Route path=&#x22;/users/:id&#x22; component={Profile} /&#x3E;
+    &#x3C;/Switch&#x3E;
+  &#x3C;/Router&#x3E;
+);</code></pre>
   </div>
 </section>
 
@@ -203,5 +203,34 @@ export default () => (
       </header>
       <p>Try it once and you won't need to read the docs again</p>
     </div>
+  </div>
+</section>
+
+<br />
+
+<section class="hero flex one two-900 center">
+  <div>
+    <h2>Example: Static routes</h2>
+    <p>
+      Let's see a traditional company website, where you have a homepage, some
+      specific pages and a PDF:
+    </p>
+    <div class="buttons">
+      <a
+        class="button"
+        href="https://codesandbox.io/s/loving-joana-jikne"
+        target="_blank"
+        >Live demo</a
+      >
+      <a class="pseudo button" href="/documentation#static-routes"
+        >Code & docs</a
+      >
+    </div>
+  </div>
+  <div>
+    <video
+      controls
+      src="https://user-images.githubusercontent.com/2801252/131257834-bfd9b6c6-f22e-46f2-9d06-8c14ac7f2708.mp4"
+    ></video>
   </div>
 </section>
