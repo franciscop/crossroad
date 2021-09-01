@@ -1,11 +1,13 @@
 {
   "name": "crossroad",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "A React library to handle navigation in your webapp. Built with simple components and React Hooks.",
   "homepage": "https://crossroad.page/",
   "repository": "https://github.com/franciscop/crossroad.git",
   "bugs": "https://github.com/franciscop/crossroad/issues",
-  "funding": "https://www.paypal.me/franciscopresencia/19",
+  "funding": {
+    "url": "https://www.paypal.me/franciscopresencia/19"
+  },
   "author": "Francisco Presencia <public@francisco.io> (https://francisco.io/)",
   "license": "MIT",
   "type": "module",
