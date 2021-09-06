@@ -418,6 +418,14 @@ By default `setQuery()` will create a new entry in the browser history. If you w
 setQuery({ search: "abc" }, { mode: "replace" });
 ```
 
+When you set a search query to `null` or `false`, it will be removed from the URL. However, empty strings are not removed. So if you want empty strings to also remove the parameter in the URL, please do this:
+
+```js
+const [myname, setMyname] = useQuery("myname");
+// ...
+setWord(newName || null);
+```
+
 ### `useHash()`
 
 Read and set only the hash part of the URL:
@@ -509,7 +517,74 @@ That's it, in the [Codesandbox](https://codesandbox.io/s/loving-joana-jikne) we 
 
 ### Vanity URLs
 
+These refer to the websites where your username is straight after the domain, like Twitter (https://twitter.com/fpresencia). Of course Twitter has _other_ pages besides the username, so how can we emulate loading the page e.g. `/explore` in this case?
+
+The best way is to first define the known, company pages and then use the wildcard for the usernames:
+
+```js
+<Switch>
+  <!-- Company pages -->
+  <Route path="/" component={Home} />
+  <Route path="/home" component={Home} />
+  <Route path="/explore" component={Explore} />
+
+  <!-- Username page -->
+  <Route path="/:username" component={Profile} />
+</Switch>
+```
+
+This way we can handle the username inside Profile, and the other company-specific pages will load as expected. To work with the parameter, you can either use the props passed form the component or with the hook [useParams()](#useparams):
+
+```js
+// The parameters are passed straight to the component:
+function Profile({ username }) {
+  return <div>Hello {username}</div>;
+}
+
+// or
+
+// Use a hook to access the parameters:
+function Profile() {
+  const { username } = useParams("/:username");
+  //
+  return <div>Hello {username}</div>;
+}
+
+// or
+
+// The path is defined as `/:username` already in <Route>, we can reuse that:
+function Profile() {
+  const { username } = useParams();
+  //
+  return <div>Hello {username}</div>;
+}
+```
+
+In the end of the day we recommend picking one style and following it. For simple applications we recommend the first one, where you receive the parameters straight in the props. For more complex applications, including those with deep nesting, we recommend the hook with the named parameter (explicit is more clear than implicit).
+
 ### Search page
+
+There are many ways to store the state to be able to visit later; localStorage, through API calls to the backend, cookies, etc. One place that people don't think often is the URL itself. Thanks to `useQuery()`, it's trivial to use the search query for storing variables. Let's say you are looking for rental properties in a specific location, with a maximum price:
+
+[**Codesandbox demo**](https://codesandbox.io/s/festive-murdock-1ctv6?file=/src/SearchForm.js)
+
+```js
+import { useQuery } from "crossroad";
+
+export default function SearchForm() {
+  const [place, setPlace] = useQuery("place");
+  const [max, setMax] = useQuery("max");
+
+  return (
+    <form>
+      <TextInput value={place} onChange={setPlace} ... />
+      <NumberInput value={max} onChange={setMax} ... />
+    </form>
+  );
+}
+```
+
+In here we can see that we are treating the output of `useQuery` in the sam way that we'd treat the output of `useState()`. This is on purpose and it makes things a lot easier for your application to work.
 
 ### Query routing
 

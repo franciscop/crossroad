@@ -32,10 +32,17 @@ const useHash = () => {
 };
 
 const useParams = ref => {
+  const ctx = useContext(Context);
   const [path] = usePath();
-  const params = {};
-  samePath(ref, path, params);
-  return params;
+
+  // If there's no string, pass the last used one
+  if (!ref) {
+    return ctx[0].params;
+  } else {
+    const params = {};
+    samePath(ref, path, params);
+    return params;
+  }
 };
 
 export { useUrl, usePath, useQuery, useHash, useParams };

@@ -18,7 +18,10 @@ const stringify = ({ path, query, hash } = {}) => {
   if (query && Object.keys(query).length) {
     str += "?";
     str += Object.entries(query)
-      .map(([k, v]) => k + "=" + encodeURIComponent(v))
+      // Remove it for null & false
+      .filter(([k, value]) => value || value === "")
+      // Make sure they are properly encoded
+      .map(([key, value]) => key + "=" + encodeURIComponent(value))
       .join("&");
   }
   if (hash) {

@@ -64,18 +64,30 @@ const Router = ({ children }) => {
 };
 
 const Route = ({ path = "*", exact = true, component, render, children }) => {
+  const ctx = useContext(Context);
   const [url, setUrl] = useUrl();
   const params = {};
   const matches = samePath(path, url, params);
   if (!matches) return null;
 
+  const childrenContext = [{ ...ctx[0], params }, ctx[1]];
   if (component) {
     const Comp = component;
-    return <Comp {...params} />;
+    return (
+      <Context.Provider value={childrenContext}>
+        <Comp {...params} />
+      </Context.Provider>
+    );
   } else if (render) {
-    return render(params);
+    return (
+      <Context.Provider value={childrenContext}>
+        {render(params)}
+      </Context.Provider>
+    );
   } else if (children) {
-    return children;
+    return (
+      <Context.Provider value={childrenContext}>{children}</Context.Provider>
+    );
   } else {
     throw new Error("Route needs the prop `component`, `render` or `children`");
   }

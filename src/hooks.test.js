@@ -4,6 +4,7 @@ import $ from "react-test";
 import { Mock, RenderUrl } from "../test/index.js";
 
 import Router, {
+  Route,
   useUrl,
   usePath,
   useQuery,
@@ -152,6 +153,63 @@ describe("useParams", () => {
       return <div>{JSON.stringify(params)}</div>;
     });
     expect(JSON.parse($user.text())).toEqual({});
+  });
+
+  it("will inherit params from the Route", async () => {
+    const Comp = () => {
+      const params = useParams();
+      return <div>{JSON.stringify(params)}</div>;
+    };
+    const $user = $(
+      <Mock path="/user/2">
+        <Router>
+          <Route path="/user/:id">
+            <Comp />
+          </Route>
+        </Router>
+      </Mock>
+    );
+    expect(JSON.parse($user.text())).toEqual({ id: "2" });
+  });
+
+  it("overwrites params if a string is given", async () => {
+    const Comp = () => {
+      const params = useParams("/:username");
+      return <div>{JSON.stringify(params)}</div>;
+    };
+    const $user = $(
+      <Mock path="/2">
+        <Router>
+          <Route path="/:id">
+            <Comp />
+          </Route>
+        </Router>
+      </Mock>
+    );
+    expect(JSON.parse($user.text())).toEqual({ username: "2" });
+  });
+
+  it("keeps independent branches", async () => {
+    const Comp = () => {
+      const params = useParams();
+      return <div>{JSON.stringify(params)}</div>;
+    };
+    const $user = $(
+      <Mock path="/2">
+        <Router>
+          <Route path="/:id">
+            <Comp />
+          </Route>
+          <Route path="/:username">
+            <Comp />
+          </Route>
+          <Route path="/*">
+            <Comp />
+          </Route>
+        </Router>
+      </Mock>
+    );
+    expect($user.text()).toBe(`{"id":"2"}{"username":"2"}{}`);
   });
 });
 
