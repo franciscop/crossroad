@@ -45,14 +45,10 @@ export default () =&#x3E; (
           stroke="currentColor"
           stroke-width="2"
           stroke-linecap="round"
-          stroke-linejoin="round"
-          class="feather feather-coffee"
         >
-          <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
-          <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
-          <line x1="6" y1="1" x2="6" y2="4"></line>
-          <line x1="10" y1="1" x2="10" y2="4"></line>
-          <line x1="14" y1="1" x2="14" y2="4"></line>
+          <path
+            d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"
+          />
         </svg>
         <h3>Familiar</h3>
       </header>
@@ -75,6 +71,7 @@ export default () =&#x3E; (
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
+          class="feather feather-file-text"
         >
           <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
           <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
@@ -152,14 +149,15 @@ export default () =&#x3E; (
     <div class="feature">
       <header>
         <svg
-          width="24px"
-          height="24px"
+          width="300"
+          height="300"
           xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
           viewBox="0 0 300 300"
-          stroke="currentColor"
         >
           <path
-            d="M187.1 205.1h25v3.8c0 27.3-22.2 49.4-49.4 49.4s-49.4-22.2-49.4-49.5l-.5-122a38.16 38.16 0 0026.5-36.2c0-21-17.1-38.1-38.1-38.1S63.1 29.6 63.1 50.6c0 17 11.2 31.4 26.6 36.3l.5 121.9c0 39.9 32.5 72.4 72.4 72.4 39.9 0 72.4-32.5 72.4-72.4V120l-47.9 85.1zM101 35.6c8.3 0 15.1 6.8 15.1 15.1s-6.8 15.1-15.1 15.1S86 59 86 50.7s6.7-15.1 15-15.1z"
+            id="svg_1"
+            d="m187.1,205.1l25,0l0,3.8c0,27.3 -22.2,49.4 -49.4,49.4s-49.4,-22.2 -49.4,-49.5l-0.5,-122c15.3,-4.9 26.5,-19.3 26.5,-36.2c0,-21 -17.1,-38.1 -38.1,-38.1c-21,0 -38.1,17.1 -38.1,38.1c0,17 11.2,31.4 26.6,36.3l0.5,121.9c0,39.9 32.5,72.4 72.4,72.4c39.9,0 72.4,-32.5 72.4,-72.4l0,-3.8l0,-42.5l0,-42.5l-47.9,85.1zm-86.1,-169.5c8.3,0 15.1,6.8 15.1,15.1s-6.8,15.1 -15.1,15.1s-15,-6.8 -15,-15.1s6.7,-15.1 15,-15.1z"
           />
         </svg>
         <h3>React Hooks</h3>
@@ -212,17 +210,47 @@ export default () =&#x3E; (
         class="button"
         href="https://codesandbox.io/s/loving-joana-jikne"
         target="_blank"
-        >Live demo</a
       >
-      <a class="pseudo button" href="/documentation#static-routes"
-        >Code & docs</a
-      >
+        Codesandbox
+      </a>
+      <a class="pseudo button" href="/documentation#static-routes">
+        Code & docs
+      </a>
     </div>
   </div>
   <div>
     <video
       controls
       src="https://user-images.githubusercontent.com/2801252/131257834-bfd9b6c6-f22e-46f2-9d06-8c14ac7f2708.mp4"
+    ></video>
+  </div>
+</section>
+
+<br />
+
+<section class="hero flex one two-900 center">
+  <div>
+    <h2>Example: Search Query</h2>
+    <p>
+      You can use the search query parameters as the source of state,
+      effectively replacing <code>useState('default')</code> with
+      <code>useQuery('key')</code>, which makes it resistant to reload:
+    </p>
+    <div class="buttons">
+      <a
+        class="button"
+        href="https://codesandbox.io/s/festive-murdock-1ctv6?file=/src/SearchForm.js"
+        target="_blank"
+      >
+        Codesandbox
+      </a>
+      <a class="pseudo button" href="/documentation#search-page">Code & docs</a>
+    </div>
+  </div>
+  <div>
+    <video
+      controls
+      src="https://user-images.githubusercontent.com/2801252/132189338-e09aa220-b773-43ed-803b-fa6c7449bf44.mp4"
     ></video>
   </div>
 </section>
