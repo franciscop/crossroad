@@ -568,6 +568,8 @@ There are many ways to store the state to be able to visit later; localStorage, 
 
 [**Codesandbox demo**](https://codesandbox.io/s/festive-murdock-1ctv6?file=/src/SearchForm.js)
 
+https://user-images.githubusercontent.com/2801252/132189338-e09aa220-b773-43ed-803b-fa6c7449bf44.mp4
+
 ```js
 import { useQuery } from "crossroad";
 
