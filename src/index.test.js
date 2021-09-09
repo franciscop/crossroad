@@ -52,16 +52,16 @@ describe("crossroad", () => {
     ).toHaveText("Home");
   });
 
-  it("can render a different path", () => {
+  it("can overload the home", () => {
     const $home = $(
       <Mock path="/user">
-        <Router>
+        <Router url="/">
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
         </Router>
       </Mock>
     );
-    expect($home.text()).toBe("User");
+    expect($home.text()).toBe("Home");
   });
 
   it("can deal with partial matches", () => {

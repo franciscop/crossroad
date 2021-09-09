@@ -22,8 +22,9 @@ const getHref = el => {
   return href;
 };
 
-const Router = ({ children }) => {
-  const [url, setUrl] = useState(parse(window.location.href));
+const Router = ({ url: baseUrl, children }) => {
+  const init = typeof window === "undefined" ? "/" : window.location.href;
+  const [url, setUrl] = useState(parse(baseUrl || init));
   const setBrowserUrl = (url, opts = { mode: "push" }) => {
     if (typeof url === "string") {
       url = parse(url);
@@ -40,6 +41,7 @@ const Router = ({ children }) => {
     setUrl(url);
   };
   useEffect(() => {
+    // onPop is only triggered if window is defined, so this is fine:
     const handlePop = e => setUrl(parse(window.location.href));
     const handleClick = e => {
       // Attempt to find a valid "href", taking into account the exit conditions
@@ -51,11 +53,19 @@ const Router = ({ children }) => {
         setBrowserUrl(href);
       }
     };
-    window.addEventListener("popstate", handlePop);
-    document.addEventListener("click", handleClick);
+    if (typeof window !== "undefined") {
+      window.addEventListener("popstate", handlePop);
+    }
+    if (typeof document !== "undefined") {
+      document.addEventListener("click", handleClick);
+    }
     return () => {
-      window.removeEventListener("popstate", handlePop);
-      document.removeEventListener("click", handleClick);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("popstate", handlePop);
+      }
+      if (typeof document !== "undefined") {
+        document.removeEventListener("click", handleClick);
+      }
     };
   }, []);
   return (

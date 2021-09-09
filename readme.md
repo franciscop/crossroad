@@ -564,7 +564,9 @@ In the end of the day we recommend picking one style and following it. For simpl
 
 ### Search page
 
-There are many ways to store the state to be able to visit later; localStorage, through API calls to the backend, cookies, etc. One place that people don't think often is the URL itself. Thanks to `useQuery()`, it's trivial to use the search query for storing variables. Let's say you are looking for rental properties in a specific location, with a maximum price:
+There are many ways to store the state to be able to visit later; localStorage, through API calls to the backend, cookies, etc. One place that people don't think often is the URL itself.
+
+Thanks to `useQuery()`, it's trivial to use the search query for storing variables. Let's say you are looking for trips in a specific location, on a budget:
 
 [**Codesandbox demo**](https://codesandbox.io/s/festive-murdock-1ctv6?file=/src/SearchForm.js)
 

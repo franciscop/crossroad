@@ -1,7 +1,7 @@
 const parse = base => {
   if (typeof base !== "string") return base;
   const url = {};
-  const MyUrl = new URL(base, "https://example.com/");
+  const MyUrl = new URL(base, "http://localhost:3000/");
   url.path = MyUrl.pathname.replace(/\/$/, "") || "/"; // It shouldn't end with /
   if (MyUrl.hash) {
     url.hash = MyUrl.hash?.replace(/^#/, "");
