@@ -15,7 +15,7 @@ const Other = () => <div>Other</div>;
 describe("<a> links", () => {
   it("can use normal links", async () => {
     const $home = $(
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
@@ -34,7 +34,7 @@ describe("<a> links", () => {
       </div>
     );
     const $home = $(
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
@@ -53,7 +53,7 @@ describe("<a> links", () => {
       </div>
     );
     const $home = $(
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
@@ -75,7 +75,7 @@ describe("<a> links", () => {
       </div>
     );
     const $home = $(
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />

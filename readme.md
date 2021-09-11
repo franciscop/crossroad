@@ -146,6 +146,15 @@ You might want to redirect the user to a specific route (like `/notfound`) when 
 </Switch>
 ```
 
+The redirect parameter can be a plain string, an url-like object or a callback that returns any of the previous:
+
+```js
+<Switch redirect="/gohere?hello=world"></Switch>
+<Switch redirect={{ path: "/gohere", query: { hello: "world" } }}></Switch>
+<Switch redirect={() => "/gohere"}></Switch>
+<Switch redirect={url => ({ ...url, path: "/gohere" })}></Switch>
+```
+
 Or to keep it in the current route, whatever it is, you can render a component with no path (no path === `*`):
 
 ```js
@@ -619,11 +628,220 @@ You can also use this for subpages, say if you were in a Dashboard:
 
 ### Not found
 
+We have already seen in different examples how to do simple redirects with a single `<Switch redirect="">`, so now let's create a page for whenever the switch is not found:
+
+```js
+<Switch>
+  <Route path="/" component={Home} />
+  <Route path="/users" component={Users} />
+
+  {/* Not found page */}
+  <Route component={NotFound} />
+</Switch>
+```
+
+This page will maintain the url in the browser, but render the NotFound component. Notice how we didn't write any `path=""`, omitting the `path` is the same as writing it as `path="*"`, which will catch everything.
+
+So the way this Switch works here, it will try to match the URL against `"/"`, then against `"/users"`, and if it's none of those it'll match it against `"*"` (since that's always a match) and render the NotFound component.
+
+We can also have different not found pages. Let's say we have a specific "documentation page not found" with helpful documentation links and a general one for the rest of the website, we can manage them this way then:
+
+```js
+<Switch>
+  <Route path="/" component={Home} />
+  <Route path="/docs/abc" component={DocsAbc} />
+  <Route path="/docs/def" component={DocsDef} />
+
+  {/* Not found page only for the docs */}
+  <Route path="/docs/*" component={NotFoundDocs} />
+
+  {/* Not found page only for everything else */}
+  <Route component={NotFound} />
+</Switch>
+```
+
+In this case the order matters, because the generic NotFound will be matched with any route (since it's `"*"`), so we need to match first the docs that is not found and then, even if that fails (e.g. on the path `/hello`) we can render the generic NotFound component.
+
 ### Github hosting
 
-> NOTE: this is a bad idea for SEO, but if that doesn't matter much for you...
+> NOTE: this is a bad idea for SEO, but if that doesn't matter much for you go ahead and host your webapp in Github Pages
+
+Github pages is a bit particular in that as of this writing it does not allow for a generic redirect like most other static website servers, so we need to do a workaround with the `notfound.html` page.
+
+This is because any of your visitors landing on `https://example.com/` will see the proper website (since that'll be directed to `docs/index.html`), but when the user lands on other paths like `https://example.com/info` it'll not find `docs/info.html` and thus render `nofound.html`.
+
+So let's save the url and setup a redirect in `404.html`:
+
+```html
+<!-- 404.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <script>
+      const url = JSON.stringify(location.pathname + location.search);
+      localStorage.url = url;
+      location.replace("/");
+    </script>
+  </body>
+</html>
+```
+
+Then in your index.html, or in almost anywhere else, you can overwrite the URL:
+
+```js
+if (localStorage.url) {
+  history.replaceState({}, null, JSON.decode(localStorage.url));
+  delete localStorage.url;
+}
+```
 
 ### Testing routes
+
+When testing a route, we can do it mainly in two different ways. The recommended one in general is that you pass a `url` prop straight into your `<Router>` component, which will force the Router to behave like the browser is in that route.
+
+Let's see first a very simple App example, noting that for this case we are passing the `url` from App to Router:
+
+```js
+// App.js
+import Router, { Switch, Route } from "crossroad";
+
+// Imagine these are your apps and components:
+const Home = () => <div>Home</div>;
+const Users = () => <div>Users</div>;
+const NotFound = () => <div>Website not found</div>;
+
+export default function App({ url }) {
+  return (
+    <Router url={url}>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/users" component={Users} />
+        <Route component={NotFound} />
+      </Switch>
+    </Router>
+  );
+}
+```
+
+Now let's see how to test it. The `url` prop will be undefined in the browser, so it'll use `window.location.href`, so it'll only apply to testing:
+
+```js
+// App.test.js
+import React from "react";
+import $ from "react-test";
+
+import App from "./App";
+
+describe("use the url prop", () => {
+  it("renders the home component on /", () => {
+    const $home = $(<App url="/" />);
+    expect($home.text()).toBe("Home");
+  });
+
+  it("renders the user list on /users", () => {
+    const $home = $(<App url="/users" />);
+    expect($home.text()).toBe("Users");
+  });
+
+  it("renders not found when in another route", () => {
+    const $home = $(<App url="/bla" />);
+    expect($home.text()).toContain("not found");
+  });
+});
+```
+
+This method is the simplest to get started, but some people don't like having to add code to the production website only for the testing environment. That's all fine, there's another way that is a bit harder to setup but it's also more accurate to the browser's real behavior.
+
+When you are running Jest, it creates a fake `window` already, so you can plug into that to mock the behavior for the duration of the test. Doing it with a React component makes it even smoother:
+
+```js
+// Mock.js
+import React, { useEffect } from "react";
+
+export default function Mock({ url, children }) {
+  const href = "http://localhost:3000" + url;
+  const oldLocation = { value: window.location };
+  delete global.window.location;
+  Object.defineProperty(global.window, "location", {
+    value: new URL(href),
+    configurable: true
+  });
+
+  // Undo the setup when the component unmounts
+  useEffect(() => {
+    return () => Object.defineProperty(window, "location", oldLocation);
+  });
+  return <div>{children}</div>;
+}
+```
+
+With this Mock component, then you can wrap your normal application into working with routes:
+
+```js
+import React from "react";
+import $ from "react-test";
+
+import App from "./App";
+import Mock from "./Mock";
+
+describe("use the Mock component", () => {
+  it("renders the home component on /", () => {
+    const $home = $(
+      <Mock url="/">
+        <App />
+      </Mock>
+    );
+    expect($home.text()).toBe("Home");
+  });
+
+  it("renders the user list on /users", () => {
+    const $home = $(
+      <Mock url="/users">
+        <App />
+      </Mock>
+    );
+    expect($home.text()).toBe("Users");
+  });
+
+  it("renders not found when in another route", () => {
+    const $home = $(
+      <Mock url="/bla">
+        <App />
+      </Mock>
+    );
+    expect($home.text()).toContain("not found");
+  });
+});
+```
+
+### Server Side Render
+
+Crossroad has been tested with Next.js and should work both on the server as in the browser. When working on the server, and similar to [how we saw in testing](#testing-routes), we can overload the current url:
+
+```js
+// An express example
+const App = ({ url }) => <Router url={url}>...</Router>;
+
+app.get("/users", (req, res) => {
+  res.render(<App url="/users" />);
+});
+
+app.get("/users/:id", (req, res) => {
+  const id = req.params.id;
+
+  // {...} validate the `id` it here!
+
+  res.render(<App url={`/users/${id}`} />);
+});
+```
+
+There is a big warning in `node-babel` and that applies to us as well. Node-babel doesn't work with proper EcmaScript Modules (ESM) in libraries, so if you are using `node-babel` to compile your Node.js code from JSX to JS, it'll not work with Crossroad. There's another warning in `node-babel` that you are not supposed to use node-babel in production anyway, so it should not be a big deal.
 
 ## React Router diff
 

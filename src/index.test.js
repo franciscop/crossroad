@@ -13,7 +13,7 @@ const delay = time => new Promise(done => setTimeout(done, time));
 describe("crossroad", () => {
   it("can render the home", () => {
     const $home = $(
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
@@ -25,7 +25,7 @@ describe("crossroad", () => {
 
   it("can render with render, component or children", () => {
     expect(
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
@@ -33,7 +33,7 @@ describe("crossroad", () => {
       </Mock>
     ).toHaveText("Home");
     expect(
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <Route path="/" render={() => <Home />} />
           <Route path="/user" component={User} />
@@ -41,7 +41,7 @@ describe("crossroad", () => {
       </Mock>
     ).toHaveText("Home");
     expect(
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <Route path="/">
             <Home />
@@ -54,7 +54,7 @@ describe("crossroad", () => {
 
   it("can overload the home", () => {
     const $home = $(
-      <Mock path="/user">
+      <Mock url="/user">
         <Router url="/">
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
@@ -66,7 +66,7 @@ describe("crossroad", () => {
 
   it("can deal with partial matches", () => {
     const $home = $(
-      <Mock path="/hello">
+      <Mock url="/hello">
         <Router>
           <Route path="/*" component={Home} />
           <Route path="/user" component={User} />
@@ -78,7 +78,7 @@ describe("crossroad", () => {
 
   it("can deal with multiple partial matches", () => {
     const $home = $(
-      <Mock path="/user/abc">
+      <Mock url="/user/abc">
         <Router>
           <Route path="/*" component={Home} />
           <Route path="/user/:id" component={User} />
@@ -90,9 +90,37 @@ describe("crossroad", () => {
 
   it("can redirect", () => {
     const $home = $(
-      <Mock path="/user/abc">
+      <Mock url="/user/abc">
         <Router>
           <Switch redirect="/">
+            <Route path="/" component={Home} />
+            <Route path="/user/" component={User} />
+          </Switch>
+        </Router>
+      </Mock>
+    );
+    expect($home.text()).toBe("Home");
+  });
+
+  it("can redirect with an object", () => {
+    const $home = $(
+      <Mock url="/user/abc">
+        <Router>
+          <Switch redirect={{ path: "/" }}>
+            <Route path="/" component={Home} />
+            <Route path="/user/" component={User} />
+          </Switch>
+        </Router>
+      </Mock>
+    );
+    expect($home.text()).toBe("Home");
+  });
+
+  it("can redirect with a function", () => {
+    const $home = $(
+      <Mock url="/user/abc">
+        <Router>
+          <Switch redirect={() => "/"}>
             <Route path="/" component={Home} />
             <Route path="/user/" component={User} />
           </Switch>
@@ -108,7 +136,7 @@ describe("crossroad", () => {
     try {
       expect(() => {
         $(
-          <Mock path="/">
+          <Mock url="/">
             <Route path="/" component={Home} />
           </Mock>
         );
@@ -122,7 +150,7 @@ describe("crossroad", () => {
 describe("<Switch>", () => {
   it("can handle a simple switch", () => {
     const $home = $(
-      <Mock path="/user/abc">
+      <Mock url="/user/abc">
         <Router>
           <Switch>
             <Route path="/*" component={Home} />
@@ -137,7 +165,7 @@ describe("<Switch>", () => {
 
   it("matches a route without path", () => {
     const $home = $(
-      <Mock path="/fdsgsrf/dfgas">
+      <Mock url="/fdsgsrf/dfgas">
         <Router>
           <Switch>
             <Route path="/" component={Home} />
@@ -152,7 +180,7 @@ describe("<Switch>", () => {
 
   it("does not blow up empty", () => {
     const $home = $(
-      <Mock path="/user/abc">
+      <Mock url="/user/abc">
         <Router>
           <Switch></Switch>
         </Router>
@@ -167,7 +195,7 @@ describe("<Switch>", () => {
     try {
       expect(() => {
         $(
-          <Mock path="/">
+          <Mock url="/">
             <Router>
               <Switch>
                 <Route path="/" />
@@ -220,7 +248,7 @@ describe("<Switch>", () => {
     };
 
     const App = () => (
-      <Mock path="/">
+      <Mock url="/">
         <Router>
           <nav>
             <a href="/">Home</a>

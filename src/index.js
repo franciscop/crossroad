@@ -116,7 +116,10 @@ const Switch = ({ redirect, children }) => {
   const findMatch = child => samePath(child.props.path || "*", url);
   const match = toArray(children).find(findMatch) || null;
   useEffect(() => {
-    if (redirect && !match) setUrl(redirect);
+    if (!redirect) return;
+    if (match) return;
+    if (typeof redirect === "function") redirect = redirect(url);
+    setUrl(stringify(redirect));
   }, [redirect, Boolean(match)]);
   return match;
 };

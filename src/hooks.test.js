@@ -22,7 +22,7 @@ $.prototype.json = function(key) {
 
 const withPath = (url, Comp) => {
   return $(
-    <Mock path={url}>
+    <Mock url={url}>
       <Router>
         <Comp />
       </Router>
@@ -161,7 +161,7 @@ describe("useParams", () => {
       return <div>{JSON.stringify(params)}</div>;
     };
     const $user = $(
-      <Mock path="/user/2">
+      <Mock url="/user/2">
         <Router>
           <Route path="/user/:id">
             <Comp />
@@ -178,7 +178,7 @@ describe("useParams", () => {
       return <div>{JSON.stringify(params)}</div>;
     };
     const $user = $(
-      <Mock path="/2">
+      <Mock url="/2">
         <Router>
           <Route path="/:id">
             <Comp />
@@ -195,7 +195,7 @@ describe("useParams", () => {
       return <div>{JSON.stringify(params)}</div>;
     };
     const $user = $(
-      <Mock path="/2">
+      <Mock url="/2">
         <Router>
           <Route path="/:id">
             <Comp />
