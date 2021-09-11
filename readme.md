@@ -307,7 +307,6 @@ export default function Login() {
 These are the structures of each:
 
 - `url`: an object with the properties, it's similar to the native URL:
-  - `url.href`: a string with the full URL (path + query + hash)
   - `url.path`: a string with the current pathname
   - `url.query`: an object with the keys and values. Example: `{ q: 'hello' }`, `{ q: 'hello', s: 'world' }`.
   - `url.hash`: the hashtag, without the "#"
@@ -595,6 +594,8 @@ In here we can see that we are treating the output of `useQuery` in the sam way 
 Some times you prefer the current page to be defined by the query, instead of by the pathname. This might be true for subpages, for tabs, or for other things depending on your app. With Crossroad it's easy to manage:
 
 [**Codesandbox**](https://codesandbox.io/s/white-moon-5q0hr)
+
+https://user-images.githubusercontent.com/2801252/132944833-ad63ad0a-8d91-4ae2-916a-72f578cc2efd.mp4
 
 ```js
 <Switch redirect="/?page=home">
