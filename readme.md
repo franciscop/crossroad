@@ -918,6 +918,12 @@ const [search, setSearch] = useQuery("search");
 setSearch("myname2");
 ```
 
+See a video and a demo of how useful and easy it is to use `useQuery()`:
+
+[**Codesandbox demo**](https://codesandbox.io/s/festive-murdock-1ctv6?file=/src/SearchForm.js)
+
+https://user-images.githubusercontent.com/2801252/132189338-e09aa220-b773-43ed-803b-fa6c7449bf44.mp4
+
 ### Plain Links
 
 To add a link in your application, you use the native `<a>` element instead of having to import a different component. What's more, this makes links a lot more consistent than in React Router. Some examples:
