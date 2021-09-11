@@ -841,7 +841,7 @@ app.get("/users/:id", (req, res) => {
 });
 ```
 
-There is a big warning in `node-babel` and that applies to us as well. Node-babel doesn't work with proper EcmaScript Modules (ESM) in libraries, so if you are using `node-babel` to compile your Node.js code from JSX to JS, it'll not work with Crossroad. There's another warning in `node-babel` that you are not supposed to use node-babel in production anyway, so it should not be a big deal.
+There is a big warning in `babel-node` and that applies to us as well. Babel-node [doesn't work with proper EcmaScript Modules (ESM)](https://babeljs.io/docs/en/babel-node#es6-style-module-loading-may-not-function-as-expected) in libraries, so if you are using `babel-node` to compile your Node.js code from JSX to JS, it'll not work with Crossroad. `babel-node` is also [not supposed to be used in production](https://babeljs.io/docs/en/babel-node#not-meant-for-production-use) anyway, so it should not be a big deal.
 
 ## React Router diff
 
