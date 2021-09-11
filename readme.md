@@ -592,6 +592,30 @@ In here we can see that we are treating the output of `useQuery` in the sam way 
 
 ### Query routing
 
+Some times you prefer the current page to be defined by the query, instead of by the pathname. This might be true for subpages, for tabs, or for other things depending on your app. With Crossroad it's easy to manage:
+
+[**Codesandbox**](https://codesandbox.io/s/white-moon-5q0hr)
+
+```js
+<Switch redirect="/?page=home">
+  <Route path="/?page=home" component={Tabs.Home} />
+  <Route path="/?page=product" component={Tabs.Product} />
+  <Route path="/?page=about" component={Tabs.About} />
+</Switch>
+```
+
+With the code above, it will match the given component when the path is exactly "/" and the query parameter is the given one. If no one is matched, then it'll redirect you to `/?page=home`, the main page.
+
+You can also use this for subpages, say if you were in a Dashboard:
+
+```js
+<Switch redirect="/dashboard?tab=home">
+  <Route path="/dashboard?tab=home" component={Tabs.Home} />
+  <Route path="/dashboard?tab=product" component={Tabs.Product} />
+  <Route path="/dashboard?tab=about" component={Tabs.About} />
+</Switch>
+```
+
 ### Not found
 
 ### Github hosting
@@ -710,10 +734,3 @@ The same in React Router are like this, note the inconsistencies of some times u
 <a href="https://example.com/" target="_blank">Hello</Link>
 <Link to="https://example.com/">Hello</Link>  // Broken
 ```
-
-## TODO
-
-This library is pretty much complete, but as always help with the documentation and test would be greatly appreciated. In particular:
-
-- There are some skipped tests because they are logging to the console and I haven't found a way to avoid that, see `src/index.test.js` and search for "skip".
-- More examples would be amazing.
