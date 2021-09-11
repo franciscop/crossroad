@@ -595,7 +595,7 @@ Some times you prefer the current page to be defined by the query, instead of by
 
 [**Codesandbox**](https://codesandbox.io/s/white-moon-5q0hr)
 
-https://user-images.githubusercontent.com/2801252/132944833-ad63ad0a-8d91-4ae2-916a-72f578cc2efd.mp4
+https://user-images.githubusercontent.com/2801252/132944863-3caf9399-d0c1-4cdc-86a0-dca1a6a4b4d1.mp4
 
 ```js
 <Switch redirect="/?page=home">
