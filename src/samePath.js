@@ -37,10 +37,10 @@ export default function samePath(ref, url, params = {}) {
   }
 
   // If the paths are exactly the same, then return true
-  if (url.path === ref.path) return true;
+  if (url.path === ref.path) return params;
 
   // Straightforward comparison between paths when there are no parameters
-  if (!ref.path.includes(":")) return ref.path === url.path;
+  if (!ref.path.includes(":")) return ref.path === url.path && params;
 
   // Different length, cannot be the same paths
   if (ref.path.split("/").length !== url.path.split("/").length) return false;
@@ -51,11 +51,11 @@ export default function samePath(ref, url, params = {}) {
     const part = url.path.split("/")[i];
     if (ref.startsWith(":")) {
       extra[ref.slice(1)] = part;
-      return true; // A parameter is always a match
+      return params; // A parameter is always a match
     }
     return part === ref;
   });
   // Extend it only if there's a full match
   if (match) Object.assign(params, extra);
-  return match;
+  return match && params;
 }

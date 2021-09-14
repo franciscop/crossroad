@@ -21,6 +21,10 @@ describe("format.parse()", () => {
     expect(parse("/?a=b&c=d").query).toEqual({ a: "b", c: "d" });
   });
 
+  it("can parse multiple query parameters", () => {
+    expect(parse("/?a=b&a=c").query).toEqual({ a: ["b", "c"] });
+  });
+
   it("can parse the hash", () => {
     expect(parse("/#").hash).toEqual(undefined);
     expect(parse("/#hello").hash).toEqual("hello");
@@ -34,9 +38,18 @@ describe("format.stringify()", () => {
     expect(stringify({ path: "/" })).toBe("/");
   });
 
+  const queryStr = query => stringify({ query });
   it("works with the query", () => {
-    expect(stringify({ query: { a: "b" } })).toBe("/?a=b");
-    expect(stringify({ query: { a: "b", c: "d" } })).toBe("/?a=b&c=d");
+    expect(queryStr({ a: "b" })).toBe("/?a=b");
+    expect(queryStr({ a: "b", c: "d" })).toBe("/?a=b&c=d");
+    expect(queryStr({ a: "b", c: "d", e: "f" })).toBe("/?a=b&c=d&e=f");
+  });
+
+  it("works with the query and array parameters", () => {
+    expect(queryStr({ a: "b" })).toBe("/?a=b");
+    expect(queryStr({ a: ["b", "c"] })).toBe("/?a=b&a=c");
+    expect(queryStr({ a: ["b", "c"], d: "e" })).toBe("/?a=b&a=c&d=e");
+    expect(queryStr({ a: ["b", "c", "d"] })).toBe("/?a=b&a=c&a=d");
   });
 
   it("works with the hash", () => {

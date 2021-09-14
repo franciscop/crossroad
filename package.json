@@ -1,7 +1,7 @@
 {
   "name": "crossroad",
   "version": "0.14.0",
-  "description": "A React library to handle navigation in your webapp. Built with simple components and React Hooks.",
+  "description": "A React library to handle navigation in your WebApp. Built with simple components and React Hooks so your code is cleaner.",
   "homepage": "https://crossroad.page/",
   "repository": "https://github.com/franciscop/crossroad.git",
   "bugs": "https://github.com/franciscop/crossroad/issues",

@@ -4,7 +4,7 @@ import samePath from "./samePath";
 
 const useUrl = () => {
   const ctx = useContext(Context);
-  if (!ctx) throw new Error(`Hooks should be used as children of <Router>`);
+  if (!ctx) throw new Error(`Wrap your App with <Router>`);
   return ctx;
 };
 

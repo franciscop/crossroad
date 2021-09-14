@@ -22,27 +22,22 @@ const getHref = el => {
   return href;
 };
 
+const isServer = () => typeof window === "undefined";
+
 const Router = ({ url: baseUrl, children }) => {
-  const init = typeof window === "undefined" ? "/" : window.location.href;
-  const [url, setUrl] = useState(parse(baseUrl || init));
-  const setBrowserUrl = (url, opts = { mode: "push" }) => {
-    if (typeof url === "string") {
-      url = parse(url);
-    }
-    const href = stringify(url);
-    if (!["push", "replace"].includes(opts.mode)) {
-      throw new Error(`Unrecognized mode "${opts.mode}"`);
-    }
-    if (opts.mode === "replace") {
-      history.replaceState({}, null, href);
-    } else {
-      history.pushState({}, null, href);
-    }
-    setUrl(url);
+  const init = baseUrl || (isServer() ? "/" : window.location.href);
+  const [url, setStateUrl] = useState(() => parse(init));
+  const setUrl = (url, { mode = "push" } = {}) => {
+    if (!history[mode + "State"]) throw new Error(`Invalid mode "${mode}"`);
+    history[mode + "State"]({}, null, stringify(url));
+    setStateUrl(parse(url));
   };
   useEffect(() => {
+    // The server doesn't have any of these fancy handlers
+    if (isServer()) return;
+
     // onPop is only triggered if window is defined, so this is fine:
-    const handlePop = e => setUrl(parse(window.location.href));
+    const handlePop = () => setUrl(window.location.href);
     const handleClick = e => {
       // Attempt to find a valid "href", taking into account the exit conditions
       const href = getHref(e.target.closest("a"));
@@ -50,62 +45,48 @@ const Router = ({ url: baseUrl, children }) => {
       // If it was found, handle it with Crossroad
       if (href) {
         e.preventDefault();
-        setBrowserUrl(href);
+        setUrl(href);
       }
     };
-    if (typeof window !== "undefined") {
-      window.addEventListener("popstate", handlePop);
-    }
-    if (typeof document !== "undefined") {
-      document.addEventListener("click", handleClick);
-    }
+
+    window.addEventListener("popstate", handlePop);
+    document.addEventListener("click", handleClick);
     return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener("popstate", handlePop);
-      }
-      if (typeof document !== "undefined") {
-        document.removeEventListener("click", handleClick);
-      }
+      window.removeEventListener("popstate", handlePop);
+      document.removeEventListener("click", handleClick);
     };
   }, []);
-  return (
-    <Context.Provider value={[url, setBrowserUrl]}>{children}</Context.Provider>
-  );
+
+  return <Context.Provider value={[url, setUrl]}>{children}</Context.Provider>;
 };
 
 const Route = ({ path = "*", exact = true, component, render, children }) => {
+  // Check whether there's a parameter match or not
   const ctx = useContext(Context);
-  const [url, setUrl] = useUrl();
-  const params = {};
-  const matches = samePath(path, url, params);
-  if (!matches) return null;
+  const params = samePath(path, ctx[0]);
+  if (!params) return null;
 
-  const childrenContext = [{ ...ctx[0], params }, ctx[1]];
+  // Find the correct child to use
   if (component) {
     const Comp = component;
-    return (
-      <Context.Provider value={childrenContext}>
-        <Comp {...params} />
-      </Context.Provider>
-    );
+    children = <Comp {...params} />;
   } else if (render) {
-    return (
-      <Context.Provider value={childrenContext}>
-        {render(params)}
-      </Context.Provider>
-    );
-  } else if (children) {
-    return (
-      <Context.Provider value={childrenContext}>{children}</Context.Provider>
-    );
-  } else {
-    throw new Error("Route needs the prop `component`, `render` or `children`");
+    children = render(params);
+  } else if (!children) {
+    throw new Error("Route needs prop `component`, `render` or `children`");
   }
+
+  // Wrap any children with the correct parameters
+  return (
+    <Context.Provider value={[{ ...ctx[0], params }, ...ctx.slice(1)]}>
+      {children}
+    </Context.Provider>
+  );
 };
 
 const toArray = children => {
-  if (!children) return [];
-  return Array.isArray(children) ? [...children] : [children];
+  if (!Array.isArray(children)) children = [children];
+  return children.filter(c => c && c.props);
 };
 
 // Same as with React-Router Switch  (https://github.com/remix-run/react-router/blob/main/packages/react-router/modules/Switch.js#L23-L26),
@@ -120,7 +101,7 @@ const Switch = ({ redirect, children }) => {
     if (match) return;
     if (typeof redirect === "function") redirect = redirect(url);
     setUrl(stringify(redirect));
-  }, [redirect, Boolean(match)]);
+  }, [redirect, match]);
   return match;
 };
 

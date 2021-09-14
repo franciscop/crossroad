@@ -52,6 +52,22 @@ describe("crossroad", () => {
     ).toHaveText("Home");
   });
 
+  it("needs to be wrapped with <Router>", () => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+
+    try {
+      expect(() => {
+        $(
+          <Mock url="/">
+            <Route path="/" />
+          </Mock>
+        );
+      }).toThrow();
+    } finally {
+      console.error.mockRestore();
+    }
+  });
+
   it("can overload the home", () => {
     const $home = $(
       <Mock url="/user">
@@ -189,6 +205,19 @@ describe("<Switch>", () => {
     expect($home.text()).toBe("");
   });
 
+  it("does not blow up with a string", () => {
+    const $home = $(
+      <Mock url="/user/abc">
+        <Router>
+          <Switch>abc</Switch>
+        </Router>
+      </Mock>
+    );
+    expect($home.text()).toBe("");
+  });
+});
+
+describe("Route.js", () => {
   it("needs one of the three props", () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 

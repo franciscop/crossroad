@@ -90,7 +90,7 @@ describe("useUrl", () => {
     try {
       await $user.find("button").click();
     } catch (error) {
-      expect(error.message).toBe(`Unrecognized mode "abc"`);
+      expect(error.message).toBe(`Invalid mode "abc"`);
     }
   });
 });

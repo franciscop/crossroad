@@ -1,9 +1,10 @@
 # Crossroad [![npm install crossroad](https://img.shields.io/badge/npm%20install-crossroad-blue.svg "install badge")](https://www.npmjs.com/package/crossroad) [![test badge](https://github.com/franciscop/crossroad/workflows/tests/badge.svg "test badge")](https://github.com/franciscop/crossroad/blob/master/.github/workflows/tests.yml) [![gzip size](https://img.badgesize.io/franciscop/crossroad/master/index.min.js.svg?compression=gzip "gzip badge")](https://github.com/franciscop/crossroad/blob/master/index.min.js)
 
-A React library to handle navigation in your webapp. Built with simple components and React Hooks. It has [some differences](#react-router-differences) with React Router so you write cleaner code:
+A React library to handle navigation in your WebApp. Built with simple components and React Hooks so you write cleaner code:
 
-- The links are plain `<a>` instead of custom components. [Read more](#a).
-- There are useful hooks like [`useUrl`](#useurl), [`useQuery`](#usequery), etc.
+- `<Router>`, `<Switch>` and `<Route>` inspired by React Router so it's easy to get started.
+- Very useful hooks like [`useUrl`](#useurl), [`useQuery`](#usequery), etc.
+- Links are plain `<a>` instead of custom components. [Read more](#a).
 - The `<Route>` path is `exact` by default and can match query parameters.
 - It's [just ~1.5kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
 
