@@ -437,7 +437,7 @@ setWord(newName || null);
 
 ### `useHash()`
 
-Read and set only the hash part of the URL:
+Read and set only the hash part of the URL (without the `"#"`):
 
 ```js
 // In /login#welcome
