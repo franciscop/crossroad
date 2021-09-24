@@ -302,6 +302,8 @@ Some examples:
 Read and set the full URL:
 
 ```js
+import { useUrl } from "crossroad";
+
 export default function Login() {
   const [url, setUrl] = useUrl();
 
@@ -368,7 +370,7 @@ setUrl("/newurl", { mode: "replace" });
 ```
 
 - `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`.
-- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new node.
+- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new entry.
 
 ### `usePath()`
 
@@ -398,34 +400,35 @@ setPath("/newpath", { mode: "replace" });
 ```
 
 - `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`.
-- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new node.
+- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new entry.
 
 ### `useQuery()`
 
 Read and set only the search query parameters from the URL:
 
 ```js
-// In /users?search=name&filter=new
-const [query, setQuery] = useQuery();
-// { search: 'name', filter: 'new' }
+import { useQuery } from "crossroad";
 
-// Removes the other query params
-setQuery({ search: "myname" });
-// Goto /users?search=myname
+export default function SearchInput() {
+  // In /users?search=
+  const [query, setQuery] = useQuery();
+  // [{ search: "" }, fn]
 
-// Keeps the other query params
-setQuery({ ...query, search: "myname" });
-// Goto /users?search=myname&filter=new
+  // Goes to /users?search={value}
+  const onChange = e => setQuery({ search: e.target.value });
+
+  return <input value={query.search} onChange={onChange} />;
+}
 ```
 
-If you pass a parameter, it can read and modify that parameter while keeping the others the same. This is specially useful in e.g. a search form:
+If you pass a key, it can read and modify that parameter while keeping the others the same. This is specially useful in e.g. a search form:
 
 ```js
 // In /users?search=name&filter=new
 const [search, setSearch] = useQuery("search");
 // 'name'
 
-setQuery("myname");
+setSearch("myname");
 // Goto /users?search=myname&filter=new
 ```
 
@@ -457,6 +460,13 @@ const [myname, setMyname] = useQuery("myname");
 setMyname(newName || null);
 ```
 
+If you are using `react-query` and already have a bunch of `useQuery()` in your code and prefer to use other name, just rename this method when importing it:
+
+```js
+import { useQuery as useSearch } from 'crossroad';
+...
+```
+
 #### New history entry
 
 By default `setQuery()` will create a new entry in the browser history. If you want to instead replace the current entry, so that the "Back" button goes to the previous page, you can pass a second parameter with `{ mode: 'replace' }`:
@@ -466,7 +476,7 @@ setQuery({ search: "abc" }, { mode: "replace" });
 ```
 
 - `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b?q=c` and then click on the back button, the browser will go back to `/b`.
-- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b?q=c` and then click on the back button, it'll go back to `/a`. This is because `/b?q=c` is overwriting `/b`, instead of adding a new node.
+- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b?q=c` and then click on the back button, it'll go back to `/a`. This is because `/b?q=c` is overwriting `/b`, instead of adding a new entry.
 
 ### `useHash()`
 
@@ -494,11 +504,11 @@ If you want to remove the hash, pass a `null` or `undefined` to the setter.
 By default `setHash()` will create a new entry in the browser history. If you want to instead replace the current entry, so that the "Back" button goes to the previous page, you can pass a second parameter with `{ mode: 'replace' }`:
 
 ```js
-setHash({ search: "abc" }, { mode: "replace" });
+setHash("newhash", { mode: "replace" });
 ```
 
-- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b?q=c` and then click on the back button, the browser will go back to `/b`.
-- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b?q=c` and then click on the back button, it'll go back to `/a`. This is because `/b?q=c` is overwriting `/b`, instead of adding a new node.
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b#c` and then click on the back button, the browser will go back to `/b`.
+- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b#c` and then click on the back button, it'll go back to `/a`. This is because `/b#c` is overwriting `/b`, instead of adding a new entry.
 
 ### `useParams()`
 
@@ -715,9 +725,9 @@ In this case the order matters, because the generic NotFound will be matched wit
 
 > NOTE: this is a bad idea for SEO, but if that doesn't matter much for you go ahead and host your webapp in Github Pages
 
-Github pages is a bit particular in that as of this writing it does not allow for a generic redirect like most other static website servers, so we need to do a workaround with the `notfound.html` page.
+Github pages is a bit particular in that as of this writing it does not allow for a generic redirect like most other static website servers, so we need to do a workaround with the `404.html` page.
 
-This is because any of your visitors landing on `https://example.com/` will see the proper website (since that'll be directed to `docs/index.html`), but when the user lands on other paths like `https://example.com/info` it'll not find `docs/info.html` and thus render `nofound.html`.
+This is because any of your visitors landing on `https://example.com/` will see the proper website (since that'll be directed to `docs/index.html`), but when the user lands on other paths like `https://example.com/info` it'll not find `docs/info.html` and thus render `404.html`.
 
 So let's save the url and setup a redirect in `404.html`:
 
@@ -778,7 +788,7 @@ export default function App({ url }) {
 }
 ```
 
-Now let's see how to test it. The `url` prop will be undefined in the browser, so it'll use `window.location.href`, so it'll only apply to testing:
+How does it work? The `url` prop will be undefined when a user loads the app (since we **don't** add it to index.js), so it is only being written for testing. On the users' browser, since it's undefinde Crossroad will use `window.location.href` instead.
 
 ```js
 // App.test.js
@@ -806,6 +816,10 @@ describe("use the url prop", () => {
 ```
 
 This method is the simplest to get started, but some people don't like having to add code to the production website only for the testing environment. That's all fine, there's another way that is a bit harder to setup but it's also more accurate to the browser's real behavior.
+
+#### Mock window.location
+
+The previous method has **a big limitation**: it doesn't allow you to navigate within your app for a test, since it's always forcing the same url. To avoid this and be able to test better the real-world behavior, use this method.
 
 When you are running Jest, it creates a fake `window` already, so you can plug into that to mock the behavior for the duration of the test. Doing it with a React component makes it even smoother:
 
