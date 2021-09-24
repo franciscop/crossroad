@@ -500,7 +500,6 @@ setHash({ search: "abc" }, { mode: "replace" });
 - `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b?q=c` and then click on the back button, the browser will go back to `/b`.
 - `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b?q=c` and then click on the back button, it'll go back to `/a`. This is because `/b?q=c` is overwriting `/b`, instead of adding a new node.
 
-
 ### `useParams()`
 
 Parse the current URL against the given reference:
@@ -879,12 +878,10 @@ Crossroad has been tested with these libraries/frameworks for SSR:
 - ❌ [Babel-Node](https://babeljs.io/docs/en/babel-node): BabelNode [doesn't support ECMAScript modules (ESM)](https://babeljs.io/docs/en/babel-node#es6-style-module-loading-may-not-function-as-expected), but you are **also** [not supposed to use `babel-node` for production anyway](https://babeljs.io/docs/en/babel-node#not-meant-for-production-use) so this is not a real framework for SSR.
 - Others? I couldn't find many other ways that people are running SSR that I could test.
 
-For Razzle (based on [this FaQ](https://github.com/JoshK2/react-spinners-css#how-to-use-with-ssr)):
+For Razzle (based on [these docs FaQ](https://razzlejs.org/docs/customization#transpilation-of-external-modules)):
 
 ```js
 // razzle.config.js
-"use strict";
-
 module.exports = {
   modifyWebpackOptions({ options: { webpackOptions } }) {
     webpackOptions.notNodeExternalResMatch = req => /crossroad/.test(req);
@@ -905,14 +902,11 @@ app.get("/users", (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
-
   // {...} validate the `id` it here!
 
   res.render(<App url={req.url} />);
 });
 ```
-
-There is a big warning in `babel-node` and that applies to us as well. Babel-node in libraries, so if you are using `babel-node` to compile your Node.js code from JSX to JS, it'll not work with Crossroad. `babel-node` is also [not supposed to be used in production] anyway, so it should not be a big deal.
 
 ## React Router diff
 
