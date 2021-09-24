@@ -5,6 +5,10 @@ describe("samePath", () => {
     expect(samePath("/", { path: "/" })).toEqual({});
   });
 
+  it("equals quick strings", () => {
+    expect(samePath("/abc", { path: "/def" })).toEqual(false);
+  });
+
   it("matches a root param match", () => {
     expect(samePath("/:id", { path: "/abc" })).toEqual({ id: "abc" });
   });

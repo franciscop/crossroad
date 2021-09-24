@@ -1,5 +1,9 @@
 import React from "react";
-import { useUrl, usePath, useQuery, useHash } from "../src/hooks.js";
+
+import useUrl from "../src/hooks/useUrl.js";
+import usePath from "../src/hooks/usePath.js";
+import useQuery from "../src/hooks/useQuery.js";
+import useHash from "../src/hooks/useHash.js";
 
 export default function RenderUrl({ onClick, children }) {
   const [url] = useUrl();

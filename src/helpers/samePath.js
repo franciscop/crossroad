@@ -7,18 +7,15 @@ export default function samePath(ref, url, params = {}) {
   ref = JSON.parse(JSON.stringify(parse(ref)));
   url = JSON.parse(JSON.stringify(parse(url)));
 
-  if (url.path.endsWith("/")) url.path = url.path.slice(0, -1) || "/";
-  if (ref.path.endsWith("/")) ref.path = ref.path.slice(0, -1) || "/";
+  url.path = url.path.replace(/\/$/, "") || "/";
+  ref.path = ref.path.replace(/\/$/, "") || "/";
 
   // Extract whether it's exact or not
   if (ref.path.endsWith("*")) {
     // Remove "/*" or "*" in the end, making sure the minimum is "/"
     ref.path = ref.path.replace(/\/?\*/, "") || "/";
 
-    const length = ref.path
-      .slice(1)
-      .split("/")
-      .filter(Boolean).length;
+    const length = ref.path.split("/").filter(Boolean).length;
     url.path =
       "/" +
       url.path
@@ -35,9 +32,6 @@ export default function samePath(ref, url, params = {}) {
       if (ref.query[key] && ref.query[key] !== url.query[key]) return false;
     }
   }
-
-  // If the paths are exactly the same, then return true
-  if (url.path === ref.path) return params;
 
   // Straightforward comparison between paths when there are no parameters
   if (!ref.path.includes(":")) return ref.path === url.path && params;

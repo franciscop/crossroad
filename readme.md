@@ -341,20 +341,34 @@ You can also set it fully or partially:
 ```js
 const [url, setUrl] = useUrl();
 
-setUrl("/#firsttime"); // [Shorthand] Redirect to home with a hashtag
-setUrl({ path: "/", hash: "firsttime" }); // Same as above
-setUrl({ ...url, path: "/" }); // Keep everything the same except the path
-setUrl({ ...url, query: { search: myQuery } }); // Set a full search query
-setUrl({ ...url, query: { ...url.query, safe: 0 } }); // Modify only one query param
+// [Shorthand] Redirect to home with a hashtag
+setUrl("/#firsttime");
+
+// Same as above, but specifying the parts
+setUrl({ path: "/", hash: "firsttime" });
+
+// Keep everything the same except the path
+setUrl({ ...url, path: "/" });
+
+// Set a full search query
+setUrl({ ...url, query: { search: "hello" } });
+
+// Modify only one query param
+setUrl({ ...url, query: { ...url.query, safe: 0 } });
 ```
 
 `useUrl()` is powerful enough for all of your needs, but you might still be interested in other hooks to simplify situations where you do e.g. heavy query manipulation with `useQuery`.
 
-By default `setUrl()` will create a new entry in the browser history. If you want to instead replace the current entry you can pass a second parameter with `{ mode: 'replace' }`:
+#### New history entry
+
+By default `setUrl()` will create a new entry in the browser history. If you want to instead replace the current url you can pass a second parameter with `{ mode: 'replace' }`:
 
 ```js
 setUrl("/newurl", { mode: "replace" });
 ```
+
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`.
+- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new node.
 
 ### `usePath()`
 
@@ -375,11 +389,16 @@ const Login = () => {
 
 > Note: this _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
 
-By default `setPath()` will create a new entry in the browser history. If you want to instead replace the current entry you can pass a second parameter with `{ mode: 'replace' }`:
+#### New history entry
+
+By default `setPath()` will create a new entry in the browser history. If you want to instead replace the current url you can pass a second parameter with `{ mode: 'replace' }`:
 
 ```js
-setPath("/newurl", { mode: "replace" });
+setPath("/newpath", { mode: "replace" });
 ```
+
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`.
+- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new node.
 
 ### `useQuery()`
 
@@ -390,10 +409,12 @@ Read and set only the search query parameters from the URL:
 const [query, setQuery] = useQuery();
 // { search: 'name', filter: 'new' }
 
-setQuery({ search: "myname" }); // Remove the other query params
+// Removes the other query params
+setQuery({ search: "myname" });
 // Goto /users?search=myname
 
-setQuery({ ...query, search: "myname" }); // Keep the other query params
+// Keeps the other query params
+setQuery({ ...query, search: "myname" });
 // Goto /users?search=myname&filter=new
 ```
 
@@ -414,12 +435,29 @@ When you update it, it will clean any parameter not passed, so make sure to pass
 // In /users?search=name&filter=new
 const [query, setQuery] = useQuery();
 
-setQuery({ search: "myname" }); // Goto /users?q=myname  (removes the filter)
-setQuery({ ...query, search: "myname" }); // Goto /users?q=myname&filter=new
-setQuery(prev => ({ ...prev, search: "myname" })); // Goto /users?q=myname&filter=new
+setQuery({ search: "myname" });
+// Goto /users?q=myname  (removes the filter)
+
+setQuery({ ...query, search: "myname" });
+// Goto /users?q=myname&filter=new
+
+setQuery(prev => ({ ...prev, search: "myname" }));
+// Goto /users?q=myname&filter=new
 ```
 
 `setQuery` only modifies the query string part of the URL, keeping the `path` and `hash` the same as they were previously.
+
+When you set a search query to `null` or `false`, it will be removed from the URL. However, empty strings are not removed. So if you want empty strings to also remove the parameter in the URL, please do this:
+
+```js
+const [myname, setMyname] = useQuery("myname");
+
+// ...
+
+setMyname(newName || null);
+```
+
+#### New history entry
 
 By default `setQuery()` will create a new entry in the browser history. If you want to instead replace the current entry, so that the "Back" button goes to the previous page, you can pass a second parameter with `{ mode: 'replace' }`:
 
@@ -427,13 +465,8 @@ By default `setQuery()` will create a new entry in the browser history. If you w
 setQuery({ search: "abc" }, { mode: "replace" });
 ```
 
-When you set a search query to `null` or `false`, it will be removed from the URL. However, empty strings are not removed. So if you want empty strings to also remove the parameter in the URL, please do this:
-
-```js
-const [myname, setMyname] = useQuery("myname");
-// ...
-setWord(newName || null);
-```
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b?q=c` and then click on the back button, the browser will go back to `/b`.
+- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b?q=c` and then click on the back button, it'll go back to `/a`. This is because `/b?q=c` is overwriting `/b`, instead of adding a new node.
 
 ### `useHash()`
 
@@ -454,6 +487,20 @@ By default `setHash()` will create a new entry in the browser history. If you wa
 setHash("newhash", { mode: "replace" });
 ```
 
+If you want to remove the hash, pass a `null` or `undefined` to the setter.
+
+#### New history entry
+
+By default `setHash()` will create a new entry in the browser history. If you want to instead replace the current entry, so that the "Back" button goes to the previous page, you can pass a second parameter with `{ mode: 'replace' }`:
+
+```js
+setHash({ search: "abc" }, { mode: "replace" });
+```
+
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b?q=c` and then click on the back button, the browser will go back to `/b`.
+- `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b?q=c` and then click on the back button, it'll go back to `/a`. This is because `/b?q=c` is overwriting `/b`, instead of adding a new node.
+
+
 ### `useParams()`
 
 Parse the current URL against the given reference:
@@ -463,6 +510,8 @@ Parse the current URL against the given reference:
 const params = useParams("/users/:id");
 // { id: '2' }
 ```
+
+> Note: this returns a plain object, not a [value, setter] array
 
 It's not this method responsibility to match the url, just to attempt to parse it, so if there's no good match it'll just return an empty object (use a `<Route />` for path matching):
 
@@ -823,7 +872,29 @@ describe("use the Mock component", () => {
 
 ### Server Side Render
 
-Crossroad has been tested with Next.js and should work both on the server as in the browser. When working on the server, and similar to [how we saw in testing](#testing-routes), we can overload the current url:
+Crossroad has been tested with these libraries/frameworks for SSR:
+
+- ✅ [Razzle](https://razzlejs.org/): it works adding a bit of config; Razzle bundles React Router Dom by default, so you need to install Crossroad, remove React Router Dom and add the code mentioned below.
+- ⚠️ [Next.js](https://nextjs.org/): it works, but is generally not needed since Next.js include its own router and file-based routing.
+- ❌ [Babel-Node](https://babeljs.io/docs/en/babel-node): BabelNode [doesn't support ECMAScript modules (ESM)](https://babeljs.io/docs/en/babel-node#es6-style-module-loading-may-not-function-as-expected), but you are **also** [not supposed to use `babel-node` for production anyway](https://babeljs.io/docs/en/babel-node#not-meant-for-production-use) so this is not a real framework for SSR.
+- Others? I couldn't find many other ways that people are running SSR that I could test.
+
+For Razzle (based on [this FaQ](https://github.com/JoshK2/react-spinners-css#how-to-use-with-ssr)):
+
+```js
+// razzle.config.js
+"use strict";
+
+module.exports = {
+  modifyWebpackOptions({ options: { webpackOptions } }) {
+    webpackOptions.notNodeExternalResMatch = req => /crossroad/.test(req);
+    webpackOptions.babelRule.include.push(/crossroad/);
+    return webpackOptions;
+  }
+};
+```
+
+When working on the server, and similar to [how we saw in testing](#testing-routes), we can overload the current url:
 
 ```js
 // An express example
@@ -834,15 +905,14 @@ app.get("/users", (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
-  const id = req.params.id;
 
   // {...} validate the `id` it here!
 
-  res.render(<App url={`/users/${id}`} />);
+  res.render(<App url={req.url} />);
 });
 ```
 
-There is a big warning in `babel-node` and that applies to us as well. Babel-node [doesn't work with proper EcmaScript Modules (ESM)](https://babeljs.io/docs/en/babel-node#es6-style-module-loading-may-not-function-as-expected) in libraries, so if you are using `babel-node` to compile your Node.js code from JSX to JS, it'll not work with Crossroad. `babel-node` is also [not supposed to be used in production](https://babeljs.io/docs/en/babel-node#not-meant-for-production-use) anyway, so it should not be a big deal.
+There is a big warning in `babel-node` and that applies to us as well. Babel-node in libraries, so if you are using `babel-node` to compile your Node.js code from JSX to JS, it'll not work with Crossroad. `babel-node` is also [not supposed to be used in production] anyway, so it should not be a big deal.
 
 ## React Router diff
 
