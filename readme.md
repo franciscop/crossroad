@@ -369,7 +369,7 @@ By default `setUrl()` will create a new entry in the browser history. If you wan
 setUrl("/newurl", { mode: "replace" });
 ```
 
-- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`.
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`. This is because `/b` and `/b?q=c` are both independent entries in your history.
 - `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new entry.
 
 ### `usePath()`
@@ -399,7 +399,7 @@ By default `setPath()` will create a new entry in the browser history. If you wa
 setPath("/newpath", { mode: "replace" });
 ```
 
-- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`.
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`. This is because `/b` and `/b?q=c` are both independent entries in your history.
 - `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new entry.
 
 ### `useQuery()`
@@ -439,13 +439,13 @@ When you update it, it will clean any parameter not passed, so make sure to pass
 const [query, setQuery] = useQuery();
 
 setQuery({ search: "myname" });
-// Goto /users?q=myname  (removes the filter)
+// Goto /users?search=myname  (removes the filter)
 
 setQuery({ ...query, search: "myname" });
-// Goto /users?q=myname&filter=new
+// Goto /users?search=myname&filter=new
 
 setQuery(prev => ({ ...prev, search: "myname" }));
-// Goto /users?q=myname&filter=new
+// Goto /users?search=myname&filter=new
 ```
 
 `setQuery` only modifies the query string part of the URL, keeping the `path` and `hash` the same as they were previously.
@@ -460,7 +460,7 @@ const [myname, setMyname] = useQuery("myname");
 setMyname(newName || null);
 ```
 
-If you are using `react-query` and already have a bunch of `useQuery()` in your code and prefer to use other name, just rename this method when importing it:
+If you are using `react-query` and already have a bunch of `useQuery()` in your code and prefer to use other name, you can rename this method when importing it:
 
 ```js
 import { useQuery as useSearch } from 'crossroad';
@@ -475,7 +475,7 @@ By default `setQuery()` will create a new entry in the browser history. If you w
 setQuery({ search: "abc" }, { mode: "replace" });
 ```
 
-- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b?q=c` and then click on the back button, the browser will go back to `/b`.
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b?q=c` and then click on the back button, the browser will go back to `/b`. This is because `/b` and `/b?q=c` are both independent entries in your history.
 - `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b?q=c` and then click on the back button, it'll go back to `/a`. This is because `/b?q=c` is overwriting `/b`, instead of adding a new entry.
 
 ### `useHash()`
@@ -507,7 +507,7 @@ By default `setHash()` will create a new entry in the browser history. If you wa
 setHash("newhash", { mode: "replace" });
 ```
 
-- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b#c` and then click on the back button, the browser will go back to `/b`.
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/b#c` and then click on the back button, the browser will go back to `/b`. This is because `/b` and `/b?q=c` are both independent entries in your history.
 - `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/b#c` and then click on the back button, it'll go back to `/a`. This is because `/b#c` is overwriting `/b`, instead of adding a new entry.
 
 ### `useParams()`
