@@ -17,8 +17,9 @@ export default ({ url: baseUrl, children }) => {
     // The server doesn't have any of these fancy handlers
     if (isServer()) return;
 
+    // setStateUrl instead of setUrl to avoid creating a new entry in history
     // onPop is only triggered if window is defined, so this is fine:
-    const handlePop = () => setUrl(window.location.href);
+    const handlePop = () => setStateUrl(parse(window.location.href));
     const handleClick = e => {
       // Attempt to find a valid "href", taking into account the exit conditions
       const href = getHref(e.target.closest("a"));
