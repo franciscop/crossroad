@@ -5,7 +5,7 @@ describe("format.parse()", () => {
     expect(parse("/welcome?hello=world#francisco")).toEqual({
       path: "/welcome",
       query: { hello: "world" },
-      hash: "francisco"
+      hash: "francisco",
     });
   });
 
@@ -38,11 +38,17 @@ describe("format.stringify()", () => {
     expect(stringify({ path: "/" })).toBe("/");
   });
 
-  const queryStr = query => stringify({ query });
+  const queryStr = (query) => stringify({ query });
   it("works with the query", () => {
     expect(queryStr({ a: "b" })).toBe("/?a=b");
     expect(queryStr({ a: "b", c: "d" })).toBe("/?a=b&c=d");
     expect(queryStr({ a: "b", c: "d", e: "f" })).toBe("/?a=b&c=d&e=f");
+  });
+
+  it("can ignore null", () => {
+    expect(queryStr({ a: null })).toBe("/");
+    expect(queryStr({ a: null, c: "d" })).toBe("/?c=d");
+    expect(queryStr({ a: null, c: "d", e: "f" })).toBe("/?c=d&e=f");
   });
 
   it("works with the query and array parameters", () => {

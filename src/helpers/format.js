@@ -1,6 +1,6 @@
-const single = arr => (arr.length > 1 ? arr : arr[0]);
+const single = (arr) => (arr.length > 1 ? arr : arr[0]);
 
-const parse = base => {
+const parse = (base) => {
   if (typeof base !== "string") return base;
   const url = {};
   const MyUrl = new URL(base, "http://localhost:3000/");
@@ -15,13 +15,16 @@ const parse = base => {
   return url;
 };
 
-const stringify = url => {
+const stringify = (url) => {
   if (typeof url === "string") return url;
   const { path, query = {}, hash } = url || {};
   let str = path || "/";
   const params = new URLSearchParams(
     Object.entries(query)
-      .map(([key, val]) => (val.map ? val : [val]).map(val => [key, val]))
+      .filter(([key, val]) => val)
+      .map(([key, val]) =>
+        (Array.isArray(val) ? val : [val]).map((val) => [key, val])
+      )
       .flat()
   ).toString();
   if (params) str += "?" + params;
