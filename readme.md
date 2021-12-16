@@ -450,7 +450,7 @@ setQuery(prev => ({ ...prev, search: "myname" }));
 
 `setQuery` only modifies the query string part of the URL, keeping the `path` and `hash` the same as they were previously.
 
-When you set a search query to `null` or `false`, it will be removed from the URL. However, empty strings are not removed. So if you want empty strings to also remove the parameter in the URL, please do this:
+When you set a search query to `null` it will be removed from the URL. However, empty strings `""`, zero `0` or boolean `false` are not removed. So if you want falsy values to also remove the parameter in the URL, please do this:
 
 ```js
 const [myname, setMyname] = useQuery("myname");
