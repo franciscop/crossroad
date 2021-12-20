@@ -5,9 +5,7 @@
   "homepage": "https://crossroad.page/",
   "repository": "https://github.com/franciscop/crossroad.git",
   "bugs": "https://github.com/franciscop/crossroad/issues",
-  "funding": {
-    "url": "https://www.paypal.me/franciscopresencia/19"
-  },
+  "funding": "https://www.paypal.me/franciscopresencia/19",
   "author": "Francisco Presencia <public@francisco.io> (https://francisco.io/)",
   "license": "MIT",
   "type": "module",
@@ -35,7 +33,7 @@
     "babel-polyfill": "^6.26.0",
     "jest": "^25.3.0",
     "react": "^16.8.0 || ^17.0.0",
-    "react-test": "^0.9.1",
+    "react-test": "^0.10.2",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-terser": "^5.2.0"
