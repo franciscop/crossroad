@@ -43,7 +43,7 @@ describe("Route.js", () => {
       if (show) {
         return (
           <Router>
-            <button onClick={e => setShow(false)}>Hello</button>
+            <button onClick={(e) => setShow(false)}>Hello</button>
           </Router>
         );
       }
@@ -149,7 +149,7 @@ describe("Route.js", () => {
     await $app.find("a:nth-child(2)").click();
     expect(mounted).toBe(1);
     expect(rendered).toBe(2);
-    await $app.find("a:nth-child(1)").click();
+    await $app.find('a[href="/"]').click();
     expect(mounted).toBe(1);
     expect(rendered).toBe(3);
   });

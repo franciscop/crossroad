@@ -21,11 +21,11 @@ const stringify = (url) => {
   let str = path || "/";
   const params = new URLSearchParams(
     Object.entries(query)
-      .filter(([key, val]) => val)
       .map(([key, val]) =>
         (Array.isArray(val) ? val : [val]).map((val) => [key, val])
       )
       .flat()
+      .filter(([key, val]) => val)
   ).toString();
   if (params) str += "?" + params;
   if (hash) str += "#" + hash;

@@ -125,6 +125,30 @@ export default function App() {
 
 You would normally setup this Router straight on your App, along things like [Statux](https://statux.dev/)'s or [Redux](https://redux.js.org/)'s Store, error handling, translations, etc.
 
+An example for a simple app:
+
+```js
+
+// App.js
+import Router, { Switch, Route} from "crossroad";
+
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+
+export default function App() {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/:username" component={Profile} />
+      </Switch>
+    </Router>
+  );
+}
+```
+
 ### `<Switch />`
 
 A component that will only render the first of its children that matches the current URL. This is very useful to handle 404s, multiple routes matching, etc. For example, if you have a username system like `"/:username"` but want to have a help page, you can make it work easily with the switch:
@@ -356,10 +380,44 @@ setUrl({ ...url, path: "/" });
 setUrl({ ...url, query: { search: "hello" } });
 
 // Modify only one query param
-setUrl({ ...url, query: { ...url.query, safe: 0 } });
+setUrl({ ...url, query: { ...url.query, safe: "no" } });
 ```
 
 `useUrl()` is powerful enough for all of your needs, but you might still be interested in other hooks to simplify situations where you do e.g. heavy query manipulation with `useQuery`.
+
+#### Setter
+
+The setter can be invoked directly, or with a callback:
+
+```js
+setUrl('/newurl');
+setUrl(oldUrl => '/newurl');
+setUrl(oldUrl => ({ ...oldUrl, path: newPath }));
+```
+
+The function `setUrl` is _always_ the same, so it doesn't matter whether you put it as a dependency or not. However the `path` can be updated and change, so you want to depend on it:
+
+```js
+const [url, setUrl] = useurl();
+useEffect(() => {
+  if (url.path === '/base') {
+    setUrl('/base/deeper');
+  }
+}, [url, setUrl]);
+```
+
+If you update the url with the current url, it won't trigger a rerender. So the above can also be written as this, removing all dependencies:
+
+```js
+const [url, setUrl] = useUrl();
+useEffect(() => {
+  setUrl(old => {
+    if (old.path === '/base') return '/base/deeper';
+    return old;
+  });
+}, []);
+```
+
 
 #### New history entry
 
@@ -369,7 +427,7 @@ By default `setUrl()` will create a new entry in the browser history. If you wan
 setUrl("/newurl", { mode: "replace" });
 ```
 
-- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`. This is because `/b` and `/b?q=c` are both independent entries in your history.
+- `push` (default): creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(push)> `/c` and then click on the back button, the browser will go back to `/b`. This is because `/b` and `/c` are both independent entries in your history.
 - `replace`: creates a new entry in the history. E.g. if you navigate `/a` => `/b` =(replace)> `/c` and then click on the back button, it'll go back to `/a`. This is because `/c` is overwriting `/b`, instead of adding a new entry.
 
 ### `usePath()`
@@ -389,7 +447,42 @@ const Login = () => {
 };
 ```
 
+The path is always a string equivalent to `window.location.pathname`.
+
 > Note: this _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
+
+#### Setter
+
+The setter can be invoked directly, or with a callback:
+
+```js
+setPath('/newpath');
+setPath(oldPath => '/newpath');
+```
+
+The function `setPath` is _always_ the same, so it doesn't matter whether you put it as a dependency or not. However the `path` can be updated, so you might want to put that:
+
+```js
+const [path, setPath] = usePath();
+useEffect(() => {
+  if (path === '/base') {
+    setPath('/base/deeper');
+  }
+}, [path, setPath]);
+```
+
+If you update the path with the current path, it won't trigger a rerender. So the above can also be written as this, removing all dependencies:
+
+```js
+const [path, setPath] = usePath();
+useEffect(() => {
+  setPath(old => {
+    if (old === '/base') return '/base/deeper';
+    return old;
+  });
+}, []);
+```
+
 
 #### New history entry
 
@@ -839,7 +932,7 @@ export default function Mock({ url, children }) {
   // Undo the setup when the component unmounts
   useEffect(() => {
     return () => Object.defineProperty(window, "location", oldLocation);
-  });
+  }, []);
   return <div>{children}</div>;
 }
 ```

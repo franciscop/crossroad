@@ -56,6 +56,7 @@ describe("format.stringify()", () => {
     expect(queryStr({ a: ["b", "c"] })).toBe("/?a=b&a=c");
     expect(queryStr({ a: ["b", "c"], d: "e" })).toBe("/?a=b&a=c&d=e");
     expect(queryStr({ a: ["b", "c", "d"] })).toBe("/?a=b&a=c&a=d");
+    expect(queryStr({ a: ["b", false, null] })).toBe("/?a=b");
   });
 
   it("works with the hash", () => {

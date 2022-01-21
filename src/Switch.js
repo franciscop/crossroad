@@ -4,9 +4,9 @@ import { stringify } from "./helpers/format.js";
 import samePath from "./helpers/samePath.js";
 import useUrl from "./hooks/useUrl.js";
 
-const toArray = children => {
+const toArray = (children) => {
   if (!Array.isArray(children)) children = [children];
-  return children.filter(c => c && c.props);
+  return children.filter((c) => c && c.props);
 };
 
 // Same as with React-Router Switch  (https://github.com/remix-run/react-router/blob/main/packages/react-router/modules/Switch.js#L23-L26),
@@ -14,7 +14,7 @@ const toArray = children => {
 // added so it remounts every time (even with the same component)
 export default ({ redirect, children }) => {
   const [url, setUrl] = useUrl();
-  const findMatch = child => samePath(child.props.path || "*", url);
+  const findMatch = (child) => samePath(child.props.path || "*", url);
   const match = toArray(children).find(findMatch) || null;
   useEffect(() => {
     if (!redirect) return;
