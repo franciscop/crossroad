@@ -44,7 +44,10 @@ export default ({ url: baseUrl, children }) => {
 
       // If it was found, handle it with Crossroad
       if (href) {
-        e.preventDefault();
+        // Internal links that scroll the page should still work as usual
+        if (href[0] !== "#") {
+          e.preventDefault();
+        }
         setUrl(href);
       }
     };
