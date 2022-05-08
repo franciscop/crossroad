@@ -89,7 +89,26 @@ describe("useUrl", () => {
     });
   });
 
-  it("should use either 'replace' or 'push'", async () => {
+  it("is stable", async () => {
+    let eff = 0;
+    let out = 0;
+    const $user = withPath("/a", () => {
+      const [url, setUrl] = useUrl();
+      out++;
+      useEffect(() => {
+        eff++;
+      }, [setUrl]);
+      const onClick = (e) => setUrl("/b");
+      return <RenderUrl onClick={onClick} />;
+    });
+
+    await $user.find("button").click();
+    expect(out).toBe(2);
+    expect(eff).toBe(1);
+  });
+
+  // Cannot test right now with ReactTest@0.13
+  it.skip("should use either 'replace' or 'push'", async () => {
     const $user = withPath("/user?hello=world#there", () => {
       const [url, setUrl] = useUrl();
       const onClick = (e) =>
