@@ -43,11 +43,9 @@ export default ({ url: baseUrl, children }) => {
       const href = getHref(e.target.closest("a"));
 
       // If it was found, handle it with Crossroad
-      if (href) {
+      if (href && href[0] !== "#") {
         // Internal links that scroll the page should still work as usual
-        if (href[0] !== "#") {
-          e.preventDefault();
-        }
+        e.preventDefault();
         setUrl(href);
       }
     };
