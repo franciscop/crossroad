@@ -41,13 +41,15 @@ export default ({ url: baseUrl, children }) => {
     const handleClick = (e) => {
       // Attempt to find a valid "href", taking into account the exit conditions
       const href = getHref(e.target.closest("a"));
+      if (!href) return;
+
+      // Found it, handle it with Crossroad properly
+      e.preventDefault();
+      const [path, hash] = href.split("#");
 
       // If it was found, handle it with Crossroad
-      if (href && href[0] !== "#") {
-        // Internal links that scroll the page should still work as usual
-        e.preventDefault();
-        setUrl(href);
-      }
+      if (path) setUrl(path);
+      if (hash) window.location.hash = "#" + hash;
     };
 
     window.addEventListener("popstate", handlePop);
