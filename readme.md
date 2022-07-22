@@ -7,6 +7,7 @@ A React library to handle navigation in your WebApp. Built with simple component
 - Links are plain `<a>` instead of custom components. [Read more](#a).
 - The `<Route>` path is `exact` by default and can match query parameters.
 - It's [just ~1.5kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
+- Add `scrollUp` to `<Router>` o `<Route>` to automatically scroll up on a route change.
 
 [**🔗 Demo on CodeSandbox**](https://codesandbox.io/s/recursing-wozniak-uftyo?file=/src/App.js)
 
@@ -123,18 +124,21 @@ export default function App() {
 }
 ```
 
+Add the prop `scrollUp` to automatically scroll up the browser window when _any_ route changes. In contrast, you could also add it only to a single or multiple `<Route>`.
+
+Add the prop `url` to simulate a fake URL instead of the current `window.location`, useful specially for testing.
+
 You would normally setup this Router straight on your App, along things like [Statux](https://statux.dev/)'s or [Redux](https://redux.js.org/)'s Store, error handling, translations, etc.
 
 An example for a simple app:
 
 ```js
-
 // App.js
-import Router, { Switch, Route} from "crossroad";
+import Router, { Switch, Route } from "crossroad";
 
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 
 export default function App() {
   return (
@@ -200,6 +204,7 @@ This component defines a conditional path that, when strictly matched, renders t
 - `component`: the component that will be rendered if the browser's URL matches the `path` parameter.
 - `render`: a function that will be called with the params if the browser's URL matches the `path` parameter.
 - `children`: the children to render if the browser's URL matches the `path` parameter.
+- `scrollUp`: automatically scroll up the browser window when this route/component/etc is matched.
 
 So for example if the `path` prop is `"/user"` and you visit the page `"/user"`, then the component is rendered; it is ignored otherwise:
 
@@ -390,9 +395,9 @@ setUrl({ ...url, query: { ...url.query, safe: "no" } });
 The setter can be invoked directly, or with a callback:
 
 ```js
-setUrl('/newurl');
-setUrl(oldUrl => '/newurl');
-setUrl(oldUrl => ({ ...oldUrl, path: newPath }));
+setUrl("/newurl");
+setUrl((oldUrl) => "/newurl");
+setUrl((oldUrl) => ({ ...oldUrl, path: newPath }));
 ```
 
 The function `setUrl` is _always_ the same, so it doesn't matter whether you put it as a dependency or not. However the `path` can be updated and change, so you want to depend on it:
@@ -400,8 +405,8 @@ The function `setUrl` is _always_ the same, so it doesn't matter whether you put
 ```js
 const [url, setUrl] = useurl();
 useEffect(() => {
-  if (url.path === '/base') {
-    setUrl('/base/deeper');
+  if (url.path === "/base") {
+    setUrl("/base/deeper");
   }
 }, [url, setUrl]);
 ```
@@ -411,13 +416,12 @@ If you update the url with the current url, it won't trigger a rerender. So the 
 ```js
 const [url, setUrl] = useUrl();
 useEffect(() => {
-  setUrl(old => {
-    if (old.path === '/base') return '/base/deeper';
+  setUrl((old) => {
+    if (old.path === "/base") return "/base/deeper";
     return old;
   });
 }, []);
 ```
-
 
 #### New history entry
 
@@ -456,8 +460,8 @@ The path is always a string equivalent to `window.location.pathname`.
 The setter can be invoked directly, or with a callback:
 
 ```js
-setPath('/newpath');
-setPath(oldPath => '/newpath');
+setPath("/newpath");
+setPath((oldPath) => "/newpath");
 ```
 
 The function `setPath` is _always_ the same, so it doesn't matter whether you put it as a dependency or not. However the `path` can be updated, so you might want to put that:
@@ -465,8 +469,8 @@ The function `setPath` is _always_ the same, so it doesn't matter whether you pu
 ```js
 const [path, setPath] = usePath();
 useEffect(() => {
-  if (path === '/base') {
-    setPath('/base/deeper');
+  if (path === "/base") {
+    setPath("/base/deeper");
   }
 }, [path, setPath]);
 ```
@@ -476,13 +480,12 @@ If you update the path with the current path, it won't trigger a rerender. So th
 ```js
 const [path, setPath] = usePath();
 useEffect(() => {
-  setPath(old => {
-    if (old === '/base') return '/base/deeper';
+  setPath((old) => {
+    if (old === "/base") return "/base/deeper";
     return old;
   });
 }, []);
 ```
-
 
 #### New history entry
 
@@ -508,7 +511,7 @@ export default function SearchInput() {
   // [{ search: "" }, fn]
 
   // Goes to /users?search={value}
-  const onChange = e => setQuery({ search: e.target.value });
+  const onChange = (e) => setQuery({ search: e.target.value });
 
   return <input value={query.search} onChange={onChange} />;
 }
@@ -537,7 +540,7 @@ setQuery({ search: "myname" });
 setQuery({ ...query, search: "myname" });
 // Goto /users?search=myname&filter=new
 
-setQuery(prev => ({ ...prev, search: "myname" }));
+setQuery((prev) => ({ ...prev, search: "myname" }));
 // Goto /users?search=myname&filter=new
 ```
 
@@ -926,7 +929,7 @@ export default function Mock({ url, children }) {
   delete global.window.location;
   Object.defineProperty(global.window, "location", {
     value: new URL(href),
-    configurable: true
+    configurable: true,
   });
 
   // Undo the setup when the component unmounts
@@ -991,10 +994,10 @@ For Razzle (based on [these docs FaQ](https://razzlejs.org/docs/customization#tr
 // razzle.config.js
 module.exports = {
   modifyWebpackOptions({ options: { webpackOptions } }) {
-    webpackOptions.notNodeExternalResMatch = req => /crossroad/.test(req);
+    webpackOptions.notNodeExternalResMatch = (req) => /crossroad/.test(req);
     webpackOptions.babelRule.include.push(/crossroad/);
     return webpackOptions;
-  }
+  },
 };
 ```
 
@@ -1053,7 +1056,7 @@ import { useUrl } from "crossroad";
 
 export default function LoginButton() {
   const [url, setUrl] = useUrl();
-  const login = async e => {
+  const login = async (e) => {
     // ...
     setUrl("/welcome");
   };

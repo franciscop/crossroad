@@ -5,7 +5,7 @@ import { parse, stringify } from "./helpers/format.js";
 import getHref from "./helpers/getHref.js";
 import isServer from "./helpers/isServer.js";
 
-export default ({ url: baseUrl, children }) => {
+export default ({ scrollUp, url: baseUrl, children }) => {
   const init = baseUrl || (isServer() ? "/" : window.location.href);
   const [url, setStateUrl] = useState(() => parse(init));
 
@@ -24,6 +24,10 @@ export default ({ url: baseUrl, children }) => {
 
       // Update the browser
       history[mode + "State"]({}, null, stringify(newUrl));
+
+      if (scrollUp) {
+        window.scrollTo(0, 0);
+      }
 
       // Add the entry to the current state, refresh whatever needs refreshing
       return parse(newUrl);

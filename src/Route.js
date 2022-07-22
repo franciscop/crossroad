@@ -3,11 +3,15 @@ import React, { useContext, useEffect } from "react";
 import Context from "./Context.js";
 import samePath from "./helpers/samePath.js";
 
-export default ({ path = "*", exact = true, component, render, children }) => {
+export default ({ path = "*", scrollUp, component, render, children }) => {
   // Check whether there's a parameter match or not
   const ctx = useContext(Context);
   const params = samePath(path, ctx[0]);
   if (!params) return null;
+
+  if (scrollUp) {
+    window.scrollTo(0, 0);
+  }
 
   // Find the correct child to use
   if (component) {
