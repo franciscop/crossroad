@@ -3,7 +3,7 @@
 A React library to handle navigation in your WebApp. Built with simple components and React Hooks so you write cleaner code:
 
 - `<Router>`, `<Switch>` and `<Route>` inspired by React Router so it's easy to get started.
-- Very useful hooks like [`useUrl`](#useurl), [`useQuery`](#usequery), etc.
+- Very useful hooks like [`useUrl`](#useurl), [`useQuery`](#usequery), etc. Follow [the rules of hooks](https://reactjs.org/docs/hooks-rules.html).
 - Links are plain `<a>` instead of custom components. [Read more](#a).
 - The `<Route>` path is `exact` by default and can match query parameters.
 - It's [just ~1.5kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
@@ -357,6 +357,10 @@ These are the structures of each:
   - `setUrl({ path: '/newpath', query: { hello: 'world' } })`: update the path and query (and delete the hash if any)
   - `setUrl(prev => ...)`: use the previous url (object)
 
+`useUrl()` is powerful enough for all of your needs, but you might still be interested in other hooks to simplify situations where you do e.g. heavy query manipulation with [`useQuery`](#usequery).
+
+#### url
+
 The resulting `url` is an object containing each of the parts of the URL:
 
 ```js
@@ -367,7 +371,25 @@ console.log(url.query); // { filter: hello }
 console.log(url.hash); // world
 ```
 
-You can also set it fully or partially:
+It is memoized, so that if the url doesn't change then the object will remain the same. The same of course applies to the subelements like `url.path`. It will however change when the url changes, so you want to put it in your dependencies as usual:
+
+```js
+// You can put the whole thing if you want to listen to
+// ANY change on the url
+useEffect(() => {
+  // ...
+}, [url]);
+
+// Or only a part of it. This is useful becase it WON'T trigger
+// when the query or hashtag change
+useEffect(() => {
+  // ...
+}, [url.path]);
+```
+
+#### Setter
+
+The setter can be invoked directly, or with a callback:
 
 ```js
 const [url, setUrl] = useUrl();
@@ -388,27 +410,15 @@ setUrl({ ...url, query: { search: "hello" } });
 setUrl({ ...url, query: { ...url.query, safe: "no" } });
 ```
 
-`useUrl()` is powerful enough for all of your needs, but you might still be interested in other hooks to simplify situations where you do e.g. heavy query manipulation with `useQuery`.
-
-#### Setter
-
-The setter can be invoked directly, or with a callback:
-
-```js
-setUrl("/newurl");
-setUrl((oldUrl) => "/newurl");
-setUrl((oldUrl) => ({ ...oldUrl, path: newPath }));
-```
-
 The function `setUrl` is _always_ the same, so it doesn't matter whether you put it as a dependency or not. However the `path` can be updated and change, so you want to depend on it:
 
 ```js
-const [url, setUrl] = useurl();
+const [url, setUrl] = useUrl();
 useEffect(() => {
   if (url.path === "/base") {
     setUrl("/base/deeper");
   }
-}, [url, setUrl]);
+}, [url.path, setUrl]);
 ```
 
 If you update the url with the current url, it won't trigger a rerender. So the above can also be written as this, removing all dependencies:
@@ -428,6 +438,7 @@ useEffect(() => {
 By default `setUrl()` will create a new entry in the browser history. If you want to instead replace the current url you can pass a second parameter with `{ mode: 'replace' }`:
 
 ```js
+setUrl("/newurl"); // Default: "push"
 setUrl("/newurl", { mode: "replace" });
 ```
 
@@ -451,9 +462,9 @@ const Login = () => {
 };
 ```
 
-The path is always a string equivalent to `window.location.pathname`.
+The path is always a string equivalent to `window.location.pathname`. Why not use `window.location.pathname` then? Because usePath() is a hook that will trigger a re-render when the path changes!
 
-> Note: this _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
+> Note: `setPath` _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
 
 #### Setter
 
@@ -492,6 +503,7 @@ useEffect(() => {
 By default `setPath()` will create a new entry in the browser history. If you want to instead replace the current url you can pass a second parameter with `{ mode: 'replace' }`:
 
 ```js
+setPath("/newpath"); // Default: "push"
 setPath("/newpath", { mode: "replace" });
 ```
 
@@ -568,6 +580,7 @@ import { useQuery as useSearch } from 'crossroad';
 By default `setQuery()` will create a new entry in the browser history. If you want to instead replace the current entry, so that the "Back" button goes to the previous page, you can pass a second parameter with `{ mode: 'replace' }`:
 
 ```js
+setQuery({ search: "abc" }); // Default: "push"
 setQuery({ search: "abc" }, { mode: "replace" });
 ```
 
@@ -600,6 +613,7 @@ If you want to remove the hash, pass a `null` or `undefined` to the setter.
 By default `setHash()` will create a new entry in the browser history. If you want to instead replace the current entry, so that the "Back" button goes to the previous page, you can pass a second parameter with `{ mode: 'replace' }`:
 
 ```js
+setHash("newhash"); // Default: "push"
 setHash("newhash", { mode: "replace" });
 ```
 
@@ -682,7 +696,7 @@ That's it, in the [Codesandbox](https://codesandbox.io/s/loving-joana-jikne) we 
 
 These refer to the websites where your username is straight after the domain, like Twitter (https://twitter.com/fpresencia). Of course Twitter has _other_ pages besides the username, so how can we emulate loading the page e.g. `/explore` in this case?
 
-The best way is to first define the known, company pages and then use the wildcard for the usernames:
+The best way is to first define the known, company pages and then use the wildcard for the usernames. This **must** be inside a `<Switch>`, otherwise multiple will be rendered:
 
 ```js
 <Switch>
@@ -751,7 +765,7 @@ export default function SearchForm() {
 }
 ```
 
-In here we can see that we are treating the output of `useQuery` in the sam way that we'd treat the output of `useState()`. This is on purpose and it makes things a lot easier for your application to work.
+In here we can see that we are treating the output of `useQuery` in the same way that we'd treat the output of `useState()`. This is on purpose and it makes things a lot easier for your application to work.
 
 ### Query routing
 
