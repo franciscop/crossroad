@@ -12,6 +12,11 @@ describe("useQuery", () => {
     expect($user.json("query")).toEqual({ hello: "world" });
   });
 
+  it("can read the encoded query", () => {
+    const $user = withPath("/user?he%20lo=wo%20ld", RenderUrl);
+    expect($user.json("query")).toEqual({ "he lo": "wo ld" });
+  });
+
   it("can change the query", async () => {
     const $user = withPath("/user?hello=world#there", () => {
       const [query, setQuery] = useQuery();

@@ -13,9 +13,13 @@ describe("samePath", () => {
     expect(samePath("/:id", { path: "/abc" })).toEqual({ id: "abc" });
   });
 
+  it("matches an encoded parameter", () => {
+    expect(samePath("/:id", { path: "/a%20c" })).toEqual({ id: "a c" });
+  });
+
   it("matches a subpath param match", () => {
     expect(samePath("/users/:id", { path: "/users/abc" })).toEqual({
-      id: "abc"
+      id: "abc",
     });
   });
 
@@ -25,7 +29,7 @@ describe("samePath", () => {
 
   it("matches a mixed param match", () => {
     expect(samePath("/users/:id/def", { path: "/users/abc/def" })).toEqual({
-      id: "abc"
+      id: "abc",
     });
   });
 
@@ -39,7 +43,7 @@ describe("samePath", () => {
 
   it("matches a partial match", () => {
     expect(samePath("/users/:id/*", { path: "/users/abc/def" })).toEqual({
-      id: "abc"
+      id: "abc",
     });
   });
 });
@@ -62,6 +66,9 @@ describe("match the query", () => {
   });
   it("matches multiple values", () => {
     expect(samePath("/?abc=def&ghi=jkl", "/?abc=def&ghi=jkl")).toEqual({});
+  });
+  it("matches an encoded value", () => {
+    expect(samePath("/?abc", "/?abc=d%20e")).toEqual({});
   });
   it("skips on a key", () => {
     expect(samePath("/?abc&ghi", "/?abc=def&ghh=jkl")).toBe(false);

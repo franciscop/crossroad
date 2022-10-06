@@ -16,13 +16,7 @@ export default function samePath(ref, url, params = {}) {
     ref.path = ref.path.replace(/\/?\*/, "") || "/";
 
     const length = ref.path.split("/").filter(Boolean).length;
-    url.path =
-      "/" +
-      url.path
-        .slice(1)
-        .split("/")
-        .slice(0, length)
-        .join("/");
+    url.path = "/" + url.path.slice(1).split("/").slice(0, length).join("/");
   }
 
   // Query matching
@@ -39,12 +33,12 @@ export default function samePath(ref, url, params = {}) {
   // Different length, cannot be the same paths
   if (ref.path.split("/").length !== url.path.split("/").length) return false;
 
-  // Make a comparison per-parameter; and exctract those parameters
+  // Make a comparison per-parameter; and extract those parameters
   const extra = {};
   const match = ref.path.split("/").every((ref, i) => {
     const part = url.path.split("/")[i];
     if (ref.startsWith(":")) {
-      extra[ref.slice(1)] = part;
+      extra[ref.slice(1)] = decodeURIComponent(part);
       return params; // A parameter is always a match
     }
     return part === ref;
