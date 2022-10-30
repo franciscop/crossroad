@@ -1,6 +1,6 @@
 {
   "name": "crossroad",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A React library to handle navigation easily in your WebApp",
   "homepage": "https://crossroad.page/",
   "repository": "https://github.com/franciscop/crossroad.git",
