@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import $ from "react-test";
 
 import { Mock } from "../test/index.js";
+import isServer from "./helpers/isServer.js";
 import Router, { Route, Switch, useUrl } from "./index.js";
 
-import isServer from "./helpers/isServer.js";
 jest.mock("./helpers/isServer.js");
 isServer.mockImplementation(() => false);
 

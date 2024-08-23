@@ -43,7 +43,7 @@ describe("Route.js", () => {
       if (show) {
         return (
           <Router>
-            <button onClick={(e) => setShow(false)}>Hello</button>
+            <button onClick={() => setShow(false)}>Hello</button>
           </Router>
         );
       }

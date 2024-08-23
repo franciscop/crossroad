@@ -45,7 +45,7 @@ export default ({ scrollUp, url: baseUrl, children }) => {
     const handleClick = (e) => {
       // Attempt to find a valid "href", taking into account the exit conditions
       const href = getHref(e.target.closest("a"));
-      if (!href) return;
+      if (!href) return false;
 
       // Found it, handle it with Crossroad properly
       e.preventDefault();
