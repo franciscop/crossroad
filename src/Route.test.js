@@ -6,7 +6,6 @@ import Router, { Route, Switch, useUrl } from "./index.js";
 
 const Home = () => <div>Home</div>;
 const User = ({ id }) => <div>User{id ? " " + id : null}</div>;
-const Other = () => <div>Other</div>;
 
 describe("Route.js", () => {
   it("can render the home", () => {
