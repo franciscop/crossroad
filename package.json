@@ -24,7 +24,9 @@
   "main": "index.min.js",
   "type": "module",
   "types": "src/index.d.ts",
-  "files": [],
+  "files": [
+    "src/index.d.ts"
+  ],
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
