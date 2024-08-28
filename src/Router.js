@@ -13,14 +13,14 @@ export default ({ scrollUp, url: baseUrl, children }) => {
   const setUrl = useCallback((newUrl, { mode = "push" } = {}) => {
     if (!history[mode + "State"]) throw new Error(`Invalid mode "${mode}"`);
 
-    // Accepts callbacks
-    newUrl = typeof newUrl === "function" ? newUrl(url) : newUrl;
-
     // Need to use the callback style so that it's stable and doesn't need to
     // be remounted every time
-    setStateUrl((url) => {
+    setStateUrl((prev) => {
+      // Accepts callbacks
+      newUrl = typeof newUrl === "function" ? newUrl(prev) : newUrl;
+
       // Don't update it if it's the same
-      if (stringify(url) === stringify(newUrl)) return url;
+      if (stringify(prev) === stringify(newUrl)) return prev;
 
       // Update the browser
       history[mode + "State"]({}, null, stringify(newUrl));
