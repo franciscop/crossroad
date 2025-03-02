@@ -1,6 +1,14 @@
 import React from "react";
 
-import Router, { Route, Switch, useHash, usePath, useQuery, useUrl } from "../";
+import Router, {
+  Route,
+  Switch,
+  useHash,
+  useParams,
+  usePath,
+  useQuery,
+  useUrl,
+} from "../";
 
 console.log(() => <Router />);
 console.log(() => <Router url="/hello" />);
@@ -71,3 +79,9 @@ console.log(_query2);
 const [hash, setHash] = useHash();
 hash.split("");
 setHash("hello");
+
+const params = useParams();
+console.log(params.key);
+
+const key = useParams("key");
+key.split("");
