@@ -24,7 +24,7 @@ describe("crossroad", () => {
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home");
   });
@@ -36,26 +36,23 @@ describe("crossroad", () => {
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home");
   });
 
   // React-Test@0.13 cannot read an error thrown during render()
-  it.skip("needs to be wrapped with <Router>", () => {
+  it("needs to be wrapped with <Router>", () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    try {
-      expect(() => {
-        $(
-          <Mock url="/">
-            <Route path="/" />
-          </Mock>
-        );
-      }).toThrow();
-    } finally {
-      console.error.mockRestore();
-    }
+    const $route = $(
+      <Mock url="/">
+        <Route path="/" />
+      </Mock>,
+    );
+    expect($route).toHaveError("Wrap your App with <Router>");
+
+    console.error.mockRestore();
   });
 
   it("cannot navigate when there is no window", async () => {
@@ -74,7 +71,7 @@ describe("crossroad", () => {
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home go");
     await $home.find("a").click();
@@ -97,7 +94,7 @@ describe("crossroad", () => {
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home go");
     await $home.find("a").click();

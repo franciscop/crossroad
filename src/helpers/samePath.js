@@ -38,7 +38,22 @@ export default function samePath(ref, url, params = {}) {
   const match = ref.path.split("/").every((ref, i) => {
     const part = url.path.split("/")[i];
     if (ref.startsWith(":")) {
-      extra[ref.slice(1)] = decodeURIComponent(part);
+      let key = ref.slice(1);
+      let type = "string";
+      if (key.includes("<")) {
+        [key, type] = key.split("<");
+        type = type.slice(0, -1);
+      }
+      const value = decodeURIComponent(part);
+      extra[key] =
+        type === "number"
+          ? Number(value)
+          : type === "date"
+            ? new Date(/^\d+$/.test(value) ? Number(value) : value)
+            : type === "boolean"
+              ? value === "true"
+              : value;
+      // console.log(key, value, extra);
       return params; // A parameter is always a match
     }
     return part === ref;

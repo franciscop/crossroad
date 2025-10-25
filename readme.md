@@ -26,7 +26,7 @@ export default function App() {
       <Switch redirect="/">
         <Route path="/" component={Home} />
         <Route path="/users" component={Users} />
-        <Route path="/users/:id" component={Profile} />
+        <Route path="/users/:id<number>" component={Profile} />
       </Switch>
     </Router>
   );
@@ -200,11 +200,13 @@ The `<Switch>` component only accepts `<Route>` as its children.
 
 This component defines a conditional path that, when strictly matched, renders the given component. Its props are:
 
-- `path`: the path to match to the current browser's URL. It can have parameters `/:id` and a wildcard at the end `*` to make it a partial route.
+- `path`: the path to match to the current browser's URL. It can have parameters `/:id`, with optional types like `/:id<number>`, and a wildcard at the end `*` to make it a partial route.
 - `component`: the component that will be rendered if the browser's URL matches the `path` parameter.
 - `render`: a function that will be called with the params if the browser's URL matches the `path` parameter.
 - `children`: the children to render if the browser's URL matches the `path` parameter.
 - `scrollUp`: automatically scroll up the browser window when this route/component/etc is matched.
+
+> Exactly one of "component | render | children" props must be defined, not 0, not multiple.
 
 So for example if the `path` prop is `"/user"` and you visit the page `"/user"`, then the component is rendered; it is ignored otherwise:
 
@@ -225,17 +227,23 @@ So for example if the `path` prop is `"/user"` and you visit the page `"/user"`,
 When matching a path with a parameter (a part of the url that starts with `:`) it will be passed as a prop straight to the children:
 
 ```js
-// In https://example.com/user/abc
-const User = ({ id }) => <div>Hello {id}</div>;
+// In https://example.com/user/25
+const User = ({ id }) => <div>Hello {id} ({typeof id})</div>;
 const UserList = () => <div>List here</div>;
 
 <Route path="/user/:id" component={User} />;
-// <div>Hello abc</div>
+// <div>Hello 25 (string)</div>
+
+<Route path="/user/:id<number>" component={User} />;
+// <div>Hello 25 (number)</div>
 
 <Route path="/user/:id" render={({ id }) => <User id={id} />} />;
-// <div>Hello abc</div>
+// <div>Hello 25 (string)</div>
 
-// Avoid when you need the params, since they cannot be passed
+<Route path="/user/:id<number>" render={({ id }) => <User id={id} />} />;
+// <div>Hello 25 (number)</div>
+
+// Avoid when you need the params, since they cannot be passed easily
 <Route path="/user/">
   <UserList />
 </Route>;
@@ -277,6 +285,18 @@ It can also match query parameters:
 <Route path="/profile?page2" component={User} />  // Wrong key
 <Route path="/profile?page=options" component={User} />  // Wrong value
 ```
+
+Finally, it can also attempt to convert the types to the specified format. It does _not_ run validation. The only really useful type right now is `number` and `date` (`string` is the default so no need for it):
+
+```jsx
+<Route path="/user/:id<number>" render={({ id }) => {
+  console.log(id, typeof id);  // 25 number
+}} />;
+
+<Route path="/metrics/:time<date>" render={({ time }) => {
+  console.log(time, typeof time);  // Jan 25th, 2055 Date
+}} />;
+````
 
 ### `<a>`
 
@@ -622,23 +642,51 @@ setHash("newhash", { mode: "replace" });
 
 ### `useParams()`
 
-Parse the current URL against the given reference:
+Get the parameters from the matched URL, already parsed as an object, or pass an argument to just get the key:
 
-```js
-// In /users/2
-const params = useParams("/users/:id");
-// { id: '2' }
+```ts
+function Profile() {
+  const { username } = useParams();
+  // or
+  const username = useParams('username');
+  return <div>Hello {username}</div>;
+}
 ```
 
-> Note: this returns a plain object, not a [value, setter] array
-
-It's not this method responsibility to match the url, just to attempt to parse it, so if there's no good match it'll just return an empty object (use a `<Route />` for path matching):
+The path in the [Route](#route) can also specify the type. Whenever possible it's preferable to use the props (since those can be type-checked automatically):
 
 ```js
-// In /pages/settings
-const params = useParams("/users/:id");
-// {}
+function Profile({ id }: { id: number }) {
+  return <div>Hello {id}</div>;
+}
+
+<Route path="/users/:id<number>" component={Profile} />
+````
+
+Because with React Context we cannot infer the types properly, so if you want to differentiate between string | number you can do so with:
+
+```js
+// <Route path="/users/:id/books/:bookId" ... />
+const userId = useParams<string>("id");  // "25"
+const bookId = useParams<string>("bookId");  // "55"
+
+
+// <Route path="/users/:id<number>/books/:bookId<number>" ... />
+const userId = useParams<number>("id");  // 25
+const bookId = useParams<number>("bookId");  // 55
 ```
+
+You can also type the whole list of params, but we recommend using useParams() with the key argument:
+
+```js
+// <Route path="/users/:id/books/:bookId" ... />
+const params = useParams<{ id: string, bookId: string }>();
+// { id: "25", bookId: "55" }
+
+// <Route path="/users/:id<number>/books/:bookId<number>" ... />
+const params = useParams<{ id: number, bookId: number }>();
+// { id: 25, bookId: 55 }
+````
 
 ## Examples
 
@@ -766,6 +814,46 @@ export default function SearchForm() {
 ```
 
 In here we can see that we are treating the output of `useQuery` in the same way that we'd treat the output of `useState()`. This is on purpose and it makes things a lot easier for your application to work.
+
+### Dynamic Pagination
+
+This example shows how to use path params with mixed types to track the current page in the URL, enabling bookmarkable, dynamic list navigation. Clicking "Previous" or "Next" updates the page number:
+
+```tsx
+import Router, { Switch, Route, useQuery, useParams } from "crossroad";
+
+const Category = ({ category, page }) => {
+  const posts = fetchPosts(category, page); // Simulated API call
+
+  return (
+    <div>
+      <h1>{category} Posts - Page {page}</h1>
+      <ul>{posts.map(post => <li key={post.id}>{post.title}</li>)}</ul>
+      <nav>
+        {page > 1 ? (
+          <a href={`/${category}/${page - 1}`}>Previous</a>
+        ) : 'Previous'}
+        <a href={`/${category}/${page + 1}`}>Next</a>
+      </nav>
+    </div>
+  );
+};
+
+export default function App() {
+  return (
+    <Router>
+      <nav>
+        <a href="/tech/1">Tech</a>
+        <a href="/lifestyle/1">Lifestyle</a>
+      </nav>
+      <Switch>
+        <Route path="/:category/:page<number>" component={Category} />
+        <Route path="/" component={() => <div>Home</div>} />
+      </Switch>
+    </Router>
+  );
+}
+```
 
 ### Query routing
 

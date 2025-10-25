@@ -8,7 +8,7 @@ export default (key) => {
   const [{ params }] = useContext(Context);
 
   // If there's no string, pass the last used one
-  if (!key) return params;
+  if (!key) return params || {};
 
   return key in params ? params[key] : "";
 };

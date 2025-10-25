@@ -15,26 +15,25 @@ describe("Route.js", () => {
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home");
   });
 
   // React-Test@0.13 cannot catch an error during render()
-  it.skip("needs one of the three props", () => {
+  it("needs one of the three props", () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    try {
-      expect(() => {
-        $(
-          <Router url="/">
-            <Route path="/" />
-          </Router>
-        );
-      }).toThrow();
-    } finally {
-      console.error.mockRestore();
-    }
+    const $route = $(
+      <Router url="/">
+        <Route path="/" />
+      </Router>,
+    );
+
+    expect($route).toHaveError(
+      "Route needs prop `component`, `render` or `children`",
+    );
+    console.error.mockRestore();
   });
 
   it("unmounts without any issue", async () => {
@@ -52,7 +51,7 @@ describe("Route.js", () => {
     const $app = $(
       <div>
         <App />
-      </div>
+      </div>,
     );
     expect($app.text()).toBe("Hello");
     await $app.find("button").click();
@@ -66,7 +65,7 @@ describe("Route.js", () => {
           <Route path="/" component={Home} />
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     ).toHaveText("Home");
     expect(
       <Mock url="/">
@@ -74,7 +73,7 @@ describe("Route.js", () => {
           <Route path="/" render={() => <Home />} />
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     ).toHaveText("Home");
     expect(
       <Mock url="/">
@@ -84,7 +83,7 @@ describe("Route.js", () => {
           </Route>
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     ).toHaveText("Home");
   });
 
@@ -95,7 +94,7 @@ describe("Route.js", () => {
           <Route path="/*" component={Home} />
           <Route path="/user" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home");
   });
@@ -107,9 +106,102 @@ describe("Route.js", () => {
           <Route path="/*" component={Home} />
           <Route path="/user/:id" component={User} />
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("HomeUser abc");
+  });
+
+  it("parses the types as strings by default", () => {
+    const $home = $(
+      <Mock url="/users/abc/books/def">
+        <Router>
+          <Route
+            path="/users/:userId/books/:bookId"
+            component={({ userId, bookId }) => (
+              <div>
+                {userId} ({typeof userId}) - {bookId} ({typeof bookId})
+              </div>
+            )}
+          />
+        </Router>
+      </Mock>,
+    );
+    expect($home.text()).toBe("abc (string) - def (string)");
+  });
+
+  it("parses the types as explicit strings", () => {
+    const $home = $(
+      <Mock url="/users/abc/books/def">
+        <Router>
+          <Route
+            path="/users/:userId<string>/books/:bookId<string>"
+            component={({ userId, bookId }) => (
+              <div>
+                {userId} ({typeof userId}) - {bookId} ({typeof bookId})
+              </div>
+            )}
+          />
+        </Router>
+      </Mock>,
+    );
+    expect($home.text()).toBe("abc (string) - def (string)");
+  });
+
+  it("parses the types as explicit numbers", () => {
+    const $home = $(
+      <Mock url="/users/25/books/55">
+        <Router>
+          <Route
+            path="/users/:userId<number>/books/:bookId<number>"
+            component={({ userId, bookId }) => (
+              <div>
+                {userId} ({typeof userId}) - {bookId} ({typeof bookId})
+              </div>
+            )}
+          />
+        </Router>
+      </Mock>,
+    );
+    expect($home.text()).toBe("25 (number) - 55 (number)");
+  });
+
+  it("parses the types as explicit dates", () => {
+    const $home = $(
+      <Mock url="/users/2025-12-31/books/1735660861000">
+        <Router>
+          <Route
+            path="/users/:userId<date>/books/:bookId<date>"
+            component={({ userId, bookId }) => (
+              <div>
+                {userId.toISOString()} {bookId.toISOString()}
+              </div>
+            )}
+          />
+        </Router>
+      </Mock>,
+    );
+    expect($home.text()).toBe(
+      "2025-12-31T00:00:00.000Z 2024-12-31T16:01:01.000Z",
+    );
+  });
+
+  it("parses the types as explicit booleans", () => {
+    const $home = $(
+      <Mock url="/users/true/books/false">
+        <Router>
+          <Route
+            path="/users/:userId<boolean>/books/:bookId<boolean>"
+            component={({ userId, bookId }) => (
+              <div>
+                {String(userId)} ({typeof userId}) - {String(bookId)} (
+                {typeof bookId})
+              </div>
+            )}
+          />
+        </Router>
+      </Mock>,
+    );
+    expect($home.text()).toBe("true (boolean) - false (boolean)");
   });
 
   // According to this React Router comment:

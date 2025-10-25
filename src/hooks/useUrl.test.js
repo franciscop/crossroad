@@ -16,20 +16,17 @@ describe("useUrl", () => {
   });
 
   // React-Test@0.13 cannot read an error thrown during render()
-  it.skip("requires to be wrapped in <Router />", () => {
+  it("requires to be wrapped in <Router />", () => {
     jest.spyOn(console, "error").mockImplementation(() => {});
 
-    try {
-      const App = () => {
-        const [url, setUrl] = useUrl();
-        return <div>Hello</div>;
-      };
-      expect(() => {
-        $(<App />);
-      }).toThrow();
-    } finally {
-      console.error.mockRestore();
-    }
+    const App = () => {
+      const [url, setUrl] = useUrl();
+      return <div>Hello</div>;
+    };
+    const $app = $(<App />);
+    expect($app).toHaveError("Wrap your App with <Router>");
+
+    console.error.mockRestore();
   });
 
   it("can change the url", async () => {
@@ -108,19 +105,13 @@ describe("useUrl", () => {
     expect(eff).toBe(1);
   });
 
-  // Cannot test right now with ReactTest@0.13
-  it.skip("should use either 'replace' or 'push'", async () => {
+  // Cannot test right now with ReactTest@0.22.1
+  it("should use either 'replace' or 'push'", async () => {
     const $user = withPath("/user?hello=world#there", () => {
       const [url, setUrl] = useUrl();
-      const onClick = (e) =>
-        setUrl("/user2?hello=world2#there2", { mode: "abc" });
+      setUrl("/user2?hello=world2#there2", { mode: "abc" });
       return <RenderUrl onClick={onClick} />;
     });
-    expect($user.text()).toEqual("");
-    try {
-      await $user.find("button").click();
-    } catch (error) {
-      expect(error.message).toBe(`Invalid mode "abc"`);
-    }
+    expect($user).toHaveError(`Invalid mode "abc"`);
   });
 });

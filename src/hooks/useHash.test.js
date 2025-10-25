@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import $ from "react-test";
 import { RenderUrl, withPath } from "../../test/index.js";
 import useHash from "./useHash.js";
 

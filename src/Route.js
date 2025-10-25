@@ -2,10 +2,11 @@ import React, { useContext, useEffect } from "react";
 
 import Context from "./Context.js";
 import samePath from "./helpers/samePath.js";
+import useUrl from "./hooks/useUrl.js";
 
 export default ({ path = "*", scrollUp, component, render, children }) => {
   // Check whether there's a parameter match or not
-  const ctx = useContext(Context);
+  const ctx = useUrl();
   const params = samePath(path, ctx[0]);
   if (!params) return null;
 

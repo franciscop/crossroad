@@ -30,29 +30,19 @@ console.log(() => <Route path="/hello/:id" render={() => <div>Hello</div>} />);
 console.log(() => (
   <Route path="/hello/:id" render={({ id }) => <div>Hello {id}</div>} />
 ));
+// Now with types!
 console.log(() => (
-  <Route path="/hello/:id">
-    <div>Hello</div>
-  </Route>
-));
-// Specify the reception types
-console.log(() => (
-  <Route<{ id: string }> path="/hello/:id" component={() => <div>Hello</div>} />
-));
-console.log(() => (
-  <Route<{ id: string }>
-    path="/hello/:id"
-    component={({ id }) => <div>Hello {id}</div>}
+  <Route
+    path="/hello/:id<number>"
+    component={({ id }) => <div>Hello {id.toFixed(2)}</div>}
   />
 ));
 console.log(() => (
-  <Route<{ id: string }> path="/hello/:id" render={() => <div>Hello</div>} />
+  <Route path="/hello/:id" component={({ id }) => <div>Hello {id}</div>} />
 ));
+console.log(() => <Route path="/hello/:id" render={() => <div>Hello</div>} />);
 console.log(() => (
-  <Route<{ id: string }>
-    path="/hello/:id"
-    render={({ id }) => <div>Hello {id}</div>}
-  />
+  <Route path="/hello/:id" render={({ id }) => <div>Hello {id}</div>} />
 ));
 
 const [url, setUrl] = useUrl();
@@ -81,7 +71,16 @@ hash.split("");
 setHash("hello");
 
 const params = useParams();
-console.log(params.key);
+console.log(params.key); // String OR Number, TS cannot know...
 
-const key = useParams("key");
+const params2 = useParams<{ id: number }>();
+params2.id.toFixed(0);
+
+const arb = useParams("arb");
+(arb as string).split("");
+
+const key = useParams<string>("key");
 key.split("");
+
+const id = useParams<number>("id");
+id.toFixed(0);

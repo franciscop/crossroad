@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import $ from "react-test";
 
 import { Mock } from "../test/index.js";
@@ -59,7 +59,7 @@ describe("<a> links", () => {
             go
           </a>
         }
-      />
+      />,
     );
     expect($home.text()).toBe("Home go");
     await $home.find("a").click();
