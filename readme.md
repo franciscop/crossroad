@@ -317,6 +317,7 @@ An important concept to understand is where links open, whether it's a react nav
 - `/`: plain paths will navigate within React
 - `/?abc=def`: queries, hashtags, etc. will also perform a navigation in React
 - `https://example.com/`: full URLs will trigger a browser page change
+- `tel:+1234567890`, `mailto:test@example.com`: non-HTTP protocol links will trigger a browser action (call, email, etc.)
 - `target="_self"`: will trigger a browser page change, in the same tab
 - `target="_blank"`: will open a new tab
 
