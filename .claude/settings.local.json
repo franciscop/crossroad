@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx jest:*)",
+      "Bash(npm show:*)",
+      "Bash(node -e \":*)"
+    ]
+  }
+}
