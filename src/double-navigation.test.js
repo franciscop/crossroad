@@ -28,10 +28,16 @@ describe("double navigation", () => {
   let pushState;
 
   beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation((err) => {
+      if (!err.message?.includes("Not implemented: navigation")) {
+        console.log(err);
+      }
+    });
     pushState = jest.spyOn(history, "pushState");
   });
 
   afterEach(() => {
+    console.error.mockRestore();
     pushState.mockRestore();
   });
 
