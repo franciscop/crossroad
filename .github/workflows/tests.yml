@@ -1,17 +1,12 @@
 name: tests
 
-on:
-  push:
-  schedule:
-    - cron: "0 0 1 1 *" # Runs every January 1st at 00:00 UTC
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [24.x]
 
     steps:
       - uses: actions/checkout@v1
