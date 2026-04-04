@@ -24,36 +24,39 @@
     }
   },
   "scripts": {
-    "build": "vite build && npm run build:prettier",
+    "build": "vite build && mv dist/index.min.js . && dts-bundle-generator --out-file index.d.ts src/index.ts && rm -rf dist && npm run build:prettier",
     "build:prettier": "prettier src *.ts *.json --write",
     "lint": "tsc",
-    "size": "echo $(gzip -c dist/index.min.js | wc -c) bytes",
+    "size": "echo $(gzip -c index.min.js | wc -c) bytes",
     "start": "vitest",
     "test": "vitest run --coverage"
   },
-  "main": "dist/index.min.js",
+  "main": "index.min.js",
   "type": "module",
-  "types": "dist/src/index.d.ts",
+  "types": "index.d.ts",
   "files": [
-    "dist"
+    "index.min.js",
+    "index.d.ts"
   ],
   "devDependencies": {
     "@types/node": "^25.5.2",
     "@types/react": "^18.3.4",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.2",
+    "dts-bundle-generator": "^9.5.1",
     "esbuild": "^0.27.7",
     "jsdom": "^29.0.1",
     "prettier": "^3.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-test": "^0.24.2",
+    "terser": "^5.46.1",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^4.1.2"
   },
   "peerDependencies": {
-    "react": ">=16.8.0"
+    "react": ">=18.0.0"
   }
 }

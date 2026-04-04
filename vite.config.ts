@@ -1,14 +1,8 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
-import dts from "vite-plugin-dts";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    dts({
-      exclude: ["src/**/*.test.*", "src/helpers.tsx", "src/vitest.setup.ts"],
-    }),
-  ],
+  plugins: [react()],
   build: {
     lib: {
       entry: "src/index.ts",
@@ -16,7 +10,7 @@ export default defineConfig({
       fileName: () => "index.min.js",
     },
     rollupOptions: { external: ["react"] },
-    minify: "esbuild",
+    minify: "terser",
     sourcemap: false,
   },
   test: {
