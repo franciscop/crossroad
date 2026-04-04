@@ -110,7 +110,7 @@ describe("useUrl", () => {
     const $user = withPath("/user?hello=world#there", () => {
       const [url, setUrl] = useUrl();
       setUrl("/user2?hello=world2#there2", { mode: "abc" as any });
-      return <RenderUrl onClick={onClick} />;
+      return <RenderUrl />;
     });
     expect($user).toHaveError(`Invalid mode "abc"`);
   });

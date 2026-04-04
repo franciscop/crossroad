@@ -18,7 +18,7 @@ const App = ({ url = "/", homeLink = Home, userLink = User }) => (
 
 describe("<a> links", () => {
   beforeEach(() => {
-    jest.spyOn(console, "error").mockImplementation((err) => {
+    jest.spyOn(console, "error").mockImplementation((err: any) => {
       if (!err.message.includes("Not implemented: navigation")) {
         console.log(err);
       }

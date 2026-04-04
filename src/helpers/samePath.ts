@@ -1,11 +1,11 @@
 import { parse } from "./format.ts";
-import type { Url, Params } from "../types.ts";
+import type { Url, UrlSet, Params } from "../types.ts";
 
 // ref - the path as typed by the user
 // url - the current url
 export default function samePath(
-  ref: string | Url,
-  url: string | Url,
+  ref: string | Url | UrlSet,
+  url: string | Url | UrlSet,
   params: Params = {}
 ): Params | false {
   // Clone them, to be able to mutate them within this function

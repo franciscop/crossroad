@@ -5,7 +5,7 @@ import usePath from "../src/hooks/usePath.ts";
 import useQuery from "../src/hooks/useQuery.ts";
 import useHash from "../src/hooks/useHash.ts";
 
-export default function RenderUrl({ onClick, children }: { onClick?: () => void; children?: React.ReactNode }) {
+export default function RenderUrl({ onClick, children }: { onClick?: React.MouseEventHandler<HTMLButtonElement>; children?: React.ReactNode }) {
   const [url] = useUrl();
   const [path] = usePath();
   const [query] = useQuery();
