@@ -7,9 +7,15 @@ import type { Query, SetUrlOptions } from "../types";
 const strQuery = (query: Query): string => stringify({ query });
 
 type QueryValue = string | string[] | undefined;
-type SetQueryProp = (value: string | ((prev: QueryValue) => string), opts?: SetUrlOptions) => void;
+type SetQueryProp = (
+  value: string | ((prev: QueryValue) => string),
+  opts?: SetUrlOptions,
+) => void;
 type QueryUpdater = (query: Query) => Query | string;
-type SetQuery = (newQuery: Query | string | QueryUpdater, opts?: SetUrlOptions) => void;
+type SetQuery = (
+  newQuery: Query | string | QueryUpdater,
+  opts?: SetUrlOptions,
+) => void;
 
 const useQueryProp = (key: string): [QueryValue, SetQueryProp] => {
   const [url, setUrl] = useUrl();
@@ -37,7 +43,8 @@ const useQueryObject = (): [Query, SetQuery] => {
   const setQuery = useCallback<SetQuery>((newQuery, opts) => {
     setUrl((url) => {
       // Accepts also function callbacks
-      let q: Query | string = typeof newQuery === "function" ? newQuery(url.query) : newQuery;
+      let q: Query | string =
+        typeof newQuery === "function" ? newQuery(url.query) : newQuery;
 
       // Parse a string to the proper object
       if (typeof q === "string") {

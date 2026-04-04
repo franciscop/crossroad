@@ -23,8 +23,12 @@ export default ({ scrollUp, url: baseUrl, children }: RouterProps) => {
 
   // Memoize the callback so it doesn't trigger remounts
   const setUrl = useCallback(
-    (newUrl: NewUrlValue | ((prev: Url) => NewUrlValue), { mode = "push" }: SetUrlOptions = {}) => {
-      if (!(history as any)[mode + "State"]) throw new Error(`Invalid mode "${mode}"`);
+    (
+      newUrl: NewUrlValue | ((prev: Url) => NewUrlValue),
+      { mode = "push" }: SetUrlOptions = {},
+    ) => {
+      if (!(history as any)[mode + "State"])
+        throw new Error(`Invalid mode "${mode}"`);
 
       // Need to use the callback style so that it's stable and doesn't need to
       // be remounted every time
@@ -51,7 +55,7 @@ export default ({ scrollUp, url: baseUrl, children }: RouterProps) => {
         if (scrollUp) window.scrollTo(0, 0);
       }
     },
-    []
+    [],
   );
 
   // Keep the ref in sync when state updates from sources other than setUrl

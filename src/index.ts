@@ -18,5 +18,5 @@ export {
   useQuery,
   useHash,
   useParams,
-  Context
+  Context,
 };

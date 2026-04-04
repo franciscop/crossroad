@@ -47,14 +47,32 @@ describe("use the Mock component", () => {
   );
 
   it("renders the home component on /", () => {
-    expect($(<Mock url="/"><App /></Mock>).text()).toBe("Home");
+    expect(
+      $(
+        <Mock url="/">
+          <App />
+        </Mock>,
+      ).text(),
+    ).toBe("Home");
   });
 
   it("renders the user list on /users", () => {
-    expect($(<Mock url="/users"><App /></Mock>).text()).toBe("Users");
+    expect(
+      $(
+        <Mock url="/users">
+          <App />
+        </Mock>,
+      ).text(),
+    ).toBe("Users");
   });
 
   it("renders not found when in another route", () => {
-    expect($(<Mock url="/bla"><App /></Mock>).text()).toContain("not found");
+    expect(
+      $(
+        <Mock url="/bla">
+          <App />
+        </Mock>,
+      ).text(),
+    ).toContain("not found");
   });
 });

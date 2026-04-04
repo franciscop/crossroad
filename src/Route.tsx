@@ -34,8 +34,10 @@ interface RoutePropsBase {
   children?: React.ReactNode;
 }
 
-type RouteProps<T extends Record<string, string | number | boolean | Date> = {}> =
-  RoutePropsBase & (
+type RouteProps<
+  T extends Record<string, string | number | boolean | Date> = {},
+> = RoutePropsBase &
+  (
     | { component: React.FunctionComponent<T>; render?: never }
     | { render: (params: T) => React.ReactNode; component?: never }
     | { component?: never; render?: never }
@@ -45,7 +47,13 @@ type RouteType = <P extends string = string>(
   props: RouteProps<InferParamsFromPath<P>> & { path?: P },
 ) => React.ReactNode;
 
-const RouteImpl = ({ path = "*", scrollUp, component, render, children }: RoutePropsBase & {
+const RouteImpl = ({
+  path = "*",
+  scrollUp,
+  component,
+  render,
+  children,
+}: RoutePropsBase & {
   component?: React.ComponentType<Params>;
   render?: (params: Params) => React.ReactNode;
 }) => {

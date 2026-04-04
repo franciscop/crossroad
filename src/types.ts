@@ -21,5 +21,5 @@ export type NewUrlValue = Url | UrlSet | string;
 
 export type SetUrl = (
   newUrl: NewUrlValue | ((prev: Url) => NewUrlValue),
-  opts?: SetUrlOptions
+  opts?: SetUrlOptions,
 ) => void;

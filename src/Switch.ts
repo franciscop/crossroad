@@ -12,7 +12,8 @@ interface ChildWithProps {
 const toArray = (children: ReactNode): ChildWithProps[] => {
   const arr = Array.isArray(children) ? children : [children];
   return arr.filter(
-    (c): c is ChildWithProps => c != null && typeof c === "object" && "props" in c
+    (c): c is ChildWithProps =>
+      c != null && typeof c === "object" && "props" in c,
   );
 };
 
@@ -26,7 +27,8 @@ interface SwitchProps {
 // added so it remounts every time (even with the same component)
 export default ({ redirect, children }: SwitchProps): ReactElement | null => {
   const [url, setUrl] = useUrl();
-  const findMatch = (child: ChildWithProps) => samePath(child.props.path || "*", url);
+  const findMatch = (child: ChildWithProps) =>
+    samePath(child.props.path || "*", url);
   const match = toArray(children).find(findMatch) || null;
   useEffect(() => {
     if (!redirect) return;

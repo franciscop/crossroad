@@ -58,7 +58,9 @@ describe("useHash", () => {
     expect(count).toBe(1);
     await $user.find("button").click();
     expect(count).toBe(1);
-    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("hello world");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual(
+      "hello world",
+    );
   });
 
   it("doesn't update if it's the same hash", async () => {

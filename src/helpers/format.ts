@@ -1,6 +1,7 @@
 import type { Query, Url, UrlSet } from "../types";
 
-const single = (arr: string[]): string | string[] => (arr.length > 1 ? arr : arr[0]);
+const single = (arr: string[]): string | string[] =>
+  arr.length > 1 ? arr : arr[0];
 
 export const parse = (base: string | Url | UrlSet): Url => {
   if (typeof base !== "string") return base as Url;
@@ -19,17 +20,20 @@ export const parse = (base: string | Url | UrlSet): Url => {
   return url as Url;
 };
 
-export const stringify = (url: string | Url | UrlSet | null | undefined): string => {
+export const stringify = (
+  url: string | Url | UrlSet | null | undefined,
+): string => {
   if (typeof url === "string") return url;
   const { path, query = {}, hash } = url || {};
   let str = path || "/";
   const params = new URLSearchParams(
-    (Object.entries(query)
-      .map(([key, val]) =>
-        (Array.isArray(val) ? val : [val]).map((val) => [key, val]),
-      )
-      .flat() as string[][])
-      .filter(([key, val]) => val),
+    (
+      Object.entries(query)
+        .map(([key, val]) =>
+          (Array.isArray(val) ? val : [val]).map((val) => [key, val]),
+        )
+        .flat() as string[][]
+    ).filter(([key, val]) => val),
   ).toString();
   if (params) str += "?" + params;
   if (hash) str += "#" + hash;

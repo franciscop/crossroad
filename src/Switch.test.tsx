@@ -19,7 +19,7 @@ describe("<Switch>", () => {
             <Route path="/hello" component={Other} />
           </Switch>
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home");
   });
@@ -34,7 +34,7 @@ describe("<Switch>", () => {
             <Route component={Other} />
           </Switch>
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Other");
   });
@@ -45,7 +45,7 @@ describe("<Switch>", () => {
         <Router>
           <Switch></Switch>
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("");
   });
@@ -56,7 +56,7 @@ describe("<Switch>", () => {
         <Router>
           <Switch>abc</Switch>
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("");
   });
@@ -70,7 +70,7 @@ describe("<Switch>", () => {
             <Route path="/user/" component={User} />
           </Switch>
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home");
   });
@@ -84,7 +84,7 @@ describe("<Switch>", () => {
             <Route path="/user/" component={User} />
           </Switch>
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home");
   });
@@ -98,7 +98,7 @@ describe("<Switch>", () => {
             <Route path="/user/" component={User} />
           </Switch>
         </Router>
-      </Mock>
+      </Mock>,
     );
     expect($home.text()).toBe("Home");
   });

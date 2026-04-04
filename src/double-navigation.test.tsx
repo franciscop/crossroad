@@ -10,7 +10,14 @@ const AppWithHashLink = ({ url = "/user" }) => (
   <Mock url={url}>
     <Router>
       <Route path="/" render={() => <div>Home</div>} />
-      <Route path="/user" render={() => <div>User <a href="/#section">go home</a></div>} />
+      <Route
+        path="/user"
+        render={() => (
+          <div>
+            User <a href="/#section">go home</a>
+          </div>
+        )}
+      />
     </Router>
   </Mock>
 );
@@ -19,7 +26,14 @@ const AppWithHashLink = ({ url = "/user" }) => (
 const App = ({ url = "/" }) => (
   <Mock url={url}>
     <Router>
-      <Route path="/" render={() => <div>Home <a href="/user">go</a></div>} />
+      <Route
+        path="/"
+        render={() => (
+          <div>
+            Home <a href="/user">go</a>
+          </div>
+        )}
+      />
       <Route path="/user" render={() => <div>User</div>} />
     </Router>
   </Mock>

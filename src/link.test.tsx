@@ -19,7 +19,9 @@ const App = ({ url = "/", homeLink = Home, userLink = User }) => (
 describe("<a> links", () => {
   beforeEach(() => {
     vi.spyOn(console, "error").mockImplementation((err: any) => {
-      if (!String(err?.message ?? err).includes("Not implemented: navigation")) {
+      if (
+        !String(err?.message ?? err).includes("Not implemented: navigation")
+      ) {
         console.log(err);
       }
     });
