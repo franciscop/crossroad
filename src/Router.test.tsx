@@ -5,7 +5,7 @@ import { Mock } from "../test/index.ts";
 import isServer from "./helpers/isServer.ts";
 import Router, { Route, Switch, useUrl } from "./index.ts";
 
-jest.mock("./helpers/isServer.js");
+jest.mock("./helpers/isServer.ts");
 (isServer as jest.Mock).mockImplementation(() => false);
 
 const Home = () => <div>Home</div>;
@@ -14,7 +14,7 @@ const Other = () => <div>Other</div>;
 
 describe("crossroad", () => {
   afterEach(() => {
-    jest.unmock("./helpers/isServer.js");
+    jest.unmock("./helpers/isServer.ts");
   });
 
   it("can overload the home", () => {
