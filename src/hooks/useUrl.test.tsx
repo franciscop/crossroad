@@ -8,7 +8,7 @@ import useUrl from "./useUrl.ts";
 describe("useUrl", () => {
   it("can parse the url", () => {
     const $user = withPath("/user?hello=world#there", RenderUrl);
-    expect($user.json()).toEqual({
+    expect(JSON.parse($user.find("button").data("url")!)).toEqual({
       path: "/user",
       query: { hello: "world" },
       hash: "there",
@@ -35,13 +35,13 @@ describe("useUrl", () => {
       const onClick = (e: any) => setUrl("/user2?hello=world2#there2");
       return <RenderUrl onClick={onClick} />;
     });
-    expect($user.json()).toEqual({
+    expect(JSON.parse($user.find("button").data("url")!)).toEqual({
       path: "/user",
       query: { hello: "world" },
       hash: "there",
     });
     await $user.find("button").click();
-    expect($user.json()).toEqual({
+    expect(JSON.parse($user.find("button").data("url")!)).toEqual({
       path: "/user2",
       query: { hello: "world2" },
       hash: "there2",
@@ -54,13 +54,13 @@ describe("useUrl", () => {
       const onClick = (e: any) => setUrl(() => "/user2?hello=world2#there2");
       return <RenderUrl onClick={onClick} />;
     });
-    expect($user.json()).toEqual({
+    expect(JSON.parse($user.find("button").data("url")!)).toEqual({
       path: "/user",
       query: { hello: "world" },
       hash: "there",
     });
     await $user.find("button").click();
-    expect($user.json()).toEqual({
+    expect(JSON.parse($user.find("button").data("url")!)).toEqual({
       path: "/user2",
       query: { hello: "world2" },
       hash: "there2",
@@ -74,13 +74,13 @@ describe("useUrl", () => {
         setUrl("/user2?hello=world2#there2", { mode: "replace" });
       return <RenderUrl onClick={onClick} />;
     });
-    expect($user.json()).toEqual({
+    expect(JSON.parse($user.find("button").data("url")!)).toEqual({
       path: "/user",
       query: { hello: "world" },
       hash: "there",
     });
     await $user.find("button").click();
-    expect($user.json()).toEqual({
+    expect(JSON.parse($user.find("button").data("url")!)).toEqual({
       path: "/user2",
       query: { hello: "world2" },
       hash: "there2",

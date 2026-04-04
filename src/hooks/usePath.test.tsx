@@ -6,7 +6,7 @@ import usePath from "./usePath.ts";
 describe("usePath", () => {
   it("can parse the path", () => {
     const $user = withPath("/user?hello=world#there", RenderUrl);
-    expect($user.json("path")).toEqual("/user");
+    expect(JSON.parse($user.find("button").data("path")!)).toEqual("/user");
   });
 
   it("can change the path", async () => {
@@ -16,9 +16,9 @@ describe("usePath", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("path")).toEqual("/user");
+    expect(JSON.parse($user.find("button").data("path")!)).toEqual("/user");
     await $user.find("button").click();
-    expect($user.json("path")).toEqual("/user2");
+    expect(JSON.parse($user.find("button").data("path")!)).toEqual("/user2");
   });
 
   it("can change the path with a callback", async () => {
@@ -28,9 +28,9 @@ describe("usePath", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("path")).toEqual("/user");
+    expect(JSON.parse($user.find("button").data("path")!)).toEqual("/user");
     await $user.find("button").click();
-    expect($user.json("path")).toEqual("/user2");
+    expect(JSON.parse($user.find("button").data("path")!)).toEqual("/user2");
   });
 
   it("has a memoed callback", async () => {
@@ -47,7 +47,7 @@ describe("usePath", () => {
     expect(count).toBe(1);
     await $user.find("button").click();
     expect(count).toBe(1);
-    expect($user.json("path")).toEqual("/hello/world");
+    expect(JSON.parse($user.find("button").data("path")!)).toEqual("/hello/world");
   });
 
   it("doesn't update if it's the same path", async () => {
@@ -71,8 +71,8 @@ describe("usePath", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("path")).toEqual("/hello");
+    expect(JSON.parse($user.find("button").data("path")!)).toEqual("/hello");
     await $user.find("button").click();
-    expect($user.json("path")).toEqual("/");
+    expect(JSON.parse($user.find("button").data("path")!)).toEqual("/");
   });
 });

@@ -6,7 +6,7 @@ A React library to handle navigation in your WebApp. Built with simple component
 - Very useful hooks like [`useUrl`](#useurl), [`useQuery`](#usequery), etc. Follow [the rules of hooks](https://reactjs.org/docs/hooks-rules.html).
 - Links are plain `<a>` instead of custom components. [Read more](#a).
 - The `<Route>` path is `exact` by default and can match query parameters.
-- It's [just ~1.5kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
+- It's [just ~1.8kb](https://bundlephobia.com/package/crossroad) (min+gzip) instead of the 17kb of React Router(+Dom).
 - Add `scrollUp` to `<Router>` o `<Route>` to automatically scroll up on a route change.
 
 [**🔗 Demo on CodeSandbox**](https://codesandbox.io/s/recursing-wozniak-uftyo?file=/src/App.js)

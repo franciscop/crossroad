@@ -5,7 +5,8 @@
     "emitDeclarationOnly": true,
     "declaration": true,
     "declarationDir": ".types",
-    "rootDir": "src"
+    "rootDir": "src",
   },
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/declarations.d.ts"]
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx"],
 }

@@ -9,12 +9,12 @@ import usePath from "./usePath.ts";
 describe("useQuery", () => {
   it("can read the query", () => {
     const $user = withPath("/user?hello=world#there", RenderUrl);
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
   });
 
   it("can read the encoded query", () => {
     const $user = withPath("/user?he%20lo=wo%20ld", RenderUrl);
-    expect($user.json("query")).toEqual({ "he lo": "wo ld" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ "he lo": "wo ld" });
   });
 
   it("can change the query", async () => {
@@ -24,9 +24,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ welcome: "there" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ welcome: "there" });
   });
 
   it("can change the query with a callback", async () => {
@@ -37,9 +37,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ hello: "world", welcome: "there" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world", welcome: "there" });
   });
 
   it("can change the query with a string", async () => {
@@ -49,9 +49,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ welcome: "there" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ welcome: "there" });
   });
 
   it("ignores a leading question mark", async () => {
@@ -61,9 +61,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ welcome: "there" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ welcome: "there" });
   });
 
   it("can append to the query", async () => {
@@ -73,9 +73,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ hello: "world", welcome: "there" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world", welcome: "there" });
   });
 
   it("can remove from the query", async () => {
@@ -86,9 +86,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ welcome: "there" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ welcome: "there" });
   });
 
   it("can modify a single parameter", async () => {
@@ -98,9 +98,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ hello: "xxx" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "xxx" });
   });
 
   it("can delete a single parameter", async () => {
@@ -110,9 +110,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({});
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({});
   });
 
   it("can modify a single parameter with a callback", async () => {
@@ -122,9 +122,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ hello: "worldxxx" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "worldxxx" });
   });
 
   it("doesn't change anything else", async () => {
@@ -134,13 +134,13 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json()).toMatchObject({
+    expect(JSON.parse($user.find("button").data("url")!)).toMatchObject({
       path: "/user",
       query: { hello: "world" },
       hash: "there",
     });
     await $user.find("button").click();
-    expect($user.json()).toMatchObject({
+    expect(JSON.parse($user.find("button").data("url")!)).toMatchObject({
       path: "/user",
       query: { welcome: "there" },
       hash: "there",
@@ -154,13 +154,13 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json()).toMatchObject({
+    expect(JSON.parse($user.find("button").data("url")!)).toMatchObject({
       path: "/user",
       query: { hello: "world" },
       hash: "there",
     });
     await $user.find("button").click();
-    expect($user.json()).toMatchObject({
+    expect(JSON.parse($user.find("button").data("url")!)).toMatchObject({
       path: "/user",
       query: { hello: "world", welcome: "there" },
       hash: "there",
@@ -174,9 +174,9 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ hello: "world", a: "b" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "world", a: "b" });
     await $user.find("button").click();
-    expect($user.json("query")).toEqual({ hello: "xxx", a: "b" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: "xxx", a: "b" });
   });
 
   it("decodes the parameters", async () => {
@@ -186,7 +186,7 @@ describe("useQuery", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("query")).toEqual({ say: "a b c+d&e%25" });
+    expect(JSON.parse($user.find("button").data("query")!)).toEqual({ say: "a b c+d&e%25" });
   });
 
   it("is stable with the setter and self", async () => {
@@ -428,7 +428,7 @@ describe("useQuery", () => {
   describe("multiple values", () => {
     it("can handle multiple values", () => {
       const $user = withPath("/user?hello=world&hello=there", RenderUrl);
-      expect($user.json("query")).toEqual({ hello: ["world", "there"] });
+      expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: ["world", "there"] });
     });
 
     it("can change a single value", async () => {
@@ -438,9 +438,9 @@ describe("useQuery", () => {
         return <RenderUrl onClick={onClick} />;
       });
 
-      expect($user.json("query")).toEqual({ hello: ["world", "there"] });
+      expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: ["world", "there"] });
       await $user.find("button").click();
-      expect($user.json("query")).toEqual({ hello: ["world", "bye"] });
+      expect(JSON.parse($user.find("button").data("query")!)).toEqual({ hello: ["world", "bye"] });
     });
   });
 
@@ -484,7 +484,7 @@ describe("useQuery", () => {
             });
 
             await $user.find("button").click();
-            expect($user.json("query")).toEqual(result);
+            expect(JSON.parse($user.find("button").data("query")!)).toEqual(result);
           }
         );
       }

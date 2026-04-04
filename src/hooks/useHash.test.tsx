@@ -5,7 +5,7 @@ import useHash from "./useHash.ts";
 describe("useHash", () => {
   it("can parse the hash", () => {
     const $user = withPath("/user?hello=world#there", RenderUrl);
-    expect($user.json("hash")).toEqual("there");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("there");
   });
 
   it("can change the hash", async () => {
@@ -15,9 +15,9 @@ describe("useHash", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("hash")).toEqual("there");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("there");
     await $user.find("button").click();
-    expect($user.json("hash")).toEqual("there2");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("there2");
   });
 
   it("can change the hash with a callback", async () => {
@@ -27,9 +27,9 @@ describe("useHash", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("hash")).toEqual("there");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("there");
     await $user.find("button").click();
-    expect($user.json("hash")).toEqual("there2");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("there2");
   });
 
   it("removes any extra leading hash", async () => {
@@ -39,9 +39,9 @@ describe("useHash", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("hash")).toEqual("there");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("there");
     await $user.find("button").click();
-    expect($user.json("hash")).toEqual("there2");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("there2");
   });
 
   it("has a memoed callback", async () => {
@@ -58,7 +58,7 @@ describe("useHash", () => {
     expect(count).toBe(1);
     await $user.find("button").click();
     expect(count).toBe(1);
-    expect($user.json("hash")).toEqual("hello world");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("hello world");
   });
 
   it("doesn't update if it's the same hash", async () => {
@@ -82,8 +82,8 @@ describe("useHash", () => {
       return <RenderUrl onClick={onClick} />;
     });
 
-    expect($user.json("hash")).toEqual("hello");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("hello");
     await $user.find("button").click();
-    expect($user.json("hash")).toEqual("");
+    expect(JSON.parse($user.find("button").data("hash")!)).toEqual("");
   });
 });
