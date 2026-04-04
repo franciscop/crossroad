@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import $ from "react-test";
-import { RenderUrl, withPath } from "../../test/index.ts";
-import usePath from "./usePath.ts";
+import { RenderUrl, withPath } from "../helpers";
+import usePath from "./usePath";
 
 describe("usePath", () => {
   it("can parse the path", () => {

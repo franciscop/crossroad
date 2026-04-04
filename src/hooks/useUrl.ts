@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import Context from "../Context.ts";
-import type { Url, SetUrl } from "../types.ts";
+import Context from "../Context";
+import type { Url, SetUrl } from "../types";
 
 export default (): [Url, SetUrl] => {
   const ctx = useContext(Context);

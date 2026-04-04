@@ -1,9 +1,9 @@
 import { useEffect, ReactElement, ReactNode } from "react";
 
-import { stringify } from "./helpers/format.ts";
-import samePath from "./helpers/samePath.ts";
-import useUrl from "./hooks/useUrl.ts";
-import type { Url } from "./types.ts";
+import { stringify } from "./helpers/format";
+import samePath from "./helpers/samePath";
+import useUrl from "./hooks/useUrl";
+import type { Url } from "./types";
 
 interface ChildWithProps {
   props: { path?: string };

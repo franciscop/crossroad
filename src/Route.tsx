@@ -1,9 +1,9 @@
 import React from "react";
 
-import Context from "./Context.ts";
-import samePath from "./helpers/samePath.ts";
-import useUrl from "./hooks/useUrl.ts";
-import type { Params } from "./types.ts";
+import Context from "./Context";
+import samePath from "./helpers/samePath";
+import useUrl from "./hooks/useUrl";
+import type { Params } from "./types";
 
 type ParseParamType<T extends string> = T extends `${infer Name}<${infer Type}>`
   ? Type extends "number"

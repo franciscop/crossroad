@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { RenderUrl, withPath } from "../../test/index.ts";
-import useHash from "./useHash.ts";
+import { RenderUrl, withPath } from "../helpers";
+import useHash from "./useHash";
 
 describe("useHash", () => {
   it("can parse the hash", () => {

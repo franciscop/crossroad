@@ -1,5 +1,5 @@
-import { parse } from "./format.ts";
-import type { Url, UrlSet, Params } from "../types.ts";
+import { parse } from "./format";
+import type { Url, UrlSet, Params } from "../types";
 
 // ref - the path as typed by the user
 // url - the current url

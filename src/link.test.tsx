@@ -1,8 +1,8 @@
 import React from "react";
 import $ from "react-test";
 
-import { Mock } from "../test/index.ts";
-import Router, { Route, Switch, useUrl } from "./index.ts";
+import { Mock } from "./helpers";
+import Router, { Route, Switch, useUrl } from "./index";
 
 const Home = <a href="/user">go</a>;
 const User = <a href="/">go</a>;
@@ -18,8 +18,8 @@ const App = ({ url = "/", homeLink = Home, userLink = User }) => (
 
 describe("<a> links", () => {
   beforeEach(() => {
-    jest.spyOn(console, "error").mockImplementation((err: any) => {
-      if (!err.message.includes("Not implemented: navigation")) {
+    vi.spyOn(console, "error").mockImplementation((err: any) => {
+      if (!String(err?.message ?? err).includes("Not implemented: navigation")) {
         console.log(err);
       }
     });
@@ -67,7 +67,7 @@ describe("<a> links", () => {
   });
 
   it("doesn't trigger for current link", async () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
     const Home = () => {
       fn();
       return <a href="/">go</a>;

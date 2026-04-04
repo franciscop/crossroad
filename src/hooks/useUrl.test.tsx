@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import $ from "react-test";
 
-import { RenderUrl, withPath } from "../../test/index.ts";
+import { RenderUrl, withPath } from "../helpers";
 
-import useUrl from "./useUrl.ts";
+import useUrl from "./useUrl";
 
 describe("useUrl", () => {
   it("can parse the url", () => {
@@ -17,7 +17,7 @@ describe("useUrl", () => {
 
   // React-Test@0.13 cannot read an error thrown during render()
   it("requires to be wrapped in <Router />", () => {
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
 
     const App = () => {
       const [url, setUrl] = useUrl();
@@ -26,7 +26,7 @@ describe("useUrl", () => {
     const $app = $(<App />);
     expect($app).toHaveError("Wrap your App with <Router>");
 
-    (console.error as jest.Mock).mockRestore();
+    vi.mocked(console.error).mockRestore();
   });
 
   it("can change the url", async () => {

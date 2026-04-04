@@ -7,13 +7,7 @@
   "funding": "https://www.paypal.me/franciscopresencia/19",
   "author": "Francisco Presencia <public@francisco.io> (https://francisco.io/)",
   "license": "MIT",
-  "keywords": [
-    "react",
-    "router",
-    "routing",
-    "javascript",
-    "hooks"
-  ],
+  "keywords": ["react", "router", "routing", "javascript", "hooks"],
   "documentation": {
     "home": "assets/home.html",
     "menu": {
@@ -24,48 +18,31 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && rollup -c",
+    "build": "vite build",
     "lint": "tsc",
-    "size": "echo $(gzip -c index.min.js | wc -c) bytes",
-    "start": "jest --watch",
-    "test": "jest --coverage"
+    "size": "echo $(gzip -c dist/index.min.js | wc -c) bytes",
+    "start": "vitest",
+    "test": "vitest run --coverage"
   },
-  "main": "index.min.js",
+  "main": "dist/index.min.js",
   "type": "module",
-  "types": "index.d.ts",
-  "files": [
-    "index.d.ts"
-  ],
+  "types": "dist/src/index.d.ts",
+  "files": ["dist"],
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.2",
-    "@babel/preset-react": "^7.28.5",
-    "@babel/preset-typescript": "^7.28.5",
-    "@rollup/plugin-babel": "^6.0.0",
-    "@rollup/plugin-terser": "^1.0.0",
-    "@types/jest": "^30.0.0",
     "@types/node": "^25.5.2",
     "@types/react": "^18.3.4",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "jsdom": "^26.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-test": "^0.23.2",
-    "rollup": "^4.60.1",
-    "rollup-plugin-dts": "^6.4.1",
-    "typescript": "^6.0.2"
+    "react-test": "^0.23.3",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react",
-      "@babel/preset-typescript"
-    ]
-  },
-  "jest": {
-    "testEnvironment": "jsdom"
   }
 }

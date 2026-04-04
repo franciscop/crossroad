@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import Context from "./Context.ts";
-import { parse, stringify } from "./helpers/format.ts";
-import getHref from "./helpers/getHref.ts";
-import isServer from "./helpers/isServer.ts";
-import type { Url, NewUrlValue, SetUrlOptions } from "./types.ts";
+import Context from "./Context";
+import { parse, stringify } from "./helpers/format";
+import getHref from "./helpers/getHref";
+import isServer from "./helpers/isServer";
+import type { Url, NewUrlValue, SetUrlOptions } from "./types";
 
 interface RouterProps {
   scrollUp?: boolean;

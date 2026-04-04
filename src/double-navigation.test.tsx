@@ -1,8 +1,9 @@
 import React from "react";
 import $ from "react-test";
+import type { MockInstance } from "vitest";
 
-import { Mock } from "../test/index.ts";
-import Router, { Route } from "./index.ts";
+import { Mock } from "./helpers";
+import Router, { Route } from "./index";
 
 // App with a path+hash link to reproduce the non-StrictMode bug
 const AppWithHashLink = ({ url = "/user" }) => (
@@ -25,19 +26,19 @@ const App = ({ url = "/" }) => (
 );
 
 describe("double navigation", () => {
-  let pushState: jest.SpyInstance;
+  let pushState: MockInstance;
 
   beforeEach(() => {
-    jest.spyOn(console, "error").mockImplementation((err: any) => {
+    vi.spyOn(console, "error").mockImplementation((err: any) => {
       if (!err.message?.includes("Not implemented: navigation")) {
         console.log(err);
       }
     });
-    pushState = jest.spyOn(history, "pushState");
+    pushState = vi.spyOn(history, "pushState");
   });
 
   afterEach(() => {
-    (console.error as jest.Mock).mockRestore();
+    vi.mocked(console.error).mockRestore();
     pushState.mockRestore();
   });
 

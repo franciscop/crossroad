@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import $ from "react-test";
 
-import { Mock } from "../test/index.ts";
-import Router, { Route, Switch } from "./index.ts";
+import { Mock } from "./helpers";
+import Router, { Route, Switch } from "./index";
 
 const Home = () => <div>Home</div>;
 const User = ({ id }: { id?: string }) => <div>User{id ? " " + id : null}</div>;

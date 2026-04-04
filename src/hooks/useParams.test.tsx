@@ -1,7 +1,7 @@
 import React from "react";
 import $ from "react-test";
-import { Mock, withPath } from "../../test/index.ts";
-import Router, { Route, useParams } from "../index.ts";
+import { Mock, withPath } from "../helpers";
+import Router, { Route, useParams } from "../index";
 
 const stringify = (p: any) => <div>{JSON.stringify(p)}</div>;
 

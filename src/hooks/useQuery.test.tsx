@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import $ from "react-test";
 
-import { RenderUrl, withPath } from "../../test/index.ts";
+import { RenderUrl, withPath } from "../helpers";
 
-import useQuery from "./useQuery.ts";
-import usePath from "./usePath.ts";
+import useQuery from "./useQuery";
+import usePath from "./usePath";
 
 describe("useQuery", () => {
   it("can read the query", () => {

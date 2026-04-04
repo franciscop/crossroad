@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
-import Context from "../Context.ts";
-import type { Params } from "../types.ts";
+import Context from "../Context";
+import type { Params } from "../types";
 
 // We can pass manually a param key to use only that param
 function useParams(): Params;

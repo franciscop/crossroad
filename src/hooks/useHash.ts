@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
-import useUrl from "./useUrl.ts";
-import type { SetUrlOptions } from "../types.ts";
+import useUrl from "./useUrl";
+import type { SetUrlOptions } from "../types";
 
 type HashUpdater = (hash: string | undefined) => string;
 type SetHash = (hash: string | HashUpdater, opts?: SetUrlOptions) => void;

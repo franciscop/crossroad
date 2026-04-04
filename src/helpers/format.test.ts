@@ -1,4 +1,4 @@
-import { parse, stringify } from "./format.ts";
+import { parse, stringify } from "./format";
 
 describe("format.parse()", () => {
   it("can parse a full url", () => {

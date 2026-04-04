@@ -1,4 +1,4 @@
-import samePath from "./samePath.ts";
+import samePath from "./samePath";
 
 describe("samePath", () => {
   it("matches a perfect match", () => {

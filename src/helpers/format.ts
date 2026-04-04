@@ -1,4 +1,4 @@
-import type { Query, Url, UrlSet } from "../types.ts";
+import type { Query, Url, UrlSet } from "../types";
 
 const single = (arr: string[]): string | string[] => (arr.length > 1 ? arr : arr[0]);
 

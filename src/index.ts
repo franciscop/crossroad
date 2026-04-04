@@ -1,13 +1,13 @@
-import Router from "./Router.tsx";
-import Route from "./Route.tsx";
-import Switch from "./Switch.ts";
-import Context from "./Context.ts";
+import Router from "./Router";
+import Route from "./Route";
+import Switch from "./Switch";
+import Context from "./Context";
 
-import useUrl from "./hooks/useUrl.ts";
-import usePath from "./hooks/usePath.ts";
-import useQuery from "./hooks/useQuery.ts";
-import useHash from "./hooks/useHash.ts";
-import useParams from "./hooks/useParams.ts";
+import useUrl from "./hooks/useUrl";
+import usePath from "./hooks/usePath";
+import useQuery from "./hooks/useQuery";
+import useHash from "./hooks/useHash";
+import useParams from "./hooks/useParams";
 
 export default Router;
 export {

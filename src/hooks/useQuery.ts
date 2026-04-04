@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 
-import { parse, stringify } from "../helpers/format.ts";
-import useUrl from "./useUrl.ts";
-import type { Query, SetUrlOptions } from "../types.ts";
+import { parse, stringify } from "../helpers/format";
+import useUrl from "./useUrl";
+import type { Query, SetUrlOptions } from "../types";
 
 const strQuery = (query: Query): string => stringify({ query });
 

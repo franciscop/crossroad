@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
-import useUrl from "./useUrl.ts";
-import type { SetUrlOptions } from "../types.ts";
+import useUrl from "./useUrl";
+import type { SetUrlOptions } from "../types";
 
 type PathUpdater = (path: string) => string;
 type SetPath = (path: string | PathUpdater, opts?: SetUrlOptions) => void;

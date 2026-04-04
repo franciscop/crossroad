@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import $ from "react-test";
 
-import { Mock } from "../test/index.ts";
-import isServer from "./helpers/isServer.ts";
-import Router, { Route, Switch, useUrl } from "./index.ts";
+import { Mock } from "./helpers";
+import isServer from "./helpers/isServer";
+import Router, { Route, Switch, useUrl } from "./index";
 
-jest.mock("./helpers/isServer.ts");
-(isServer as jest.Mock).mockImplementation(() => false);
+vi.mock("./helpers/isServer.ts", () => ({ default: vi.fn(() => false) }));
 
 const Home = () => <div>Home</div>;
 const User = ({ id }: { id?: string }) => <div>User{id ? " " + id : null}</div>;
@@ -14,7 +13,7 @@ const Other = () => <div>Other</div>;
 
 describe("crossroad", () => {
   afterEach(() => {
-    jest.unmock("./helpers/isServer.ts");
+    vi.mocked(isServer).mockImplementation(() => false);
   });
 
   it("can overload the home", () => {
@@ -43,7 +42,7 @@ describe("crossroad", () => {
 
   // React-Test@0.13 cannot read an error thrown during render()
   it("needs to be wrapped with <Router>", () => {
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
 
     const $route = $(
       <Mock url="/">
@@ -52,11 +51,11 @@ describe("crossroad", () => {
     );
     expect($route).toHaveError("Wrap your App with <Router>");
 
-    (console.error as jest.Mock).mockRestore();
+    vi.mocked(console.error).mockRestore();
   });
 
   it("cannot navigate when there is no window", async () => {
-    (isServer as jest.Mock).mockImplementation(() => true);
+    vi.mocked(isServer).mockImplementation(() => true);
 
     const Home = () => (
       <div>
@@ -77,7 +76,7 @@ describe("crossroad", () => {
     await $home.find("a").click();
     expect($home.text()).toBe("Home go");
 
-    (isServer as jest.Mock).mockImplementation(() => false);
+    vi.mocked(isServer).mockImplementation(() => false);
   });
 
   it("can navigate when there is window", async () => {
@@ -100,6 +99,6 @@ describe("crossroad", () => {
     await $home.find("a").click();
     expect($home.text()).toBe("User");
 
-    jest.unmock("./helpers/isServer");
+    vi.mocked(isServer).mockImplementation(() => false);
   });
 });

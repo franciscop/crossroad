@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import $ from "react-test";
 
-import { Mock } from "../test/index.ts";
-import Router, { Route, Switch, useUrl } from "./index.ts";
+import { Mock } from "./helpers";
+import Router, { Route, Switch, useUrl } from "./index";
 
 const Home = () => <div>Home</div>;
 const User = ({ id }: { id?: string }) => <div>User{id ? " " + id : null}</div>;
@@ -22,7 +22,7 @@ describe("Route.js", () => {
 
   // React-Test@0.13 cannot catch an error during render()
   it("needs one of the three props", () => {
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
 
     const $route = $(
       <Router url="/">
@@ -33,7 +33,7 @@ describe("Route.js", () => {
     expect($route).toHaveError(
       "Route needs prop `component`, `render` or `children`",
     );
-    (console.error as jest.Mock).mockRestore();
+    vi.mocked(console.error).mockRestore();
   });
 
   it("unmounts without any issue", async () => {
