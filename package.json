@@ -19,7 +19,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
-    "typecheck": "tsc",
+    "lint": "tsc",
     "size": "echo $(gzip -c index.min.js | wc -c) bytes",
     "start": "jest --watch",
     "test": "jest --coverage"
@@ -54,7 +54,7 @@
     "react-dom": "^18.3.1",
     "react-test": "^0.22.1",
     "rollup": "^4.60.1",
-    "rollup-plugin-babel": "^4.4.0",
+    "@rollup/plugin-babel": "^6.0.0",
     "typescript": "^6.0.2"
   },
   "peerDependencies": {

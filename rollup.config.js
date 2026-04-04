@@ -1,4 +1,4 @@
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import terser from "@rollup/plugin-terser";
 
 export default {
@@ -9,6 +9,7 @@ export default {
     babel({
       exclude: "node_modules/**",
       extensions: [".js", ".ts", ".tsx"],
+      babelHelpers: "bundled",
       presets: [
         ["@babel/env", { targets: { node: 24 } }],
         "@babel/preset-react",
