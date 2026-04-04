@@ -1,18 +1,20 @@
-import { terser } from "rollup-plugin-terser";
 import babel from "rollup-plugin-babel";
+import terser from "@rollup/plugin-terser";
 
 export default {
-  input: "src/index.js",
+  input: "src/index.ts",
   output: { file: "index.min.js", format: "esm" },
   external: ["react"],
   plugins: [
     babel({
       exclude: "node_modules/**",
+      extensions: [".js", ".ts", ".tsx"],
       presets: [
-        ["@babel/env", { targets: { node: 12 } }],
-        "@babel/preset-react"
-      ]
+        ["@babel/env", { targets: { node: 24 } }],
+        "@babel/preset-react",
+        "@babel/preset-typescript",
+      ],
     }),
-    terser()
-  ]
+    terser(),
+  ],
 };
