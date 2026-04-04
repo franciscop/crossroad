@@ -5,15 +5,50 @@ import samePath from "./helpers/samePath.ts";
 import useUrl from "./hooks/useUrl.ts";
 import type { Params } from "./types.ts";
 
-interface RouteProps {
+type ParseParamType<T extends string> = T extends `${infer Name}<${infer Type}>`
+  ? Type extends "number"
+    ? { [K in Name]: number }
+    : Type extends "string"
+      ? { [K in Name]: string }
+      : Type extends "date"
+        ? { [K in Name]: Date }
+        : Type extends "boolean"
+          ? { [K in Name]: boolean }
+          : { [K in Name]: string }
+  : { [K in T]: string };
+
+type ExtractParams<T extends string> =
+  T extends `${infer _Prefix}/:${infer Param}/${infer Rest}`
+    ? ParseParamType<Param> & ExtractParams<`/${Rest}`>
+    : T extends `${infer _Prefix}/:${infer Param}`
+      ? ParseParamType<Param>
+      : {};
+
+type InferParamsFromPath<T extends string> = T extends `${string}/:${string}`
+  ? ExtractParams<T>
+  : {};
+
+interface RoutePropsBase {
   path?: string;
   scrollUp?: boolean;
-  component?: React.ComponentType<Params>;
-  render?: (params: Params) => React.ReactNode;
   children?: React.ReactNode;
 }
 
-export default ({ path = "*", scrollUp, component, render, children }: RouteProps) => {
+type RouteProps<T extends Record<string, string | number | boolean | Date> = {}> =
+  RoutePropsBase & (
+    | { component: React.FunctionComponent<T>; render?: never }
+    | { render: (params: T) => React.ReactNode; component?: never }
+    | { component?: never; render?: never }
+  );
+
+type RouteType = <P extends string = string>(
+  props: RouteProps<InferParamsFromPath<P>> & { path?: P },
+) => React.ReactNode;
+
+const RouteImpl = ({ path = "*", scrollUp, component, render, children }: RoutePropsBase & {
+  component?: React.ComponentType<Params>;
+  render?: (params: Params) => React.ReactNode;
+}) => {
   // Check whether there's a parameter match or not
   const ctx = useUrl();
   const params = samePath(path, ctx[0]);
@@ -40,3 +75,5 @@ export default ({ path = "*", scrollUp, component, render, children }: RouteProp
     </Context.Provider>
   );
 };
+
+export default RouteImpl as unknown as RouteType;
