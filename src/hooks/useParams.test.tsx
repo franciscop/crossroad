@@ -1,4 +1,3 @@
-import React from "react";
 import $ from "react-test";
 import { Mock, withPath } from "../helpers";
 import Router, { Route, useParams } from "../index";

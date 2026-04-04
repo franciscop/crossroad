@@ -9,7 +9,7 @@ export default defineConfig({
       formats: ["es"],
       fileName: () => "index.min.js",
     },
-    rollupOptions: { external: ["react"] },
+    rollupOptions: { external: ["react", "react/jsx-runtime"] },
     minify: "terser",
     sourcemap: false,
   },
