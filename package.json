@@ -24,7 +24,9 @@
     }
   },
   "scripts": {
-    "build": "vite build && mv dist/index.min.js . && dts-bundle-generator --out-file index.d.ts src/index.ts && rm -rf dist && npm run build:prettier",
+    "build": "npm run build:library && npm run build:types && npm run build:prettier",
+    "build:library": "vite build && mv dist/index.min.js . && rm -rf dist",
+    "build:types": "dts-bundle-generator --out-file index.d.ts src/index.ts",
     "build:prettier": "prettier src *.ts *.json --write",
     "lint": "tsc",
     "size": "echo $(gzip -c index.min.js | wc -c) bytes",
