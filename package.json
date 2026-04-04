@@ -1,13 +1,19 @@
 {
   "name": "crossroad",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "description": "A React library to handle navigation easily in your WebApp",
   "homepage": "https://crossroad.page/",
   "repository": "github:franciscop/crossroad",
   "funding": "https://www.paypal.me/franciscopresencia/19",
   "author": "Francisco Presencia <public@francisco.io> (https://francisco.io/)",
   "license": "MIT",
-  "keywords": ["react", "router", "routing", "javascript", "hooks"],
+  "keywords": [
+    "react",
+    "router",
+    "routing",
+    "javascript",
+    "hooks"
+  ],
   "documentation": {
     "home": "assets/home.html",
     "menu": {
@@ -27,7 +33,9 @@
   "main": "dist/index.min.js",
   "type": "module",
   "types": "dist/src/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/node": "^25.5.2",
     "@types/react": "^18.3.4",
