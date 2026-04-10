@@ -250,7 +250,8 @@ const UserList = () => <div>List here</div>;
 // <div>List here</div>
 ```
 
-> NOTE: the parameter is passed straight to the component instead of wrapped like in React Router.
+> [!WARNING]
+> The parameter is passed straight to the component instead of wrapped like in React Router, see the examples above.
 
 The path can also include a wildcard `*`, in which case it will perform a partial match of everything before itself. It can only be at the end of the path:
 
@@ -265,7 +266,9 @@ The path can also include a wildcard `*`, in which case it will perform a partia
 <Route path="/user/:id/*" component={User} />
 ```
 
-> NOTE: in Crossroad the paths are exact by default, and with the wildcard you can make them partial matches. So the wildcard is the opposite of adding `exact` to React Router.
+
+> [!TIP]
+> In Crossroad the paths are exact by default, and with the wildcard you can make them partial matches. So the wildcard is the opposite of adding `exact` to React Router.
 
 It can also match query parameters:
 
@@ -347,9 +350,7 @@ Some examples:
 
 ### `useUrl()`
 
-> NOTE: within Crossroad's and for lack of a better name, "URL" refers to the combination of path + search query + hash.
-
-Read and set the full URL:
+Read and set the full URL (path + search query + hash):
 
 ```js
 import { useUrl } from "crossroad";
@@ -485,7 +486,7 @@ const Login = () => {
 
 The path is always a string equivalent to `window.location.pathname`. Why not use `window.location.pathname` then? Because usePath() is a hook that will trigger a re-render when the path changes!
 
-> Note: `setPath` _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
+`setPath` _only_ modifies the path(name) and keeps the search query and hash the same, so if you want to modify the full URL you should instead utilize `useUrl()` and `setUrl('/welcome')`
 
 #### Setter
 
@@ -496,7 +497,7 @@ setPath("/newpath");
 setPath((oldPath) => "/newpath");
 ```
 
-The function `setPath` is _always_ the same, so it doesn't matter whether you put it as a dependency or not. However the `path` can be updated, so you might want to put that:
+The function `setPath` is _always_ stable, so it doesn't matter whether you put it as a dependency or not. However the `path` can be updated, so you might want to put that:
 
 ```js
 const [path, setPath] = usePath();
@@ -922,7 +923,8 @@ In this case the order matters, because the generic NotFound will be matched wit
 
 ### Github hosting
 
-> NOTE: this is a bad idea for SEO, but if that doesn't matter much for you go ahead and host your webapp in Github Pages
+> [!WARNING]
+> This is a bad idea for SEO, but if that doesn't matter much for you go ahead and host your webapp in Github Pages
 
 Github pages is a bit particular in that as of this writing it does not allow for a generic redirect like most other static website servers, so we need to do a workaround with the `404.html` page.
 

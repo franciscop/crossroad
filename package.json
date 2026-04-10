@@ -14,15 +14,6 @@
     "javascript",
     "hooks"
   ],
-  "documentation": {
-    "home": "assets/home.html",
-    "menu": {
-      "Documentation": "/documentation",
-      "Donate": "https://www.paypal.me/franciscopresencia/19",
-      "Author": "https://francisco.io/",
-      "Github": "https://github.com/franciscop/crossroad"
-    }
-  },
   "scripts": {
     "build": "npm run build:library && npm run build:types && npm run build:prettier",
     "build:library": "vite build && mv dist/index.min.js . && rm -rf dist",
@@ -37,7 +28,6 @@
   "type": "module",
   "types": "index.d.ts",
   "files": [
-    "index.min.js",
     "index.d.ts"
   ],
   "devDependencies": {
@@ -51,7 +41,7 @@
     "prettier": "^3.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-test": "^0.24.2",
+    "react-test": "^0.24.3",
     "terser": "^5.46.1",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
@@ -59,5 +49,14 @@
   },
   "peerDependencies": {
     "react": ">=18.0.0"
+  },
+  "documentation": {
+    "home": "assets/home.html",
+    "menu": {
+      "Documentation": "/documentation",
+      "Donate": "https://www.paypal.me/franciscopresencia/19",
+      "Author": "https://francisco.io/",
+      "Github": "https://github.com/franciscop/crossroad"
+    }
   }
 }
