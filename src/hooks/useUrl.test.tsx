@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import $ from "react-test";
 
 import { RenderUrl, withPath } from "../helpers";
@@ -20,7 +20,7 @@ describe("useUrl", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
 
     const App = () => {
-      const [url, setUrl] = useUrl();
+      useUrl();
       return <div>Hello</div>;
     };
     const $app = $(<App />);
@@ -31,8 +31,8 @@ describe("useUrl", () => {
 
   it("can change the url", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [url, setUrl] = useUrl();
-      const onClick = (e: any) => setUrl("/user2?hello=world2#there2");
+      const [, setUrl] = useUrl();
+      const onClick = (_e: any) => setUrl("/user2?hello=world2#there2");
       return <RenderUrl onClick={onClick} />;
     });
     expect(JSON.parse($user.find("button").data("url")!)).toEqual({
@@ -50,8 +50,8 @@ describe("useUrl", () => {
 
   it("can change the url with a callback", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [url, setUrl] = useUrl();
-      const onClick = (e: any) => setUrl(() => "/user2?hello=world2#there2");
+      const [, setUrl] = useUrl();
+      const onClick = (_e: any) => setUrl(() => "/user2?hello=world2#there2");
       return <RenderUrl onClick={onClick} />;
     });
     expect(JSON.parse($user.find("button").data("url")!)).toEqual({
@@ -69,8 +69,8 @@ describe("useUrl", () => {
 
   it("can use 'replace'", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [url, setUrl] = useUrl();
-      const onClick = (e: any) =>
+      const [, setUrl] = useUrl();
+      const onClick = (_e: any) =>
         setUrl("/user2?hello=world2#there2", { mode: "replace" });
       return <RenderUrl onClick={onClick} />;
     });
@@ -91,12 +91,12 @@ describe("useUrl", () => {
     let eff = 0;
     let out = 0;
     const $user = withPath("/a", () => {
-      const [url, setUrl] = useUrl();
+      const [, setUrl] = useUrl();
       out++;
       useEffect(() => {
         eff++;
       }, [setUrl]);
-      const onClick = (e: any) => setUrl("/b");
+      const onClick = (_e: any) => setUrl("/b");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -108,7 +108,7 @@ describe("useUrl", () => {
   // Cannot test right now with ReactTest@0.22.1
   it("should use either 'replace' or 'push'", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [url, setUrl] = useUrl();
+      const [, setUrl] = useUrl();
       setUrl("/user2?hello=world2#there2", { mode: "abc" as any });
       return <RenderUrl />;
     });

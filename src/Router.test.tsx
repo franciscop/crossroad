@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
 import $ from "react-test";
 
 import { Mock } from "./helpers";
 import isServer from "./helpers/isServer";
-import Router, { Route, Switch, useUrl } from "./index";
+import Router, { Route } from "./index";
 
 vi.mock("./helpers/isServer.ts", () => ({ default: vi.fn(() => false) }));
 
 const Home = () => <div>Home</div>;
 const User = ({ id }: { id?: string }) => <div>User{id ? " " + id : null}</div>;
-const Other = () => <div>Other</div>;
 
 describe("crossroad", () => {
   afterEach(() => {
@@ -87,7 +85,7 @@ describe("crossroad", () => {
         Home <a href="/user">go</a>
       </div>
     );
-    const User = ({ id }: { id?: string }) => <div>User</div>;
+    const User = ({ id: _ }: { id?: string }) => <div>User</div>;
 
     const $home = $(
       <Mock url="/">

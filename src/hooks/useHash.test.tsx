@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { RenderUrl, withPath } from "../helpers";
 import useHash from "./useHash";
 
@@ -10,7 +10,7 @@ describe("useHash", () => {
 
   it("can change the hash", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [hash, setHash] = useHash();
+      const [, setHash] = useHash();
       const onClick = () => setHash("there2");
       return <RenderUrl onClick={onClick} />;
     });
@@ -22,7 +22,7 @@ describe("useHash", () => {
 
   it("can change the hash with a callback", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [hash, setHash] = useHash();
+      const [, setHash] = useHash();
       const onClick = () => setHash((prev) => (prev || "") + "2");
       return <RenderUrl onClick={onClick} />;
     });
@@ -34,7 +34,7 @@ describe("useHash", () => {
 
   it("removes any extra leading hash", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [hash, setHash] = useHash();
+      const [, setHash] = useHash();
       const onClick = () => setHash("#there2");
       return <RenderUrl onClick={onClick} />;
     });
@@ -47,7 +47,7 @@ describe("useHash", () => {
   it("has a memoed callback", async () => {
     let count = 0;
     const $user = withPath("/#hello", () => {
-      const [hash, setHash] = useHash();
+      const [, setHash] = useHash();
       useEffect(() => {
         count++;
       }, [setHash]);
@@ -66,7 +66,7 @@ describe("useHash", () => {
   it("doesn't update if it's the same hash", async () => {
     let count = 0;
     const $user = withPath("/#hello", () => {
-      const [hash, setHash] = useHash();
+      const [, setHash] = useHash();
       count++;
       const onClick = () => setHash("hello");
       return <RenderUrl onClick={onClick} />;
@@ -79,7 +79,7 @@ describe("useHash", () => {
 
   it("removes it if it's falsy", async () => {
     const $user = withPath("/#hello", () => {
-      const [hash, setHash] = useHash();
+      const [, setHash] = useHash();
       const onClick = () => setHash(null as any);
       return <RenderUrl onClick={onClick} />;
     });

@@ -1,8 +1,7 @@
-import React from "react";
 import $ from "react-test";
 
 import { Mock } from "./helpers";
-import Router, { Route, Switch, useUrl } from "./index";
+import Router, { Route } from "./index";
 
 const Home = <a href="/user">go</a>;
 const User = <a href="/">go</a>;

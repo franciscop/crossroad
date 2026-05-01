@@ -212,7 +212,7 @@ describe("Route.js", () => {
     let rendered = 0;
     let mounted = 0;
     const Test = () => {
-      const [url] = useUrl();
+      useUrl();
       useEffect(() => {
         mounted++;
       }, []);

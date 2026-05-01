@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import $ from "react-test";
+import { useEffect, useState } from "react";
 
 import { RenderUrl, withPath } from "../helpers";
 
@@ -23,8 +22,8 @@ describe("useQuery", () => {
 
   it("can change the query", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [query, setQuery] = useQuery();
-      const onClick = (e: any) => setQuery({ welcome: "there" });
+      const [, setQuery] = useQuery();
+      const onClick = (_e: any) => setQuery({ welcome: "there" });
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -39,8 +38,8 @@ describe("useQuery", () => {
 
   it("can change the query with a callback", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [query, setQuery] = useQuery();
-      const onClick = (e: any) =>
+      const [, setQuery] = useQuery();
+      const onClick = (_e: any) =>
         setQuery((prev) => ({ ...prev, welcome: "there" }));
       return <RenderUrl onClick={onClick} />;
     });
@@ -57,8 +56,8 @@ describe("useQuery", () => {
 
   it("can change the query with a string", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [query, setQuery] = useQuery();
-      const onClick = (e: any) => setQuery("welcome=there");
+      const [, setQuery] = useQuery();
+      const onClick = (_e: any) => setQuery("welcome=there");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -73,8 +72,8 @@ describe("useQuery", () => {
 
   it("ignores a leading question mark", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [query, setQuery] = useQuery();
-      const onClick = (e: any) => setQuery("?welcome=there");
+      const [, setQuery] = useQuery();
+      const onClick = (_e: any) => setQuery("?welcome=there");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -123,8 +122,8 @@ describe("useQuery", () => {
 
   it("can modify a single parameter", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [query, setQuery] = useQuery("hello");
-      const onClick = (e: any) => setQuery("xxx");
+      const [, setQuery] = useQuery("hello");
+      const onClick = (_e: any) => setQuery("xxx");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -139,8 +138,8 @@ describe("useQuery", () => {
 
   it("can delete a single parameter", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [query, setQuery] = useQuery("hello");
-      const onClick = (e: any) => setQuery(null as any);
+      const [, setQuery] = useQuery("hello");
+      const onClick = (_e: any) => setQuery(null as any);
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -153,8 +152,8 @@ describe("useQuery", () => {
 
   it("can modify a single parameter with a callback", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [query, setQuery] = useQuery("hello");
-      const onClick = (e: any) => setQuery((prev: any) => prev + "xxx");
+      const [, setQuery] = useQuery("hello");
+      const onClick = (_e: any) => setQuery((prev: any) => prev + "xxx");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -169,8 +168,8 @@ describe("useQuery", () => {
 
   it("doesn't change anything else", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [query, setQuery] = useQuery();
-      const onClick = (e: any) => setQuery({ welcome: "there" });
+      const [, setQuery] = useQuery();
+      const onClick = (_e: any) => setQuery({ welcome: "there" });
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -190,7 +189,7 @@ describe("useQuery", () => {
   it("doesn't change anything else when appending to the query", async () => {
     const $user = withPath("/user?hello=world#there", () => {
       const [query, setQuery] = useQuery();
-      const onClick = (e: any) => setQuery({ ...query, welcome: "there" });
+      const onClick = (_e: any) => setQuery({ ...query, welcome: "there" });
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -209,8 +208,8 @@ describe("useQuery", () => {
 
   it("doesn't modify other parameters", async () => {
     const $user = withPath("/user?hello=world&a=b#there", () => {
-      const [query, setQuery] = useQuery("hello");
-      const onClick = (e: any) => setQuery("xxx");
+      const [, setQuery] = useQuery("hello");
+      const onClick = (_e: any) => setQuery("xxx");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -227,8 +226,8 @@ describe("useQuery", () => {
 
   it("decodes the parameters", async () => {
     const $user = withPath("/?say=a+b%20c%2Bd%26e%2525", () => {
-      const [query, setQuery] = useQuery("hello");
-      const onClick = (e: any) => setQuery("xxx");
+      const [, setQuery] = useQuery("hello");
+      const onClick = (_e: any) => setQuery("xxx");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -248,7 +247,7 @@ describe("useQuery", () => {
       useEffect(() => {
         calledSetter++;
       }, [setQuery]);
-      const onClick = (e: any) => setQuery({ hello: "there" });
+      const onClick = (_e: any) => setQuery({ hello: "there" });
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -270,7 +269,7 @@ describe("useQuery", () => {
       useEffect(() => {
         calledSetter++;
       }, [setQuery]);
-      const onClick = (e: any) => setQuery("there");
+      const onClick = (_e: any) => setQuery("there");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -286,14 +285,14 @@ describe("useQuery", () => {
     let calledSetter = 0;
     const $user = withPath("/?hello=world", () => {
       const [query, setQuery] = useQuery();
-      const [path, setPath] = usePath();
+      const [, setPath] = usePath();
       useEffect(() => {
         calledValue++;
       }, [query]);
       useEffect(() => {
         calledSetter++;
       }, [setQuery]);
-      const onClick = (e: any) => setPath("greeting");
+      const onClick = (_e: any) => setPath("greeting");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -309,14 +308,14 @@ describe("useQuery", () => {
     let calledSetter = 0;
     const $user = withPath("/?hello=world", () => {
       const [query, setQuery] = useQuery("hello");
-      const [path, setPath] = usePath();
+      const [, setPath] = usePath();
       useEffect(() => {
         calledValue++;
       }, [query]);
       useEffect(() => {
         calledSetter++;
       }, [setQuery]);
-      const onClick = (e: any) => setPath("greeting");
+      const onClick = (_e: any) => setPath("greeting");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -330,11 +329,11 @@ describe("useQuery", () => {
   it("is doesn't trigger unnecessary rerenders", async () => {
     let renders = 0;
     const $user = withPath("/?hello=world", () => {
-      const [query, setQuery] = useQuery();
+      const [, setQuery] = useQuery();
       useEffect(() => {
         renders++;
       });
-      const onClick = (e: any) => setQuery({ hello: "world" });
+      const onClick = (_e: any) => setQuery({ hello: "world" });
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -346,9 +345,9 @@ describe("useQuery", () => {
   it("is doesn't trigger unnecessary rerenders on keys", async () => {
     let renders = 0;
     const $user = withPath("/?hello=world", () => {
-      const [query, setQuery] = useQuery("hello");
+      const [, setQuery] = useQuery("hello");
       renders++;
-      const onClick = (e: any) => setQuery("world");
+      const onClick = (_e: any) => setQuery("world");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -367,7 +366,7 @@ describe("useQuery", () => {
       useEffect(() => {
         renders++;
       }, [query, setQuery]);
-      const onClick = (e: any) => forceUpdate({});
+      const onClick = (_e: any) => forceUpdate({});
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -391,7 +390,7 @@ describe("useQuery", () => {
       useEffect(() => {
         renders++;
       }, [setQuery]);
-      const onClick = (e: any) => setQuery({ bye: "world" });
+      const onClick = (_e: any) => setQuery({ bye: "world" });
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -414,7 +413,7 @@ describe("useQuery", () => {
       useEffect(() => {
         renders++;
       }, [query, setQuery]);
-      const onClick = (e: any) => forceUpdate({});
+      const onClick = (_e: any) => forceUpdate({});
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -430,13 +429,13 @@ describe("useQuery", () => {
     let renders = 0;
     const $user = withPath("/?hello=world", () => {
       const [query, setQuery] = useQuery("hello");
-      const [bye, setBye] = useQuery("bye");
-      const [, forceUpdate] = useState({});
+      const [, setBye] = useQuery("bye");
+      useState({});
       mounts++;
       useEffect(() => {
         renders++;
       }, [query, setQuery]);
-      const onClick = (e: any) => setBye("world");
+      const onClick = (_e: any) => setBye("world");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -460,7 +459,7 @@ describe("useQuery", () => {
       useEffect(() => {
         renders++;
       }, [setQuery]);
-      const onClick = (e: any) => setQuery("moon");
+      const onClick = (_e: any) => setQuery("moon");
       return <RenderUrl onClick={onClick} />;
     });
 
@@ -483,8 +482,8 @@ describe("useQuery", () => {
 
     it("can change a single value", async () => {
       const $user = withPath("/user?hello=world&hello=there", () => {
-        const [query, setQuery] = useQuery();
-        const onClick = (e: any) => setQuery({ hello: ["world", "bye"] });
+        const [, setQuery] = useQuery();
+        const onClick = (_e: any) => setQuery({ hello: ["world", "bye"] });
         return <RenderUrl onClick={onClick} />;
       });
 
@@ -519,14 +518,14 @@ describe("useQuery", () => {
       ],
       "?hello=world": [
         [(prev: any) => prev, { hello: "world" }],
-        [(prev: any) => ({ hello: "moon" }), { hello: "moon" }],
+        [(_prev: any) => ({ hello: "moon" }), { hello: "moon" }],
         [(prev: any) => ({ ...prev, hello: "moon" }), { hello: "moon" }],
         [
           (prev: any) => ({ ...prev, bye: "moon" }),
           { hello: "world", bye: "moon" },
         ],
-        [(prev: any) => ({}), {}],
-        [(prev: any) => false, {}],
+        [(_prev: any) => ({}), {}],
+        [(_prev: any) => false, {}],
       ],
     };
     for (let base in cases) {
@@ -535,7 +534,7 @@ describe("useQuery", () => {
           "works for " + base + " to give " + JSON.stringify(result),
           async () => {
             const $user = withPath(base, () => {
-              const [query, setQuery] = useQuery();
+              const [, setQuery] = useQuery();
               const onClick = () => setQuery(callback);
               return <RenderUrl onClick={onClick} />;
             });

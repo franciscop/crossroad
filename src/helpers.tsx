@@ -20,10 +20,8 @@ export function Mock({ url, ...props }: { url: string; [key: string]: any }) {
 
 export function RenderUrl({
   onClick,
-  children,
 }: {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  children?: React.ReactNode;
 }) {
   const [url] = useUrl();
   const [path] = usePath();

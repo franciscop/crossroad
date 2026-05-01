@@ -33,7 +33,7 @@ export const stringify = (
           (Array.isArray(val) ? val : [val]).map((val) => [key, val]),
         )
         .flat() as string[][]
-    ).filter(([key, val]) => val),
+    ).filter(([, val]) => val),
   ).toString();
   if (params) str += "?" + params;
   if (hash) str += "#" + hash;

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import $ from "react-test";
+import { useEffect } from "react";
 import { RenderUrl, withPath } from "../helpers";
 import usePath from "./usePath";
 
@@ -11,7 +10,7 @@ describe("usePath", () => {
 
   it("can change the path", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [path, setPath] = usePath();
+      const [, setPath] = usePath();
       const onClick = () => setPath("/user2");
       return <RenderUrl onClick={onClick} />;
     });
@@ -23,7 +22,7 @@ describe("usePath", () => {
 
   it("can change the path with a callback", async () => {
     const $user = withPath("/user?hello=world#there", () => {
-      const [path, setPath] = usePath();
+      const [, setPath] = usePath();
       const onClick = () => setPath((path) => path + "2");
       return <RenderUrl onClick={onClick} />;
     });
@@ -36,7 +35,7 @@ describe("usePath", () => {
   it("has a memoed callback", async () => {
     let count = 0;
     const $user = withPath("/hello", () => {
-      const [path, setPath] = usePath();
+      const [, setPath] = usePath();
       useEffect(() => {
         count++;
       }, [setPath]);
@@ -55,7 +54,7 @@ describe("usePath", () => {
   it("doesn't update if it's the same path", async () => {
     let count = 0;
     const $user = withPath("/hello", () => {
-      const [path, setPath] = usePath();
+      const [, setPath] = usePath();
       count++;
       const onClick = () => setPath("/hello");
       return <RenderUrl onClick={onClick} />;
@@ -68,7 +67,7 @@ describe("usePath", () => {
 
   it("removes it if it's falsy", async () => {
     const $user = withPath("/hello", () => {
-      const [path, setPath] = usePath();
+      const [, setPath] = usePath();
       const onClick = () => setPath(null as any);
       return <RenderUrl onClick={onClick} />;
     });
