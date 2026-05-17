@@ -4,8 +4,8 @@
   "description": "A React library to handle navigation easily in your WebApp",
   "homepage": "https://crossroad.page/",
   "repository": "github:franciscop/crossroad",
-  "funding": "https://www.paypal.me/franciscopresencia/19",
   "author": "Francisco Presencia <public@francisco.io> (https://francisco.io/)",
+  "funding": "https://www.paypal.me/franciscopresencia/19",
   "license": "MIT",
   "keywords": [
     "react",
@@ -30,6 +30,15 @@
   "files": [
     "index.d.ts"
   ],
+  "documentation.page": {
+    "home": "assets/home.html",
+    "menu": {
+      "Documentation": "/documentation",
+      "Donate": "https://www.paypal.me/franciscopresencia/19",
+      "Author": "https://francisco.io/",
+      "Github": "https://github.com/franciscop/crossroad"
+    }
+  },
   "devDependencies": {
     "@types/node": "^25.5.2",
     "@types/react": "^18.3.4",
@@ -41,7 +50,7 @@
     "prettier": "^3.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-test": "^0.24.11",
+    "react-test": "^0.24.12",
     "terser": "^5.46.1",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
@@ -49,14 +58,5 @@
   },
   "peerDependencies": {
     "react": ">=18.0.0"
-  },
-  "documentation": {
-    "home": "assets/home.html",
-    "menu": {
-      "Documentation": "/documentation",
-      "Donate": "https://www.paypal.me/franciscopresencia/19",
-      "Author": "https://francisco.io/",
-      "Github": "https://github.com/franciscop/crossroad"
-    }
   }
 }
