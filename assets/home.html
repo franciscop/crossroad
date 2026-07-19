@@ -1,206 +1,338 @@
-<section class="hero flex center nowrap">
+<style>
+  .hero,
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 30px;
+    margin: 40px 0;
+  }
+  .hero > *,
+  .row > * {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  @media (min-width: 700px) {
+    .hero > *,
+    .row > * {
+      flex-basis: calc(50% - 15px);
+    }
+  }
+  .content {
+    max-width: 520px;
+  }
+  h1 {
+    margin: 0 0 12px;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  p {
+    margin: 0 0 6px;
+    color: var(--text-soft);
+    font-size: 16px;
+  }
+  a {
+    color: var(--primary);
+  }
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .button {
+    display: inline-block;
+    padding: 6px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--primary);
+    color: #fff;
+    border: 1px solid transparent;
+    transition: box-shadow 0.2s;
+  }
+  .button:hover {
+    box-shadow: inset 0 0 0 99em rgba(0, 0, 0, 0.12);
+  }
+  .button.ghost {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text);
+  }
+  .button.ghost:hover {
+    box-shadow: inset 0 0 0 99em rgba(0, 0, 0, 0.05);
+  }
+  pre {
+    margin: 0;
+    background: var(--code-bg);
+    border-radius: 10px;
+    padding: 9px 11px;
+    overflow-x: auto;
+    font: 13px/1.7 var(--font-mono);
+    color: var(--text);
+  }
+  pre.install {
+    display: inline-block;
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+  @media (min-width: 600px) {
+    pre {
+      padding: 16px 18px;
+    }
+  }
+  p code {
+    background: var(--code-bg);
+    padding: 0 5px;
+    border-radius: 5px;
+    font: 0.9em/1 var(--font-mono);
+  }
+  pre code .comment {
+    color: #8a94a6;
+  }
+  pre code .keyword {
+    color: var(--primary-dark);
+  }
+  pre code .string {
+    color: var(--color-tip);
+  }
+  pre code .number {
+    color: #905;
+  }
+  pre code .type {
+    color: var(--color-note);
+  }
+  pre code .function {
+    color: #ca0029;
+  }
+  pre code .operator {
+    color: #a67f59;
+  }
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .features > .feature {
+    flex: 1 1 100%;
+  }
+  @media (min-width: 500px) {
+    .features {
+      gap: 30px;
+    }
+    .features > .feature {
+      flex-basis: calc(50% - 15px);
+    }
+  }
+  @media (min-width: 900px) {
+    .features > .feature {
+      flex-basis: calc(33.333% - 20px);
+    }
+  }
+  .feature {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 15px 17px;
+    box-shadow: 0 1px 3px rgba(20, 20, 45, 0.05);
+  }
+  .feature header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .feature header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--text);
+  }
+  .feature header svg,
+  .feature header img {
+    width: 22px;
+    height: 22px;
+    flex: none;
+  }
+  .feature header svg {
+    fill: none;
+    stroke: var(--text);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .feature header svg.filled {
+    fill: var(--text);
+    stroke: none;
+  }
+  .feature p {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: 14.5px;
+  }
+  .separator {
+    margin: 52px 0;
+  }
+  .separator svg {
+    display: block;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .separator circle {
+    fill: none;
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+  }
+  .separator line {
+    stroke: var(--line);
+    stroke-width: 2;
+  }
+  .splash img {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(20, 20, 45, 0.05);
+  }
+  footer {
+    margin-top: 8px;
+    text-align: center;
+  }
+</style>
+
+<section class="hero">
   <div>
     <h1>Crossroad</h1>
     <p>
       A React library to handle navigation in your webapp. Built with simple
       components and React Hooks.
     </p>
-    <pre class="small">npm install crossroad</pre>
+    <pre class="install">npm install crossroad</pre>
     <div class="buttons">
       <a class="button" href="/documentation">Documentation</a>
-      <a
-        class="pseudo button"
-        href="https://www.paypal.me/franciscopresencia/19"
+      <a class="button ghost" href="https://www.paypal.me/franciscopresencia/19"
         >Donate</a
       >
     </div>
   </div>
-  <div style="width: 630px; max-width: 100%">
-    <pre><code class="language-js">import Router, { Switch, Route } from &#x22;crossroad&#x22;;
+  <div>
+    <pre><code class="language-js">import Router, { Switch, Route } from &quot;crossroad&quot;;
 
-export default () =&#x3E; (
-  &#x3C;Router&#x3E;
-    &#x3C;Switch redirect=&#x22;/&#x22;&#x3E;
-      &#x3C;Route path=&#x22;/&#x22; component={Home} /&#x3E;
-      &#x3C;Route path=&#x22;/users&#x22; component={Users} /&#x3E;
-      &#x3C;Route path=&#x22;/users/:id&#x22; component={Profile} /&#x3E;
-    &#x3C;/Switch&#x3E;
-  &#x3C;/Router&#x3E;
+export default () =&gt; (
+  &lt;Router&gt;
+    &lt;Switch redirect=&quot;/&quot;&gt;
+      &lt;Route path=&quot;/&quot; component={Home} /&gt;
+      &lt;Route path=&quot;/users&quot; component={Users} /&gt;
+      &lt;Route path=&quot;/users/:id&quot; component={Profile} /&gt;
+    &lt;/Switch&gt;
+  &lt;/Router&gt;
 );</code></pre>
   </div>
 </section>
 
-<br />
-
-<section class="features flex one two-500 three-900">
-  <div>
-    <div class="feature">
-      <header>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        >
-          <path
-            d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"
-          />
-        </svg>
-        <h3>Familiar</h3>
-      </header>
-      <p>
-        Crossroad's high level API is based on React Router
-        <a href="/documentation#react-router-diff">with some improvements</a>
-      </p>
-    </div>
+<section class="features">
+  <div class="feature">
+    <header>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"
+        />
+      </svg>
+      <h3>Familiar</h3>
+    </header>
+    <p>
+      Crossroad's high level API is based on React Router
+      <a href="/documentation#react-router-diff">with some improvements</a>
+    </p>
   </div>
-  <div>
-    <div class="feature">
-      <header>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="feather feather-file-text"
-        >
-          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-          <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
-        </svg>
-        <h3>Documented</h3>
-      </header>
-      <p>
-        <a href="/documentation#getting-started">Getting started</a>,
-        <a href="/documentation#api">API description</a> and
-        <a href="/documentation#examples">many examples</a> for your convenience
-      </p>
-    </div>
+  <div class="feature">
+    <header>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
+      </svg>
+      <h3>Documented</h3>
+    </header>
+    <p>
+      <a href="/documentation#getting-started">Getting started</a>,
+      <a href="/documentation#api">API description</a> and
+      <a href="/documentation#examples">many examples</a> for your convenience
+    </p>
   </div>
-  <div>
-    <div class="feature">
-      <header>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path
-            d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5zM16 8L2 22M17.5 15H9"
-          />
-        </svg>
-        <h3>Tiny Footprint</h3>
-      </header>
-      <p>
-        At
-        <a href="https://bundlephobia.com/package/crossroad" target="_blank"
-          >just <strong>1.8kb</strong></a
-        >
-        (min+gzip), the impact on your app loading time is minimal
-      </p>
-    </div>
+  <div class="feature">
+    <header>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5zM16 8L2 22M17.5 15H9"
+        />
+      </svg>
+      <h3>Tiny Footprint</h3>
+    </header>
+    <p>
+      At
+      <a href="https://bundlephobia.com/package/crossroad" target="_blank"
+        >just <strong>1.8kb</strong></a
+      >
+      (min+gzip), the impact on your app loading time is minimal
+    </p>
   </div>
-  <div>
-    <div class="feature">
-      <header>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="feather feather-check-circle"
-        >
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-        <h3>Stable and tested</h3>
-      </header>
-      <p>
-        With
-        <a
-          href="https://github.com/franciscop/crossroad/actions"
-          target="_blank"
-          >130+ tests</a
-        >
-        to check everything works. We follow semver strictly
-      </p>
-    </div>
+  <div class="feature">
+    <header>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <h3>Stable and tested</h3>
+    </header>
+    <p>
+      With
+      <a
+        href="https://github.com/franciscop/crossroad/actions"
+        target="_blank"
+        >130+ tests</a
+      >
+      to check everything works. We follow semver strictly
+    </p>
   </div>
-  <div>
-    <div class="feature">
-      <header>
-        <svg
-          width="300"
-          height="300"
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-          viewBox="0 0 300 300"
-        >
-          <path
-            id="svg_1"
-            d="m187.1,205.1l25,0l0,3.8c0,27.3 -22.2,49.4 -49.4,49.4s-49.4,-22.2 -49.4,-49.5l-0.5,-122c15.3,-4.9 26.5,-19.3 26.5,-36.2c0,-21 -17.1,-38.1 -38.1,-38.1c-21,0 -38.1,17.1 -38.1,38.1c0,17 11.2,31.4 26.6,36.3l0.5,121.9c0,39.9 32.5,72.4 72.4,72.4c39.9,0 72.4,-32.5 72.4,-72.4l0,-3.8l0,-42.5l0,-42.5l-47.9,85.1zm-86.1,-169.5c8.3,0 15.1,6.8 15.1,15.1s-6.8,15.1 -15.1,15.1s-15,-6.8 -15,-15.1s6.7,-15.1 15,-15.1z"
-            stroke-width="6px"
-            fill="#336"
-          />
-        </svg>
-        <h3>React Hooks</h3>
-      </header>
-      <p>
-        Provide useful hooks to add to your components:
-        <a href="/documentation#usepath">usePath()</a>,
-        <a href="/documentation#usequery">useQuery()</a>
-      </p>
-    </div>
+  <div class="feature">
+    <header>
+      <svg class="filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+        <path
+          d="m187.1,205.1l25,0l0,3.8c0,27.3 -22.2,49.4 -49.4,49.4s-49.4,-22.2 -49.4,-49.5l-0.5,-122c15.3,-4.9 26.5,-19.3 26.5,-36.2c0,-21 -17.1,-38.1 -38.1,-38.1c-21,0 -38.1,17.1 -38.1,38.1c0,17 11.2,31.4 26.6,36.3l0.5,121.9c0,39.9 32.5,72.4 72.4,72.4c39.9,0 72.4,-32.5 72.4,-72.4l0,-3.8l0,-42.5l0,-42.5l-47.9,85.1zm-86.1,-169.5c8.3,0 15.1,6.8 15.1,15.1s-6.8,15.1 -15.1,15.1s-15,-6.8 -15,-15.1s6.7,-15.1 15,-15.1z"
+        />
+      </svg>
+      <h3>React Hooks</h3>
+    </header>
+    <p>
+      Provide useful hooks to add to your components:
+      <a href="/documentation#usepath">usePath()</a>,
+      <a href="/documentation#usequery">useQuery()</a>
+    </p>
   </div>
-  <div>
-    <div class="feature">
-      <header>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="feather feather-smile"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-          <line x1="9" y1="9" x2="9.01" y2="9"></line>
-          <line x1="15" y1="9" x2="15.01" y2="9"></line>
-        </svg>
-        <h3>Intuitive</h3>
-      </header>
-      <p>Try it once and you won't need to read the docs again</p>
-    </div>
+  <div class="feature">
+    <header>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+        <line x1="9" y1="9" x2="9.01" y2="9"></line>
+        <line x1="15" y1="9" x2="15.01" y2="9"></line>
+      </svg>
+      <h3>Intuitive</h3>
+    </header>
+    <p>Try it once and you won't need to read the docs again</p>
   </div>
 </section>
 
-<br />
-
-<section class="hero flex one two-900 center">
+<section class="row">
   <div>
     <h2>Example: Static routes</h2>
     <p>
@@ -215,7 +347,7 @@ export default () =&#x3E; (
       >
         Codesandbox
       </a>
-      <a class="pseudo button" href="/documentation#static-routes">
+      <a class="button ghost" href="/documentation#static-routes">
         Code & docs
       </a>
     </div>
@@ -228,9 +360,7 @@ export default () =&#x3E; (
   </div>
 </section>
 
-<br />
-
-<section class="hero flex one two-900 center">
+<section class="row">
   <div>
     <h2>Example: Search Query</h2>
     <p>
@@ -246,7 +376,7 @@ export default () =&#x3E; (
       >
         Codesandbox
       </a>
-      <a class="pseudo button" href="/documentation#search-page">Code & docs</a>
+      <a class="button ghost" href="/documentation#search-page">Code & docs</a>
     </div>
   </div>
   <div>
@@ -257,9 +387,7 @@ export default () =&#x3E; (
   </div>
 </section>
 
-<br />
-
-<section class="hero flex one two-900 center">
+<section class="row">
   <div>
     <h2>Example: Query Routing</h2>
     <p>
@@ -274,7 +402,7 @@ export default () =&#x3E; (
       >
         Codesandbox
       </a>
-      <a class="pseudo button" href="/documentation#query-routing"
+      <a class="button ghost" href="/documentation#query-routing"
         >Code & docs</a
       >
     </div>
