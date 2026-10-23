@@ -35,12 +35,13 @@ export default ({ scrollUp, url: baseUrl, children }: RouterProps) => {
       setStateUrl((prev) => {
         // Accepts callbacks
         const resolved = typeof newUrl === "function" ? newUrl(prev) : newUrl;
+        const next = parse(resolved, stringify(prev));
 
         // Don't update it if it's the same
-        if (stringify(prev) === stringify(resolved)) return prev;
+        if (stringify(prev) === stringify(next)) return prev;
 
         // Add the entry to the current state, refresh whatever needs refreshing
-        return parse(resolved);
+        return next;
       });
 
       // Derive the next URL outside the updater so that history.pushState is
@@ -48,8 +49,8 @@ export default ({ scrollUp, url: baseUrl, children }: RouterProps) => {
       // to detect side effects; keeping pushState here avoids double navigation.
       const prev = urlRef.current;
       const resolved = typeof newUrl === "function" ? newUrl(prev) : newUrl;
-      if (stringify(prev) !== stringify(resolved)) {
-        const next = parse(resolved);
+      const next = parse(resolved, stringify(prev));
+      if (stringify(prev) !== stringify(next)) {
         urlRef.current = next;
         (history as any)[mode + "State"]({}, null, stringify(next));
         if (scrollUp) window.scrollTo(0, 0);

@@ -1,6 +1,9 @@
+import React from "react";
 import $ from "react-test";
 
+import { stringify } from "./helpers/format";
 import { Mock } from "./helpers";
+import useUrl from "./hooks/useUrl";
 import Router, { Route } from "./index";
 
 const Home = <a href="/user">go</a>;
@@ -92,5 +95,56 @@ describe("<a> links", () => {
     expect($home.text()).toBe("User go");
     await $home.find("a").click();
     expect($home.text()).toBe("Home go");
+  });
+});
+
+describe("relative links", () => {
+  const Show = ({ link }: { link: React.ReactNode }) => {
+    const [url] = useUrl();
+    return (
+      <div>
+        <span>{stringify(url)}</span>
+        {link}
+      </div>
+    );
+  };
+
+  const withLink = (url: string, link: React.ReactNode) =>
+    $(
+      <Mock url={url}>
+        <Router>
+          <Show link={link} />
+        </Router>
+      </Mock>,
+    );
+
+  it("keeps the current path for a query-only link", async () => {
+    const $page = withLink("/lessons/26", <a href="?tab=examples">go</a>);
+    await $page.find("a").click();
+    expect($page.find("span").text()).toBe("/lessons/26?tab=examples");
+    expect(window.location.pathname).toBe("/lessons/26");
+    expect(window.location.search).toBe("?tab=examples");
+  });
+
+  it("resolves a relative path link against the current path", async () => {
+    const $page = withLink("/a/b", <a href="other">go</a>);
+    await $page.find("a").click();
+    expect($page.find("span").text()).toBe("/a/other");
+  });
+
+  it("resolves a ./ link against the current path", async () => {
+    const $page = withLink("/a/b", <a href="./other?x=1">go</a>);
+    await $page.find("a").click();
+    expect($page.find("span").text()).toBe("/a/other?x=1");
+  });
+
+  it("keeps the current path when calling setUrl with a query", async () => {
+    const Button = () => {
+      const [, setUrl] = useUrl();
+      return <button onClick={() => setUrl("?q=1")}>go</button>;
+    };
+    const $page = withLink("/lessons/26", <Button />);
+    await $page.find("button").click();
+    expect($page.find("span").text()).toBe("/lessons/26?q=1");
   });
 });

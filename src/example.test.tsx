@@ -27,7 +27,7 @@ describe("use the url prop", () => {
   });
 
   it("renders not found when in another route", () => {
-    expect($(<App url="/bla" />).text()).toContain("not found");
+    expect($(<App url="/bla" />)).toHaveText(/not found/);
   });
 });
 
@@ -72,7 +72,7 @@ describe("use the Mock component", () => {
         <Mock url="/bla">
           <App />
         </Mock>,
-      ).text(),
-    ).toContain("not found");
+      ),
+    ).toHaveText(/not found/);
   });
 });

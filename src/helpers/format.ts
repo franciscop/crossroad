@@ -3,10 +3,13 @@ import type { Query, Url, UrlSet } from "../types";
 const single = (arr: string[]): string | string[] =>
   arr.length > 1 ? arr : arr[0];
 
-export const parse = (base: string | Url | UrlSet): Url => {
+const ORIGIN = "http://localhost:3000";
+
+// Relative strings ("?a=b", "x", "./x") resolve against "from", like a browser
+export const parse = (base: string | Url | UrlSet, from: string = "/"): Url => {
   if (typeof base !== "string") return base as Url;
   const url: Partial<Url> & { query: Query } = { query: {} };
-  const MyUrl = new URL(base, "http://localhost:3000/");
+  const MyUrl = new URL(base, new URL(from, ORIGIN));
   url.path = (MyUrl.pathname.replace(/\/$/, "") || "/")
     .replaceAll("%3C", "<")
     .replaceAll("%3E", ">"); // It shouldn't end with /
