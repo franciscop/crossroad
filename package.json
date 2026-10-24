@@ -19,7 +19,7 @@
     "build:library": "vite build && mv dist/index.min.js . && rm -rf dist",
     "build:types": "dts-bundle-generator --out-file index.d.ts src/index.ts",
     "build:prettier": "prettier src *.ts *.json --write",
-    "lint": "tsc",
+    "lint": "oxlint src && tsc",
     "size": "echo $(gzip -c index.min.js | wc -c) bytes",
     "start": "vitest",
     "test": "vitest run --coverage"
@@ -47,6 +47,7 @@
     "dts-bundle-generator": "^9.5.1",
     "esbuild": "^0.28.2",
     "jsdom": "^30.1.3",
+    "oxlint": "^1.89.0",
     "prettier": "^3.9.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

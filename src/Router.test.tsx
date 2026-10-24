@@ -85,7 +85,7 @@ describe("crossroad", () => {
         Home <a href="/user">go</a>
       </div>
     );
-    const User = ({ id: _ }: { id?: string }) => <div>User</div>;
+    const User = (_props: { id?: string }) => <div>User</div>;
 
     const $home = $(
       <Mock url="/">
